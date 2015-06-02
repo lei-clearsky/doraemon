@@ -2,59 +2,59 @@ var phantom = require('phantom');
 var gm = require('gm');
 var q = require('q');
 var Spooky = require('spooky');
-// var casper = require('casper');
+var casper = require('casper');
 
 // test spooky
-// var spooky = new Spooky({
-//         child: {
-//             transport: 'http'
-//         },
-//         casper: {
-//             logLevel: 'debug',
-//             verbose: true
-//         }
-//     }, function (err) {
-//         if (err) {
-//             e = new Error('Failed to initialize SpookyJS');
-//             e.details = err;
-//             throw e;
-//         }
-//         spooky.start('https://news.ycombinator.com/news?p=1');
+var spooky = new Spooky({
+        child: {
+            transport: 'http'
+        },
+        casper: {
+            logLevel: 'debug',
+            verbose: true
+        }
+    }, function (err) {
+        if (err) {
+            e = new Error('Failed to initialize SpookyJS');
+            e.details = err;
+            throw e;
+        }
+        spooky.start('http://www.google.com');
         
-//         spooky.then(function () {
-//         	console.log('test casper in spooky!!!!!');
-//             this.emit('hello', 'Hello, from ' + this.evaluate(function () {
-//                 return document.title;
-//             }));
-//         });
-//         spooky.run();
-//     });
+        spooky.then(function () {
+        	console.log('test casper in spooky!!!!!');
+            this.emit('hello', 'Hello, from ' + this.evaluate(function () {
+                return document.title;
+            }));
+        });
+        spooky.run();
+    });
 
-// spooky.on('error', function (e, stack) {
-// 	console.log('errors?????');
-//     console.error(e);
+spooky.on('error', function (e, stack) {
+	console.log('errors?????');
+    console.error(e);
 
-//     if (stack) {
-//         console.log(stack);
-//     }
-// });
+    if (stack) {
+        console.log(stack);
+    }
+});
 
-// // Uncomment this block to see all of the things Casper has to say.
-// // There are a lot.
-// // He has opinions.
-// spooky.on('console', function (line) {
-//     console.log(line);
-// });
+// Uncomment this block to see all of the things Casper has to say.
+// There are a lot.
+// He has opinions.
+spooky.on('console', function (line) {
+    console.log(line);
+});
 
-// spooky.on('hello', function (greeting) {
-//     console.log(greeting);
-// });
+spooky.on('hello', function (greeting) {
+    console.log(greeting);
+});
 
-// spooky.on('log', function (log) {
-//     if (log.space === 'remote') {
-//         console.log(log.message.replace(/ \- .*/, ''));
-//     }
-// });
+spooky.on('log', function (log) {
+    if (log.space === 'remote') {
+        console.log(log.message.replace(/ \- .*/, ''));
+    }
+});
 // end test
 
 
@@ -128,7 +128,7 @@ function start() {
 	
 	setTimeout(function() { 
         createDiff(img1path, img2path);
-    }, 3000);
+    }, 5000);
     
 }
 
