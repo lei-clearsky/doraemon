@@ -19,15 +19,58 @@ var spooky = new Spooky({
             e.details = err;
             throw e;
         }
-        spooky.start('http://www.google.com');
+
+        // test google
+        var links = [];
+
+		spooky.start('http://google.fr/', function() {
+		    // search for 'casperjs' from google form
+		    this.fill('form[action="/search"]', { q: 'casperjs' }, true);
+		});
+
+		spooky.then(function() {
+			function getLinks() {
+			    var links = document.querySelectorAll('h3.r a');
+			    return Array.prototype.map.call(links, function(e) {
+			        return e.getAttribute('href');
+			    });
+			}
+		    // aggregate results for the 'casperjs' search
+		    links = this.evaluate(getLinks);
+		    // now search for 'phantomjs' by filling the form again
+		    this.fill('form[action="/search"]', { q: 'phantomjs' }, true);
+		});
+
+		spooky.then(function() {
+			function getLinks() {
+			    var links = document.querySelectorAll('h3.r a');
+			    return Array.prototype.map.call(links, function(e) {
+			        return e.getAttribute('href');
+			    });
+			}
+		    // aggregate results for the 'phantomjs' search
+		    links = links.concat(this.evaluate(getLinks));
+		});
+
+		spooky.run(function() {
+		    // echo results in some pretty fashion
+		    this.echo(links.length + ' links found:');
+		    this.echo(' - ' + links.join('\n - ')).exit();
+		});
+
+        // end test google
+
+
+
+        // spooky.start('http://www.google.com');
         
-        spooky.then(function () {
-        	console.log('test casper in spooky!!!!!');
-            this.emit('hello', 'Hello, from ' + this.evaluate(function () {
-                return document.title;
-            }));
-        });
-        spooky.run();
+        // spooky.then(function () {
+        // 	console.log('test casper in spooky!!!!!');
+        //     this.emit('hello', 'Hello, from ' + this.evaluate(function () {
+        //         return document.title;
+        //     }));
+        // });
+        // spooky.run();
     });
 
 spooky.on('error', function (e, stack) {
@@ -64,8 +107,8 @@ var url2 = "https://news.ycombinator.com/news?p=2";
 // var url1 = "http://lei-clearsky.github.io/nanodegree-fewd-p2/";
 // var url2 = "http://lei-clearsky.github.io/lei-resume/";
 
-var img1path = 'img7.png';
-var img2path = 'img8.png';
+var img1path = 'img3.png';
+var img2path = 'img4.png';
 
 function getSnapshot(url, img) {
     // var df = q.defer();
