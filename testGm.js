@@ -101,49 +101,52 @@ spooky.on('log', function (log) {
 // end test
 
 
-var url1 = "https://news.ycombinator.com/news?p=1";
-var url2 = "https://news.ycombinator.com/news?p=2";
+// var url1 = "https://news.ycombinator.com/news?p=1";
+// var url2 = "https://news.ycombinator.com/news?p=2";
+
+// var img1 = 'img1.png';
+// var img2 = 'img2.png';
 
 // var url1 = "http://lei-clearsky.github.io/nanodegree-fewd-p2/";
 // var url2 = "http://lei-clearsky.github.io/lei-resume/";
 
-var img1path = 'img3.png';
-var img2path = 'img4.png';
+// var img1path = 'img3.png';
+// var img2path = 'img4.png';
 
-function getSnapshot(url, img) {
-    // var df = q.defer();
+// function getSnapshot(url, img) {
+//     // var df = q.defer();
 
-    phantom.create(function(ph) {
-        ph.createPage(function(page) {
-            page.set("viewportSize", { width: 1024, height: 768 });
-              page.open(url, function(status) {
-                  console.log("rendering " + url + "....");
-                  page.render(img);
-                  ph.exit();
+//     phantom.create(function(ph) {
+//         ph.createPage(function(page) {
+//             page.set("viewportSize", { width: 1024, height: 768 });
+//               page.open(url, function(status) {
+//                   console.log("rendering " + url + "....");
+//                   page.render(img);
+//                   ph.exit();
 
-                  // df.resolve(img);
-              });
-        });
-    });
+//                   // df.resolve(img);
+//               });
+//         });
+//     });
 
-    // return df.promise;
-};
+//     // return df.promise;
+// };
 
-function createDiff(img1, img2) {
-      var options = {
-        highlightColor: 'yellow', 
-        file: './diff.png',
-        tolerance: 0.02 
-      };
+// function createDiff(img1, img2) {
+//       var options = {
+//         highlightColor: 'yellow', 
+//         file: './diff.png',
+//         tolerance: 0.02 
+//       };
 
-      gm.compare(img1, img2, options, function (err, isEqual, equality, raw) {
-        if (err) throw err;
+//       gm.compare(img1, img2, options, function (err, isEqual, equality, raw) {
+//         if (err) throw err;
 
-        console.log('The images are equal: ', isEqual);
-        console.log('Actual equality: ', equality);
-        console.log('Raw output was: ', raw);
-      });
-};
+//         console.log('The images are equal: ', isEqual);
+//         console.log('Actual equality: ', equality);
+//         console.log('Raw output was: ', raw);
+//       });
+// };
 
 // function start() {
 //     var promises = [];
@@ -164,15 +167,80 @@ function createDiff(img1, img2) {
 //       });
 // }
 
+// function start() {
+
+// 	// getSnapshot(url1, img1path);
+// 	// getSnapshot(url2, img2path);
+
+// 	phantom.create(function(ph) {
+//         ph.createPage(function(page) {
+//             page.set("viewportSize", { width: 1024, height: 768 });
+//               page.open(url1, function(status) {
+//                   console.log("rendering " + url1 + "....");
+//                   page.render(img1);
+
+//                   page.open(url2, function(status) {
+//                   	console.log("rendering " + url2 + "....");
+//                   	page.render(img2);
+//                   	ph.exit();	
+//                   });
+                  
+//               });
+//         });
+//     });
+	
+// 	setTimeout(function() { 
+//         createDiff(img1, img2);
+//     }, 3000);
+    
+// }
+
+// start();
+
+var url1 = "http://www.westsiderag.com/2015/06/01/food-buzz-and-a-slideshow-from-new-taste-of-the-upper-west-side";
+var url2 = "http://www.westsiderag.com/category/columns-2";
+
+var img5 = 'img5.png';
+var img6 = 'img6.png';
+
+
 function start() {
 
-	getSnapshot(url1, img1path);
-	getSnapshot(url2, img2path);
-	
-	setTimeout(function() { 
-        createDiff(img1path, img2path);
-    }, 5000);
-    
+  phantom.create(function(ph) {
+    ph.createPage(function(page) {
+      page.open(url1, function(status) {
+          console.log('rendering first image...')
+          page.render(img5);
+          console.log('this is the first img', img5)
+
+
+          page.open(url2, function() {
+                console.log('rendering second image...')
+                page.render(img6);
+
+                ph.exit();
+          });
+        });
+
+    })
+  })
 }
 
-start();
+
+function compareUrls() {
+  var options = {
+        highlightColor: 'yellow', // optional. Defaults to red
+        file: './diff3.png' // required
+  };
+  // need to wait for images to get saved
+  gm.compare(img5, img6, options, function (err, isEqual, equality, raw) {
+        if (err) throw err;
+        console.log('The images are equal: %s', isEqual);
+        console.log('Actual equality: %d', equality);
+        console.log('Raw output was: %j', raw);
+
+        //ph.exit();
+  });
+};
+//start();
+compareUrls();
