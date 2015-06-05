@@ -5,8 +5,9 @@ var schema = new mongoose.Schema({
     date: {
         type: Date
     },
-    time: {
-        type: Time
+    time: { 
+        type : Date, 
+        default: Date.now 
     },
     url: {
         type: String
@@ -14,10 +15,10 @@ var schema = new mongoose.Schema({
     screenshot: {
         type: String
     },
-    diffI: {
+    diffImage: {
         id: String
     },
-    diffP: {
+    diffPercentage: {
         id: String
     }
 });
