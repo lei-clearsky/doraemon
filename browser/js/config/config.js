@@ -26,7 +26,9 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.site = '';
 
     $scope.config = {
-        urls: [{id: 'url1'}]
+        urls: [{
+            id: 'url1'
+        }]
     };
 
     $scope.addNewUrl = function() {
@@ -43,6 +45,11 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     };
 
     $scope.submit = function() {
+
+        $scope.config.urls.forEach(function (url, index) {
+            url = $scope.site + url;
+        });
+
         Config.create($scope.config);
     }
 
