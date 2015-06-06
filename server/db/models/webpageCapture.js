@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var schema = new mongoose.Schema({
     captureTime: { 
         type: Date, 
-        default: new Date()
+        default: Date.now
     },
     websiteUrl: {
         type: String
