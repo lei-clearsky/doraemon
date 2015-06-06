@@ -12,8 +12,8 @@ app.config(function ($stateProvider) {
 app.factory('Config', function ($http) {
 
     return {
-        getTutorialVideos: function () {
-            return $http.get('/api/tutorial/videos').then(function (response) {
+        create: function (config) {
+            return $http.post('/api/diffing', config).then(function (response) {
                 return response.data;
             });
         }
@@ -21,9 +21,13 @@ app.factory('Config', function ($http) {
 
 });
 
-app.controller('ConfigCtrl', function ($scope) {
+app.controller('ConfigCtrl', function ($scope, Config) {
 
-    $scope.urls = [{id:'url1'}];
+    $scope.site = '';
+
+    $scope.config = {
+        urls: [{id: 'url1'}]
+    };
 
     $scope.addNewUrl = function() {
         var newUrl = $scope.urls.length + 1;
@@ -31,12 +35,16 @@ app.controller('ConfigCtrl', function ($scope) {
     };
 
     $scope.showAddUrl = function(url) {
-      return url.id === $scope.urls[$scope.urls.length-1].id;
+        return url.id === $scope.urls[$scope.urls.length-1].id;
     };
 
     $scope.showUrlLabel = function(url) {
-      return url.id === $scope.urls[0].id;
+        return url.id === $scope.urls[0].id;
     };
+
+    $scope.submit = function() {
+        Config.create($scope.config);
+    }
 
 });
 

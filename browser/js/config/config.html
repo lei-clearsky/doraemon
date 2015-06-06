@@ -1,19 +1,19 @@
 <section id="config" class="col-xs-6">
-    <form>
+    <form name="configForm" ng-submit="configForm.$valid && submit()" novalidate>
     	<div class="form-group">
     	    <label for="site">Site</label>
-    	    <input type="text" class="form-control" id="site" placeholder="Enter site">
+    	    <input type="text" ng-model="site" class="form-control" id="site" placeholder="Enter site">
     	</div>
 
-    	<div class="form-group" ng-repeat="url in urls">
+    	<div class="form-group" ng-repeat="url in config.urls">
     	    <label for="url" ng-show="showUrlLabel(url)">Url</label>  	    
     	    <input type="text" ng-model="url.url" class="form-control" placeholder="Enter url">
-            <button class="btn btn-primary btn-large" ng-show="showAddUrl(url)" ng-click="addNewUrl()">Add another url</button>
+            <button class="btn btn-primary btn-sm btn-add" ng-show="showAddUrl(url)" ng-click="addNewUrl()">Add another url</button>
     	</div>
 
     	<div class="form-group">
     	    <label for="viewport">Viewport</label>
-    	    <select class="form-control" id="viewport">
+    	    <select ng-model="config.viewport" class="form-control" id="viewport">
                 <option value="1024" selected>1024 by 768</option>
             </select>
     	</div>
@@ -22,15 +22,15 @@
     	    <label>Frequency</label>
             <div>
             <label class="radio-inline">
-        	    <input type="radio" name="frequency"> 12 Hrs
+        	    <input ng-model="config.frequency" type="radio" name="frequency"> 12 Hrs
             </label>
             <label class="radio-inline">
-                <input type="radio" name="frequency"> 24 Hrs
+                <input ng-model="config.frequency" type="radio" name="frequency"> 24 Hrs
             </label>
             </div>
     	</div>
 
-        <button type="submit" class="btn btn-primary btn-large" id="config-submit">Save</button>
+        <button ng-disabled="configFrom.$invalid" type="submit" class="btn btn-primary btn-large" id="config-submit">Save</button>
 
     </form>
 
