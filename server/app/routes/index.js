@@ -6,6 +6,7 @@ router.use('/tutorial', require('./tutorial'));
 router.use('/members', require('./members'));
 router.use('/test-config', require('./test-config'));
 router.use('/screenshots', require('./screenshots'));
+router.use('/users', require('./users'));
 
 // Make sure this is after all of
 // the registered routes!
