@@ -24,7 +24,10 @@ var schema = new mongoose.Schema({
     google: {
         id: String
     },
-    urls: [String],
+    urls: [{
+        id: String,
+        url: String
+    }],
     config: {
         viewport: {
             type: [String]

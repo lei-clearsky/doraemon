@@ -32,16 +32,16 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     };
 
     $scope.addNewUrl = function() {
-        var newUrl = $scope.urls.length + 1;
-        $scope.urls.push({'id': 'url' + newUrl});
+        var newUrl = $scope.config.urls.length + 1;
+        $scope.config.urls.push({'id': 'url' + newUrl});
     };
 
     $scope.showAddUrl = function(url) {
-        return url.id === $scope.urls[$scope.urls.length-1].id;
+        return url.id === $scope.config.urls[$scope.config.urls.length-1].id;
     };
 
     $scope.showUrlLabel = function(url) {
-        return url.id === $scope.urls[0].id;
+        return url.id === $scope.config.urls[0].id;
     };
 
     $scope.submit = function() {
@@ -51,7 +51,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
         });
 
         Config.create($scope.config);
-    }
+    };
 
 });
 

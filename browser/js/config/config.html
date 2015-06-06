@@ -1,5 +1,7 @@
 <section id="config" class="col-xs-6">
+<pre>{{config|json}}</pre>
     <form name="configForm" ng-submit="configForm.$valid && submit()" novalidate>
+
     	<div class="form-group">
     	    <label for="site">Site</label>
     	    <input type="text" ng-model="site" class="form-control" id="site" placeholder="Enter site">
@@ -13,7 +15,7 @@
 
     	<div class="form-group">
     	    <label for="viewport">Viewport</label>
-    	    <select ng-model="config.viewport" class="form-control" id="viewport">
+    	    <select ng-model="config.config.viewport" class="form-control" id="viewport">
                 <option value="1024" selected>1024 by 768</option>
             </select>
     	</div>
@@ -22,10 +24,10 @@
     	    <label>Frequency</label>
             <div>
             <label class="radio-inline">
-        	    <input ng-model="config.frequency" type="radio" name="frequency"> 12 Hrs
+        	    <input ng-model="config.config.frequency" type="radio" name="frequency" value="12"> 12 Hrs
             </label>
             <label class="radio-inline">
-                <input ng-model="config.frequency" type="radio" name="frequency"> 24 Hrs
+                <input ng-model="config.config.frequency" type="radio" name="frequency" value="24"> 24 Hrs
             </label>
             </div>
     	</div>
