@@ -47,7 +47,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.submit = function() {
 
         $scope.config.urls.forEach(function (url, index) {
-            url = $scope.site + url;
+            url.url = $scope.site + url.url;
         });
 
         Config.create($scope.config);
