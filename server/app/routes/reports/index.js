@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var WebpageCapture = mongoose.model('WebpageCapture');
 var User = mongoose.model('User');
 
+
+
 // - api/user/:userId/reports
 
 router.get('/', function(req, res, next) {
@@ -11,6 +13,9 @@ router.get('/', function(req, res, next) {
 		res.json(data);
 	});
 });
+
+
+
 
 router.get('/:id', function(req, res, next) {
 	res.json(req.user);
@@ -26,3 +31,23 @@ router.param('id', function(req, res, next, id) {
 });
 
 module.exports = router;
+
+
+// screencapture function 
+var Nightmare = require('nightmare');
+var nightmare = new Nightmare();
+
+
+
+
+
+
+// image diff function
+
+
+
+// frequency function 
+
+
+
+

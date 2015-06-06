@@ -1,31 +1,31 @@
 'use strict';
 var router = require('express').Router();
 var mongoose = require('mongoose');
-var WebpageCapture = mongoose.model('WebpageCapture');
+var ImageCapture = mongoose.model('ImageCapture');
 var User = mongoose.model('User');
 
-// - api/user/:userId/webpageCaptures
+// - api/user/:userId/imageCaptures
 
 router.get('/', function(req, res, next) {
 
 	req.query.user = req.user._id;
 
-	WebpageCapture.find(req.query, function(err, data) {
+	ImageCapture.find(req.query, function(err, data) {
 		res.json(data);
 	});
 });
 
 router.get('/:id', function(req, res, next) {
-	req.webpageCapture.populate('user', function(err, populatedWebpageCapture){
-		res.json(populatedWebpageCapture);
+	req.imageCapture.populate('user', function(err, populateImageCapture){
+		res.json(populateImageCapture);
 	});
 });
 
 router.param('id', function(req, res, next, id) {
-	WebpageCapture.findById(id, function(err, webpageCapture) {
+	ImageCapture.findById(id, function(err, imageCapture) {
 		if(err) return next(err);
-		if(!webpageCapture) return res.status(404).end();
-		req.webpageCapture = webpageCapture;
+		if(!imageCapture) return res.status(404).end();
+		req.imageCapture = imageCapture;
 		next();
 	});
 });

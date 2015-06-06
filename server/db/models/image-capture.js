@@ -6,7 +6,7 @@ var schema = new mongoose.Schema({
         type: Date, 
         default: Date.now
     },
-    websiteUrl: {
+    websiteURL: {
         type: String
     },
     viewport: {
@@ -21,7 +21,7 @@ var schema = new mongoose.Schema({
     }
 });
 
-mongoose.model('WebpageCapture', schema);
+mongoose.model('ImageCapture', schema);
 
 
 
