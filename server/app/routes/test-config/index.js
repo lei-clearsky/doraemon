@@ -13,12 +13,21 @@ var	AWS = require('aws-sdk');
 
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}}),
     fs = require('fs');
+AWS.config.region = 'us-standard';
 
 router.get('/', function (req, res, next) {
-	UserModel.find({}, function (err, users) {
-		if (err) return next(err);
-		res.json(users);
-	});
+	// UserModel.find({}, function (err, users) {
+	// 	if (err) return next(err);
+	// 	res.json(users);
+	// });
+
+	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
+	var file = fs.createWriteStream(path.join(__dirname,'/../../../../public/file.jpg'));
+	s3.getObject(params).createReadStream().pipe(file);
+
+	var imgStream = s3.getObject(params).createReadStream();
+	imgStream.pipe(res);
+
 });
 
 router.get('/:id', function (req, res, next) {
@@ -34,12 +43,12 @@ router.post('/', function (req, res, next) {
 		// s3
 		var imgPath = path.join(__dirname, '/test.png');
 		
-        AWS.config.region = 'us-standard';
+        
         fs.readFile(imgPath, function (err, data) {
             if (err) { return next(err); }
 			var params = {Key: 'test3', Body: data};
 			// console.log('xky', s3.createBucket.toString());
-			s3.createBucket(function(err) {
+			s3.createBucket(function(err, data) {
 				// console.log('error?: ', err);
 				if (err) return next(err);
 			  s3.upload(params, function(err, data) {
