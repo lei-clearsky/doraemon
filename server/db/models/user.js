@@ -23,18 +23,6 @@ var schema = new mongoose.Schema({
     },
     google: {
         id: String
-    },
-    urls: [{
-        id: String,
-        url: String
-    }],
-    config: {
-        viewport: {
-            type: [String]
-        },
-        frequency: {
-            type: String
-        }
     }
 });
 
