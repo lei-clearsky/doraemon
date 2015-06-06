@@ -2,24 +2,23 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-    date: {
-        type: Date
+    captureTime: { 
+        type: Date, 
+        default: Date.now
     },
-    time: { 
-        type : Date, 
-        default: Date.now 
-    },
-    url: {
+    websiteUrl: {
         type: String
     },
-    screenshot: {
-        type: String
-    },
-    diffImage: {
-        id: String
-    },
-    diffPercentage: {
-        id: String
+    screenshots: [{
+        viewport: String,
+        currentScreenshot: String,
+        previousScreenshot: String,
+        diffImage: String,
+        diffPercentage: String
+    }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User'
     }
 });
 
@@ -38,7 +37,7 @@ var schema = new mongoose.Schema({
 //     return encryptPassword(candidatePassword, this.salt) === this.password;
 // });
 
-mongoose.model('Image', schema);
+mongoose.model('WebpageCapture', schema);
 
 
 
