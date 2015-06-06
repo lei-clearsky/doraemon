@@ -7,6 +7,7 @@ module.exports = router;
 var mongoose = require('mongoose'),
 	UserModel = mongoose.model('User');
 var path = require('path');
+var async = require('async');
 
 var	AWS = require('aws-sdk');
 // var configPath = path.join(__dirname, '/config.json');
@@ -21,9 +22,40 @@ router.get('/', function (req, res, next) {
 	// 	res.json(users);
 	// });
 
+	// var allKeys = [];
+	// function listAllKeys(marker, cb) {
+	// 	s3.listObjects({Bucket:'capstone-doraemon', Marker: marker}, function(err, data) {
+	// 		allKeys.push(data.Contents);
+
+	// 		if (data.IsTruncated)
+	// 			listAllKeys(data.Contents.slice(-1)[0].key, cb);
+	// 		else
+	// 			cb();
+	// 	});
+	// }
+
+	// s3.listObjects({Bucket:'capstone-doraemon'}, function(err, data) {
+	// 	if (err) 
+	// 		console.log(err, err.stack);
+	// 	else {
+	// 		var allImages = data.Contents;
+	// 		async.map(allImages, function(img, done){
+	// 			var params = {Bucket: 'capstone-doraemon', Key: img.Key};
+	// 			s3.getObject(params, done);
+	// 			// var imgStream = s3.getObject(params).createReadStream();
+	// 			// imgStream.pipe(res);
+	// 		}, function(err, allData) {
+	// 			if (err) 
+	// 				return console.log(err);
+	// 			res.json(allData);
+	// 			console.log(allData);
+	// 		});
+	// 	}
+	// });
+
 	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
-	var file = fs.createWriteStream(path.join(__dirname,'/../../../../public/file.jpg'));
-	s3.getObject(params).createReadStream().pipe(file);
+	// var file = fs.createWriteStream(path.join(__dirname,'/../../../../public/file.jpg'));
+	// s3.getObject(params).createReadStream().pipe(file);
 
 	var imgStream = s3.getObject(params).createReadStream();
 	imgStream.pipe(res);
