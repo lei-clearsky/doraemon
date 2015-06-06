@@ -13,7 +13,7 @@ app.factory('Config', function ($http) {
 
     return {
         create: function (config) {
-            return $http.post('/api/diffing', config).then(function (response) {
+            return $http.post('/api/test-config', config).then(function (response) {
                 return response.data;
             });
         }
