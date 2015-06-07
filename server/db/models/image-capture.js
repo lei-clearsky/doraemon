@@ -12,30 +12,32 @@ var schema = new mongoose.Schema({
     viewport: {
         type: String
     },
-    imgPath: {
+    imgURL: {
         type: String
     },
-    user: {
+    userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
     }
 });
 
+
+schema.statics.searchForPrevious = function(url, userID, viewport) {
+    return this.find({ 
+                websiteURL: url,
+                userID: userID,
+                viewport: viewport
+            }).sort({captureTime: 'desc'}).exec(function(err, docs) {
+                if (err) console.log(err);
+                return docs[0]
+            })
+};
+
+
+
+
+
 mongoose.model('ImageCapture', schema);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

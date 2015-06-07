@@ -26,9 +26,13 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.site = '';
 
     $scope.config = {
-        urls: [{
-            id: 'url1'
-        }]
+            urls: [{
+                id: 'url1'
+            }],
+            URL: 'http://www.happy.com',
+            viewport: null,
+            dayFrequency: [5],
+            hourFrequency: [11]
     };
 
     $scope.addNewUrl = function() {
@@ -46,9 +50,9 @@ app.controller('ConfigCtrl', function ($scope, Config) {
 
     $scope.submit = function() {
 
-        $scope.config.urls.forEach(function (url, index) {
-            url.url = $scope.site + url.url;
-        });
+        // $scope.config.urls.forEach(function (url, index) {
+        //     url.url = $scope.site + url.url;
+        // });
 
         Config.create($scope.config);
     };

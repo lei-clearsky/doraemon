@@ -6,6 +6,9 @@ var schema = new mongoose.Schema({
         type: Date, 
         default: Date.now
     },
+    diffImgURL: {
+        type: String
+    },
     diffPercent: {
         type: Number
     },
@@ -17,17 +20,19 @@ var schema = new mongoose.Schema({
     },
     compareFromID: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'WebpageCapture'
+        ref: 'ImageCapture'
     },
     compareToID: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'WebpageCapture'
+        ref: 'ImageCapture'
     },
     user: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
     }
 });
+
+
 
 mongoose.model('ImageDiff', schema);
 

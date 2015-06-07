@@ -2,12 +2,21 @@
 process.env.AWS_ACCESS_KEY_ID='AKIAI3KBBFBL6XN3VMJA';
 process.env.AWS_SECRET_ACCESS_KEY='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';
 
+
+
+var Nightmare = require('nightmare')
+var nightmare = new Nightmare();
+
+var CronJob = require('cron').CronJob;
+
+
+
 var router = require('express').Router();
 module.exports = router;
 var mongoose = require('mongoose'),
-	UserModel = mongoose.model('User');
+	TestConfig = mongoose.model('TestConfig');
+
 var path = require('path');
-var async = require('async');
 
 var	AWS = require('aws-sdk');
 // var configPath = path.join(__dirname, '/config.json');
@@ -63,43 +72,89 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-    UserModel.findById(req.params.id, function (err, user) {
+    TestConfig.findById(req.params.id, function (err, user) {
     	if (err) return next(err);
     	res.json(user);
     });
 });
 
 router.post('/', function (req, res, next) {
-	UserModel.create(req.body, function (err, user) {
+	TestConfig.create(req.body, function (err, user) {
 		if (err) return next(err);
 		// s3
 		var imgPath = path.join(__dirname, '/test.png');
-		
-        
-        fs.readFile(imgPath, function (err, data) {
-            if (err) { return next(err); }
-			var params = {Key: 'test3', Body: data};
-			// console.log('xky', s3.createBucket.toString());
-			s3.createBucket(function(err, data) {
-				// console.log('error?: ', err);
-				if (err) return next(err);
-			  s3.upload(params, function(err, data) {
-			    if (err) {
-			      console.log("Error uploading data: ", err);
-			      next(err);
-			    } else {
-			      console.log("Successfully uploaded data to myBucket/myKey");
-			      res.json(user);
-			    }
-			  });
-			});
-        });
+		        
+   //      fs.readFile(imgPath, function (err, data) {
+   //          if (err) { return next(err); }
+			// var params = {Key: 'test3', Body: data};
+			// // console.log('xky', s3.createBucket.toString());
+			// s3.createBucket(function(err, data) {
+			// 	// console.log('error?: ', err);
+			// 	if (err) return next(err);
+			//   s3.upload(params, function(err, data) {
+			//     if (err) {
+			//       console.log("Error uploading data: ", err);
+			//       next(err);
+			//     } else {
+			//       console.log("Successfully uploaded data to myBucket/myKey");
+			//       res.json(user);
+			//     }
+			//   });
+			// });
+        // });
 
 		// end s3
 
-		
+		res.json(user)
+
 	});
 });
+
+
+
+var intervalJob = new CronJob({
+  cronTime: '0 0 * * * *',  // runs every 5 seconds
+  onTick: function() {
+    var date = new Date();
+    var hour = date.getHours();
+    var weekday = date.getDay()
+    console.log('interval is running...', current_hour, weekday)
+
+    // searches TestConfig model and retrieve URL objects
+    TestConfig.findAllURLs(hour, weekday).then(function(data) {
+		data.forEach(function(config) {
+
+			var path = './temp_images/' + config._id + date + '.png'
+
+			nightmare
+				.viewport(1024, 768)
+				.goto(config.URL)
+				.screenshot(path)
+				.use(function() {
+					console.log('finished taking screenshot')
+				})
+		})
+
+		nightmare.run(function() {
+			console.log('finished all')
+		})
+	})
+  },
+  start: false
+});
+
+
+//intervalJob.start();
+
+
+
+
+		
+
+
+
+
+
 
 
 

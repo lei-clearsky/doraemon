@@ -1,7 +1,7 @@
 'use strict';
 var router = require('express').Router();
 var mongoose = require('mongoose');
-var WebpageCapture = mongoose.model('WebpageCapture');
+var ImageCapture = mongoose.model('ImageCapture');
 var User = mongoose.model('User');
 
 
@@ -9,7 +9,7 @@ var User = mongoose.model('User');
 // - api/user/:userId/reports
 
 router.get('/', function(req, res, next) {
-	WebpageCapture.find({}, function(err, data) {
+	ImageCapture.find({}, function(err, data) {
 		res.json(data);
 	});
 });
