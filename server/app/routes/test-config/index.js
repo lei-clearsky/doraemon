@@ -4,13 +4,15 @@ var Nightmare = require('nightmare')
 var nightmare = new Nightmare();
 
 var CronJob = require('cron').CronJob;
-
+var gm = require('gm');
 
 
 var router = require('express').Router();
 module.exports = router;
-var mongoose = require('mongoose'),
-	TestConfig = mongoose.model('TestConfig');
+
+var mongoose = require('mongoose');
+var	testConfig = mongoose.model('TestConfig');
+var	imageCapture = mongoose.model('ImageCapture');
 
 var path = require('path');
 
@@ -68,14 +70,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-    TestConfig.findById(req.params.id, function (err, user) {
+    testConfig.findById(req.params.id, function (err, user) {
     	if (err) return next(err);
     	res.json(user);
     });
 });
 
 router.post('/', function (req, res, next) {
-	TestConfig.create(req.body, function (err, user) {
+	testConfig.create(req.body, function (err, user) {
 		if (err) return next(err);
 		// s3
 		var imgPath = path.join(__dirname, '/test.png');
@@ -100,7 +102,7 @@ router.post('/', function (req, res, next) {
         // });
 
 		// end s3
-
+	
 		res.json(user)
 
 	});
@@ -109,15 +111,15 @@ router.post('/', function (req, res, next) {
 
 
 var intervalJob = new CronJob({
-  cronTime: '0 0 * * * *',  // runs every 5 seconds
+  cronTime: '10 * * * * *',  // runs every hour
   onTick: function() {
     var date = new Date();
     var hour = date.getHours();
     var weekday = date.getDay()
-    console.log('interval is running...', current_hour, weekday)
+    console.log('interval is running...')
 
     // searches TestConfig model and retrieve URL objects
-    TestConfig.findAllURLs(hour, weekday).then(function(data) {
+    testConfig.findAllURLs(11, 5).then(function(data) {
 		data.forEach(function(config) {
 
 			var path = './temp_images/' + config._id + date + '.png'
@@ -128,6 +130,27 @@ var intervalJob = new CronJob({
 				.screenshot(path)
 				.use(function() {
 					console.log('finished taking screenshot')
+
+					var newImage = {
+						websiteURL: config.URL,
+						viewport: '1024, 768',
+						imgURL: path,
+						userID: config.user
+					}
+
+					imageCapture
+						.create(newImage, function(err, newImg) {
+							console.log('new image saved')
+						})
+
+					imageCapture
+						.searchForLastSaved(config.URL, '1024, 768')
+						.then(function(lastImg) {
+							return lastImg[0].imgURL;
+						})
+						.then(function(lastImg) {
+							compareUrls(newImage.imgURL, lastImg);
+						});
 				})
 		})
 
@@ -139,8 +162,21 @@ var intervalJob = new CronJob({
   start: false
 });
 
+var compareUrls = function(newImg, lastImg) {   
+    var options = {
+        highlightColor: 'yellow', // optional. Defaults to red
+        file: './temp_images/diff.png' // required
+    };
+    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {
+    
+    if (err) throw err;
+        console.log('The images are equal: %s', isEqual);
+        console.log('Actual equality: %d', equality);
+        console.log('Raw output was: %j', raw);
+    });
+};
 
-//intervalJob.start();
+intervalJob.start();
 
 
 
