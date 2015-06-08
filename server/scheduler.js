@@ -1,3 +1,6 @@
+// Currently doesn't work - nc
+
+
 'use strict';
 
 var Nightmare = require('nightmare')
@@ -128,4 +131,4 @@ var compareUrls = function(newImg, lastImg) {
 
 
 
-intervalJob.start();
+//intervalJob.start();
