@@ -13,6 +13,7 @@ module.exports = router;
 var mongoose = require('mongoose');
 var	testConfig = mongoose.model('TestConfig');
 var	imageCapture = mongoose.model('ImageCapture');
+var imageDiff = mongoose.model('ImageDiff');
 
 var path = require('path');
 
@@ -111,51 +112,102 @@ router.post('/', function (req, res, next) {
 
 
 var intervalJob = new CronJob({
-  cronTime: '10 * * * * *',  // runs every hour
+  cronTime: '50 * * * * *',  // this is the timer
   onTick: function() {
+    // retrieving information about the date to be used later
     var date = new Date();
     var hour = date.getHours();
     var weekday = date.getDay()
-    console.log('interval is running...')
+
+    console.log('process begins...')
 
     // searches TestConfig model and retrieve URL objects
-    testConfig.findAllURLs(11, 5).then(function(data) {
-		data.forEach(function(config) {
-
+    // currently useing 11, 5 as params for testing purposes
+    testConfig.findAllURLs(1, 6).then(function(configs) {
+		configs.forEach(function(config) {
+			// define path to save images to
 			var path = './temp_images/' + config._id + date + '.png'
 
+			console.log('this is the config object', config)
+
+			// use nightmare to take a screenshot
 			nightmare
-				.viewport(1024, 768)
-				.goto(config.URL)
+				.viewport(1024, 768)	// will need to use viewport in config object
+				.goto(config.URL)	
+				.wait()	
 				.screenshot(path)
 				.use(function() {
-					console.log('finished taking screenshot')
+					console.log('screenshot completed...')
+					console.log('saving screenshot to database...')
 
+					// creating temporary object to be stored in database
 					var newImage = {
 						websiteURL: config.URL,
-						viewport: '1024, 768',
+						viewport: '1024, 768',	// will need to use viewport in config object
 						imgURL: path,
 						userID: config.user
 					}
 
+					// creates new image in database
 					imageCapture
 						.create(newImage, function(err, newImg) {
-							console.log('new image saved')
+							if (err) throw err;
+							console.log('new image saved...')
 						})
 
+					// searches for last screenshot taken
 					imageCapture
-						.searchForLastSaved(config.URL, '1024, 768')
+						.searchForLastSaved(config.URL, '1024, 768')  // will use viewport in config object
 						.then(function(lastImg) {
-							return lastImg[0].imgURL;
+							// diff the images
+							console.log('diffing the image...')
+
+						    var options = {
+						        highlightColor: 'yellow', // optional. Defaults to red
+						        file: './temp_images/diff.png' // required
+						    };
+
+							gm.compare(lastImg[0].imgURL, newImage.imgURL, options, function (err, isEqual, equality, raw) {    
+							    if (err) throw err;
+						        console.log('The images are equal: %s', isEqual);
+						        console.log('Actual equality: %d', equality);
+						        console.log('Raw output was: %j', raw);    
+							        
+					          	var output = {
+								    percent: equality,
+								    file: options.file
+								}
+
+								console.log('output...', output)
+							    return output;
+							});
+							// };
 						})
-						.then(function(lastImg) {
-							compareUrls(newImage.imgURL, lastImg);
-						});
+						.then(function(output) {
+							console.log('saving diff image to database...')
+
+							console.log('this is output', output)
+					
+							// temp image object to be save to database
+							var diffImage = {
+								    diffImgURL: output.file,
+								    diffPercent: output.percent,
+								    websiteUrl: config.URL,
+								    viewport: '1024, 768'	// will use viewport in config
+							}
+
+
+							imageDiff
+								.create(diffImage, function(err, img) {
+									if (err) throw error;
+									console.log('diff image saved')
+								})
+						})
 				})
 		})
 
 		nightmare.run(function() {
-			console.log('finished all')
+			console.log('finished with all')
 		})
 	})
   },
@@ -167,14 +219,29 @@ var compareUrls = function(newImg, lastImg) {
         highlightColor: 'yellow', // optional. Defaults to red
         file: './temp_images/diff.png' // required
     };
-    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {
     
-    if (err) throw err;
+    var output = {
+    	percent: 0,
+    	file: options.file
+    }
+
+
+    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {    
+	    if (err) throw err;
         console.log('The images are equal: %s', isEqual);
         console.log('Actual equality: %d', equality);
-        console.log('Raw output was: %j', raw);
+        console.log('Raw output was: %j', raw);    
+        
+        output.percent = equality;
+
+        return 'output'
     });
 };
+
+
+
+
+
 
 intervalJob.start();
 
