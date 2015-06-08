@@ -13,6 +13,7 @@ module.exports = router;
 var mongoose = require('mongoose');
 var	testConfig = mongoose.model('TestConfig');
 var	imageCapture = mongoose.model('ImageCapture');
+var imageDiff = mongoose.model('ImageDiff');
 
 var path = require('path');
 
@@ -111,7 +112,7 @@ router.post('/', function (req, res, next) {
 
 
 var intervalJob = new CronJob({
-  cronTime: '10 * * * * *',  // runs every hour
+  cronTime: '40 * * * * *',  // runs every hour
   onTick: function() {
     var date = new Date();
     var hour = date.getHours();
@@ -138,19 +139,35 @@ var intervalJob = new CronJob({
 						userID: config.user
 					}
 
+					// creates new image
 					imageCapture
 						.create(newImage, function(err, newImg) {
+							if (err) throw err;
 							console.log('new image saved')
 						})
 
+					// searches for last screenshot taken
 					imageCapture
 						.searchForLastSaved(config.URL, '1024, 768')
 						.then(function(lastImg) {
-							return lastImg[0].imgURL;
+							// diff the images
+							compareUrls(newImage.imgURL, lastImg[0].imgURL);
+						}).
+						then(function(equality, file) {
+							console.log('process to safe to diff image collection...')
+							var diffImage = {
+								    diffImgURL: file,
+								    diffPercent: equality,
+								    websiteUrl: config.URL,
+								    viewport: '1024, 768'
+							}
+
+							imageDiff
+								.create(diffImage, function(err, img) {
+									if (err) throw error;
+									console.log('diff image saved')
+								})
 						})
-						.then(function(lastImg) {
-							compareUrls(newImage.imgURL, lastImg);
-						});
 				})
 		})
 
@@ -167,14 +184,19 @@ var compareUrls = function(newImg, lastImg) {
         highlightColor: 'yellow', // optional. Defaults to red
         file: './temp_images/diff.png' // required
     };
-    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {
-    
-    if (err) throw err;
+    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {    
+	    if (err) throw err;
         console.log('The images are equal: %s', isEqual);
         console.log('Actual equality: %d', equality);
-        console.log('Raw output was: %j', raw);
+        console.log('Raw output was: %j', raw);    
+        return equality, options.file;
     });
 };
+
+
+
+
+
 
 intervalJob.start();
 
