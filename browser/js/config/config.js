@@ -24,62 +24,121 @@ app.factory('Config', function ($http) {
 app.controller('ConfigCtrl', function ($scope, Config) {
 
     $scope.site = '';
+    $scope.config = [];
+    $scope.viewportOptions = ['640x360', '1024x768', '1280x800', '1680x1050'];
+    
+    $scope.dayFrequencyOptions = [
+        {label: 'Sun', value: 0},
+        {label: 'Mon', value: 1},
+        {label: 'Tue', value: 2},
+        {label: 'Wed', value: 3},
+        {label: 'Thurs', value: 4},
+        {label: 'Fri', value: 5},
+        {label: 'Sat', value:6}
+    ];
 
-    $scope.config = {
-            urls: [{
-                id: 'url1'
-            }],
-            URL: 'http://www.happy.com',
-            viewport: null,
-            dayFrequency: [5],
-            hourFrequency: [11]
-    };
+    $scope.hourFrequencyOptions = [
+        {label: '12 am', value: 0},
+        {label: '1 am', value: 1},
+        {label: '2 am', value: 2},
+        {label: '3 am', value: 3},
+        {label: '4 am', value: 4},
+        {label: '5 am', value: 5},
+        {label: '6 am', value: 6},
+        {label: '7 am', value: 7},
+        {label: '8 am', value: 8},
+        {label: '9 am', value: 9},
+        {label: '10 am', value: 10},
+        {label: '11 am', value: 11},
+        {label: '12 pm', value: 12},
+        {label: '1 pm', value: 13},
+        {label: '2 pm', value: 14},
+        {label: '3 pm', value: 15},
+        {label: '4 pm', value: 16},
+        {label: '5 pm', value: 17},
+        {label: '6 pm', value: 18},
+        {label: '7 pm', value: 19},
+        {label: '8 pm', value: 20},
+        {label: '9 pm', value: 21},
+        {label: '10 pm', value: 22},
+        {label: '11 pm', value: 23}
+    ];
+
+    $scope.showSuccessAlert = false;
+    $scope.showErrorAlert = false;
+    $scope.errorMessage = "Please fill all options";
 
     $scope.addNewUrl = function() {
-        var newUrl = $scope.config.urls.length + 1;
-        $scope.config.urls.push({'id': 'url' + newUrl});
+        $scope.config.push({
+            URL: '',
+            viewport: [],
+            dayFrequency: [],
+            hourFrequency: []
+        });
     };
 
-    $scope.showAddUrl = function(url) {
-        return url.id === $scope.config.urls[$scope.config.urls.length-1].id;
-    };
-
-    $scope.showUrlLabel = function(url) {
-        return url.id === $scope.config.urls[0].id;
+    $scope.toggleCheckbox = function(option, optionsArray) {
+        var idx = optionsArray.indexOf(option);
+        if(idx > -1) // the option is already in the array, so we remove it
+            optionsArray.splice(idx, 1);
+        else // the option is not in the array, so we add it
+            optionsArray.push(option);
     };
 
     $scope.submit = function() {
+        if (isValid()) {
+            $scope.config.forEach(function(element) {
+                element.URL = $scope.site + element.URL;
+                Config.create(element);
+            });
 
-        // $scope.config.urls.forEach(function (url, index) {
-        //     url.url = $scope.site + url.url;
-        // });
-
-        Config.create($scope.config);
+            $scope.site = '';
+            $scope.config = [];
+            $scope.showSuccessAlert = true;
+        } else {
+            $scope.showErrorAlert = true;
+        }        
     };
 
+    function isValid() {
+
+        if ($scope.site === '') {
+            $scope.errorMessage = "You need to enter the website you want to test"
+            return false;
+        }
+
+        if ($scope.config.length === 0) {
+            $scope.errorMessage = "You need to test at least one URL"
+            return false;
+        }
+
+        for (var i = 0; i < $scope.config.length; i++) {
+            if ($scope.config[i].URL === '') {
+                $scope.errorMessage = "Please fill the URL field"
+                return false;
+            }
+
+            if ($scope.config[i].viewport.length === 0) {
+                $scope.errorMessage = "Please choose a viewport to test this URL"
+                return false;
+            }
+
+            if ($scope.config[i].dayFrequency.length === 0) {
+                $scope.errorMessage = "Please choose which days to test this URL"
+                return false;
+            }
+
+            if ($scope.config[i].hourFrequency.length === 0) {
+                $scope.errorMessage = "Please choose a time to test this URL"
+                return false;
+            }
+
+            if ($scope.config[i].hourFrequency.length > 4) {
+                $scope.errorMessage = "Please limit times to test a URL to 4"
+                return false;
+            }
+        };
+
+        return true;
+    };
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

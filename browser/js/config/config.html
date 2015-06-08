@@ -1,43 +1,60 @@
 <section id="config" class="col-xs-6">
-<pre>
-    {{site|json}}
-    {{config|json}}
-</pre>
-    <form name="configForm" ng-submit="configForm.$valid && submit()" novalidate>
 
-    	<div class="form-group">
-    	    <label for="site">Site</label>
-    	    <input type="text" ng-model="site" class="form-control" id="site" placeholder="Enter site">
-    	</div>
+    <div class="form-group">
+        <label for="site">Site</label>
+        <input type="text" ng-model="site" class="form-control" id="site" placeholder="Enter your website">
+    </div>
 
-    	<div class="form-group" ng-repeat="url in config.urls">
-    	    <label for="url" ng-show="showUrlLabel(url)">Url</label>  	    
-    	    <input type="text" ng-model="url.url" class="form-control" placeholder="Enter url">
-            <button class="btn btn-primary btn-sm btn-add" ng-show="showAddUrl(url)" ng-click="addNewUrl()">Add another url</button>
-    	</div>
+    <div class="form-group" ng-repeat="url in config">
+        <label for="url">Url</label>        
+        <input type="text" ng-model="url.URL" class="form-control" placeholder="Enter URL">
 
-    	<div class="form-group">
-    	    <label for="viewport">Viewport</label>
-    	    <select ng-model="config.config.viewport" class="form-control" id="viewport">
-                <option value="1024" selected>1024 by 768</option>
-            </select>
-    	</div>
+        <br>
 
-    	<div class="form-group">
-    	    <label>Frequency</label>
+        <div class="form-group">
+            <label>Viewports to test</label>
             <div>
-            <label class="radio-inline">
-        	    <input ng-model="config.config.frequency" type="radio" name="frequency" value="12"> 12 Hrs
-            </label>
-            <label class="radio-inline">
-                <input ng-model="config.config.frequency" type="radio" name="frequency" value="24"> 24 Hrs
-            </label>
+                <label class="checkbox-inline" ng-repeat="viewport in viewportOptions">
+                    <input ng-click="toggleCheckbox(viewport, url.viewport)" type="checkbox"> {{viewport}}
+                </label>
             </div>
-    	</div>
+        </div>
 
-        <button ng-disabled="configFrom.$invalid" type="submit" class="btn btn-primary btn-large" id="config-submit">Save</button>
+        <div class="form-group">
+            <label>Days to run tests</label>
+            <div>
+                <label class="checkbox-inline" ng-repeat="day in dayFrequencyOptions">
+                    <input ng-click="toggleCheckbox(day.value, url.dayFrequency)" type="checkbox"> {{day.label}}
+                </label>
+            </div>
+        </div>
 
-    </form>
+        <label>Times to run tests</label>
+        <div class="panel panel-default">
+            <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
+                <div ng-repeat="hour in hourFrequencyOptions">
+                    <label class="checkbox-inline" >
+                        <input ng-click="toggleCheckbox(hour.value, url.hourFrequency)" type="checkbox"> {{hour.label}}
+                    </label>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary btn-add" ng-click="addNewUrl()">Add another url</button>
+
+    <button type="submit" class="btn btn-primary btn-large" ng-click="submit()">Save</button>
+
+    <div class="alert alert-success" role="alert" ng-show="showSuccessAlert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
+        <strong>Sucecss!</strong> Your test has been submitted
+    </div>
+
+    <div class="alert alert-danger" role="alert" ng-show="showErrorAlert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showErrorAlert = false"><span aria-hidden="true">&times;</span></button>
+        <strong>Error!</strong> {{errorMessage}}
+    </div>
 
 </section>
 
