@@ -71,7 +71,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.addNewUrl = function() {
         $scope.config.push({
             URL: '',
-            viewport: [],
+            viewports: [],
             dayFrequency: [],
             hourFrequency: []
         });
@@ -118,7 +118,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
                 return false;
             }
 
-            if ($scope.config[i].viewport.length === 0) {
+            if ($scope.config[i].viewports.length === 0) {
                 $scope.errorMessage = "Please choose a viewport to test this URL"
                 return false;
             }

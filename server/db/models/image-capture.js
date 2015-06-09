@@ -27,7 +27,7 @@ schema.statics.searchForLastSaved = function(url, viewport) {
                 websiteURL: url,
                 // userID: userID,
                 viewport: viewport
-            }).sort({captureTime: 'desc'}).exec(function(err, docs) {
+            }).sort({captureTime: 'desc'}).limit(1).exec(function(err, docs) {
                 if (err) console.log(err);
                 console.log('sorting completed', docs[0])
                 return docs[0];

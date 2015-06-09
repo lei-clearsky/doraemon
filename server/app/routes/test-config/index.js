@@ -5,7 +5,8 @@ var nightmare = new Nightmare();
 
 var CronJob = require('cron').CronJob;
 var gm = require('gm');
-
+var Q = require('q');
+var mkdirp = require('mkdirp');
 
 var router = require('express').Router();
 module.exports = router;
@@ -80,195 +81,157 @@ router.get('/:id', function (req, res, next) {
 router.post('/', function (req, res, next) {
 	testConfig.create(req.body, function (err, user) {
 		if (err) return next(err);
-		// s3
 		var imgPath = path.join(__dirname, '/test.png');
-		        
-   //      fs.readFile(imgPath, function (err, data) {
-   //          if (err) { return next(err); }
-			// var params = {Key: 'test3', Body: data};
-			// // console.log('xky', s3.createBucket.toString());
-			// s3.createBucket(function(err, data) {
-			// 	// console.log('error?: ', err);
-			// 	if (err) return next(err);
-			//   s3.upload(params, function(err, data) {
-			//     if (err) {
-			//       console.log("Error uploading data: ", err);
-			//       next(err);
-			//     } else {
-			//       console.log("Successfully uploaded data to myBucket/myKey");
-			//       res.json(user);
-			//     }
-			//   });
-			// });
-        // });
-
-		// end s3
 	
 		res.json(user)
 
 	});
 });
 
-
-
 var intervalJob = new CronJob({
-  cronTime: '50 * * * * *',  // this is the timer
-  onTick: function() {
+  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	onTick: function() {
     // retrieving information about the date to be used later
+    console.log('process begins...');
+    
     var date = new Date();
-    var hour = date.getHours();
-    var weekday = date.getDay()
-
-    console.log('process begins...')
-
-    // searches TestConfig model and retrieve URL objects
-    // currently useing 11, 5 as params for testing purposes
+    // var hour = date.getHours();
+    // var weekday = date.getDay();
+    
+    // searches TestConfig model and retrives URL objects
+    // currently using 1, 6 as params for testing purposes
     testConfig.findAllURLs(1, 6).then(function(configs) {
 		configs.forEach(function(config) {
-			// define path to save images to
-			var path = './temp_images/' + config._id + date + '.png'
+			config.viewports.forEach(function(viewport) {
+				takeSnapshotAndCreateDiff(config, viewport, date);
+			});			
+		});
 
-			console.log('this is the config object', config)
+		nightmare.run(function() {
+			console.log('finished with all');
+		});
+	}).then(null, function(error) {
+       	throw(error);
+    });
+  },
+  start: false
+});
 
-			// use nightmare to take a screenshot
-			nightmare
-				.viewport(1024, 768)	// will need to use viewport in config object
-				.goto(config.URL)	
-				.wait()	
-				.screenshot(path)
-				.use(function() {
-					console.log('screenshot completed...')
-					console.log('saving screenshot to database...')
+intervalJob.start();
+
+function takeSnapshotAndCreateDiff(config, viewport, date) {
+	// var hour = date.getHours();
+	// var weekday = date.getDay();
+
+	// testing purposes
+	var hour = 1;
+	var weekday = 6;
+
+	var snapshotPath = createImageDir(config.user, config._id, viewport, 'snapshots', hour, weekday, date.getTime());
+
+	var viewportObj = { 
+		width: parseInt(viewport.split('x')[0]),
+		height: parseInt(viewport.split('x')[1])
+	};
+
+	// use nightmare to take a screenshot
+	nightmare
+		.viewport(viewportObj.width, viewportObj.height)
+		.goto(config.URL)	
+		.wait()	
+		.screenshot(snapshotPath)
+		.use(function() {
+			console.log('screenshot completed...');
+			console.log('saving screenshot to database...');
+
+			// searches for last screenshot taken
+			imageCapture
+				.searchForLastSaved(config.URL, viewport) 
+				.then(function(lastImg) {
 
 					// creating temporary object to be stored in database
 					var newImage = {
 						websiteURL: config.URL,
-						viewport: '1024, 768',	// will need to use viewport in config object
-						imgURL: path,
+						viewport: viewport,	
+						imgURL: snapshotPath,
 						userID: config.user
 					}
+
+					var deferred = Q.defer();
 
 					// creates new image in database
 					imageCapture
 						.create(newImage, function(err, newImg) {
 							if (err) throw err;
-							console.log('new image saved...')
-						})
+							console.log('new imageCapture document saved...');
 
-					// searches for last screenshot taken
-					imageCapture
-						.searchForLastSaved(config.URL, '1024, 768')  // will use viewport in config object
-						.then(function(lastImg) {
 							// diff the images
-							console.log('diffing the image...')
+							console.log('diffing the images...');
+
+						    var diffPath = createImageDir(config.user, config._id, viewport, 'diffs', hour, weekday, date.getTime());
 
 						    var options = {
 						        highlightColor: 'yellow', // optional. Defaults to red
-						        file: './temp_images/diff.png' // required
+						        file: diffPath // required
 						    };
 
-							gm.compare(lastImg[0].imgURL, newImage.imgURL, options, function (err, isEqual, equality, raw) {    
-							    if (err) throw err;
-						        console.log('The images are equal: %s', isEqual);
-						        console.log('Actual equality: %d', equality);
-						        console.log('Raw output was: %j', raw);    
-							        
-					          	var output = {
-								    percent: equality,
-								    file: options.file
-								}
+						    if (lastImg.length > 0) {
+				    			gm.compare(lastImg[0].imgURL, newImg.imgURL, options, function (err, isEqual, equality, raw) {    
+				    			    if (err) throw err;
+				    		        // console.log('The images are equal: %s', isEqual);
+				    		        // console.log('Actual equality: %d', equality);
+				    		        // console.log('Raw output was: %j', raw);    
+				    			        
+				    	          	var output = {
+				    				    percent: equality,
+				    				    file: options.file
+				    				};
 
-								console.log('output...', output)
-							    return output;
-							});
-							// };
-						})
-						.then(function(output) {
-							console.log('saving diff image to database...')
+				    				console.log('diff output...', output);
+				    			    deferred.resolve(output);
+				    			});
+						    } else {
+						    	console.log('No previous snapshot created');
+						    	deferred.resolve(null);
+						    }
+							
+					});
 
-							console.log('this is output', output)
-					
-							// temp image object to be save to database
-							var diffImage = {
-								    diffImgURL: output.file,
-								    diffPercent: output.percent,
-								    websiteUrl: config.URL,
-								    viewport: '1024, 768'	// will use viewport in config
-							}
+					return deferred.promise; 
+				}).then(function(output) {
+					if (!output)
+						return;
 
+					console.log('saving diff image to database...')
+			
+					// temp image object to be save to database
+					var diffImage = {
+						diffImgURL: output.file,
+						diffPercent: output.percent,
+						websiteUrl: config.URL,
+						viewport: viewport
+					}
 
-							imageDiff
-								.create(diffImage, function(err, img) {
-									if (err) throw error;
-									console.log('diff image saved')
-								})
-						})
-				})
-		})
+					imageDiff.create(diffImage, function(err, img) {
+						if (err) throw err;
+						console.log('imageDiff document saved');
+					})
 
-		nightmare.run(function() {
-			console.log('finished with all')
-		})
-	})
-  },
-  start: false
-});
-
-var compareUrls = function(newImg, lastImg) {   
-    var options = {
-        highlightColor: 'yellow', // optional. Defaults to red
-        file: './temp_images/diff.png' // required
-    };
-    
-    var output = {
-    	percent: 0,
-    	file: options.file
-    }
-
-
-    gm.compare(lastImg, newImg, options, function (err, isEqual, equality, raw) {    
-	    if (err) throw err;
-        console.log('The images are equal: %s', isEqual);
-        console.log('Actual equality: %d', equality);
-        console.log('Raw output was: %j', raw);    
-        
-        output.percent = equality;
-
-        return 'output'
-    });
+				}).then(null, function(error) {
+					throw(error);
+				});
+		});
 };
 
+function createImageDir(userID, configID, viewport, imgType, hour, day, time) {
+	// temp_images/userID/configID/viewport/imgType/hour_weekday_date.now() + .png
+	var path = './temp_images/' + userID + '/' + configID + '/' + viewport + '/' + imgType;
 
+	mkdirp(path, function (err) {
+	    if (err) console.error(err);
+	});
 
+	path += '/' + hour + '_' + day + '_' + time +'.png';
 
-
-
-intervalJob.start();
-
-
-
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return path;
+}

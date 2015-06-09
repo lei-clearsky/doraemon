@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
     URL: String,
-    viewport: [{
+    viewports: [{
         type: String
     }],
     dayFrequency: [{
