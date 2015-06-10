@@ -1,6 +1,5 @@
 'use strict';
-
-var Nightmare = require('nightmare')
+var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 
 var CronJob = require('cron').CronJob;
@@ -102,9 +101,7 @@ var intervalJob = new CronJob({
     // currently using 1, 6 as params for testing purposes
     testConfig.findAllURLs(1, 6).then(function(configs) {
 		configs.forEach(function(config) {
-			config.viewports.forEach(function(viewport) {
-				takeSnapshotAndCreateDiff(config, viewport, date);
-			});			
+			takeSnapshotAndCreateDiff(config, config.viewport, date);
 		});
 
 		nightmare.run(function() {
