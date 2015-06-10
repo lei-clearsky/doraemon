@@ -8,13 +8,25 @@ var	AWS = require('aws-sdk'),
 	s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}}),
     fs = require('fs');
 AWS.config.region = 'us-standard';
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
+var TestConfig = mongoose.model('TestConfig');
 
-router.get('/:id', function (req, res, next) {
+router.get('/:userId', function (req, res, next) {
 
-	var params = {Bucket: 'capstone-doraemon', Key: req.params.id};
-	var imgStream = s3.getObject(params).createReadStream();
-	imgStream.pipe(res);
+	// var params = {Bucket: 'capstone-doraemon', Key: req.params.id};
+	// var imgStream = s3.getObject(params).createReadStream();
+	// imgStream.pipe(res);
+	TestConfig.find({user: req.params.userId})
+			.exec()
+			.then(function(tests) {
+				res.json(tests);
+			});
 
+});
+
+router.get('/search', function (req, res, next) {
+	console.log('query object ', req.query);
 });
 
 

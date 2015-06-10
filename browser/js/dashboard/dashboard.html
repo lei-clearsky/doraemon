@@ -1,1 +1,36 @@
-<img src="{{ screenshot }}" ng-repeat="screenshot in screenshots"/>
+<!-- <img src="{{ screenshot }}" ng-repeat="screenshot in screenshots"/> -->
+<div class="container">
+<h2>Dashboard</h2>
+
+	<div class="col-md-3">
+
+		<h3>Search Screenshots</h3>
+			<h4>Refine by</h4>
+			<form name="searchDiffsForm" ng-submit="searchDiffs()">
+				<h6>Test Name</h6>
+				<div class="checkbox" ng-repeat="test in diffImgsByUser | unique: 'name'">
+					<label>
+						<input type="checkbox" value="" >
+						{{ test.name }}
+					</label>
+				</div>
+				<button type="submit" class="btn btn-primary btn-large">Search</button>
+			</form>
+
+	</div>
+
+	<div class="col-md-9">
+		<div class="col-sm-6 col-md-3" ng-repeat="diffImg in diffImgs">
+		    <div class="thumbnail">
+		      <img src="{{ diffImg }}" alt="...">
+		      <div class="caption">
+		        <h4>Date: ...</h4>
+		        <h4>Time: ...</h4>
+		        <p>...</p>
+		        <p><a href="#" class="btn btn-default" role="button" ng-click="openDiffModal()">View Detail</a></p>
+		      </div>
+		    </div>
+	  	</div>
+
+	</div>
+</div>

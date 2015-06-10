@@ -41,11 +41,12 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-	testConfig.create(req.body, function (err, user) {
+	testConfig.create(req.body, function (err, test) {
 		if (err) return next(err);
 		var imgPath = path.join(__dirname, '/test.png');
+		console.log('new test! ', test);
 	
-		res.json(user)
+		res.json(test)
 
 	});
 });
@@ -77,7 +78,7 @@ var intervalJob = new CronJob({
   start: false
 });
 
-intervalJob.start();
+// intervalJob.start();
 
 function takeSnapshotAndCreateDiff(config, viewport, date) {
 	// var hour = date.getHours();

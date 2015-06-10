@@ -94,7 +94,8 @@ app.controller('ConfigCtrl', function ($scope, Config) {
                         URL: element.URL,
                         viewport: viewport,
                         dayFrequency: element.dayFrequency,
-                        hourFrequency: element.hourFrequency
+                        hourFrequency: element.hourFrequency,
+                        user: '557886debbc0aa642d30df38'
                     });
                 });                
             });
