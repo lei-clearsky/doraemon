@@ -1,8 +1,8 @@
 <section id="config" class="col-xs-6">
 
     <div class="form-group">
-        <label for="site">Site</label>
-        <input type="text" ng-model="site" class="form-control" id="site" placeholder="Enter your website">
+        <label for="name">Name of UI Test</label>
+        <input type="text" ng-model="name" class="form-control" id="name" placeholder="Enter the name">
     </div>
 
     <div class="form-group" ng-repeat="url in config">
@@ -15,7 +15,7 @@
             <label>Viewports to test</label>
             <div>
                 <label class="checkbox-inline" ng-repeat="viewport in viewportOptions">
-                    <input ng-click="toggleCheckbox(viewport, url.viewport)" type="checkbox"> {{viewport}}
+                    <input ng-click="toggleCheckbox(viewport, url.viewports)" type="checkbox"> {{viewport}}
                 </label>
             </div>
         </div>

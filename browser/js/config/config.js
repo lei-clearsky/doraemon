@@ -23,7 +23,7 @@ app.factory('Config', function ($http) {
 
 app.controller('ConfigCtrl', function ($scope, Config) {
 
-    $scope.site = '';
+    $scope.name = '';
     $scope.config = [];
     $scope.viewportOptions = ['640x360', '1024x768', '1280x800', '1680x1050'];
     
@@ -71,7 +71,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.addNewUrl = function() {
         $scope.config.push({
             URL: '',
-            viewport: [],
+            viewports: [],
             dayFrequency: [],
             hourFrequency: []
         });
@@ -88,11 +88,18 @@ app.controller('ConfigCtrl', function ($scope, Config) {
     $scope.submit = function() {
         if (isValid()) {
             $scope.config.forEach(function(element) {
-                element.URL = $scope.site + element.URL;
-                Config.create(element);
+                element.viewports.forEach(function(viewport) {
+                    Config.create({
+                        name: $scope.name,
+                        URL: element.URL,
+                        viewport: viewport,
+                        dayFrequency: element.dayFrequency,
+                        hourFrequency: element.hourFrequency
+                    });
+                });                
             });
 
-            $scope.site = '';
+            $scope.name = '';
             $scope.config = [];
             $scope.showSuccessAlert = true;
         } else {
@@ -102,8 +109,8 @@ app.controller('ConfigCtrl', function ($scope, Config) {
 
     function isValid() {
 
-        if ($scope.site === '') {
-            $scope.errorMessage = "You need to enter the website you want to test"
+        if ($scope.name === '') {
+            $scope.errorMessage = "Please enter a UI test name"
             return false;
         }
 
@@ -118,7 +125,7 @@ app.controller('ConfigCtrl', function ($scope, Config) {
                 return false;
             }
 
-            if ($scope.config[i].viewport.length === 0) {
+            if ($scope.config[i].viewports.length === 0) {
                 $scope.errorMessage = "Please choose a viewport to test this URL"
                 return false;
             }

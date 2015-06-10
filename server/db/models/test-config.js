@@ -2,10 +2,15 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-    URL: String,
-    viewport: [{
+    name: {
         type: String
-    }],
+    },
+    URL: {
+        type: String
+    },
+    viewport: {
+        type: String
+    },
     dayFrequency: [{
         type: Number
     }],

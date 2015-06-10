@@ -22,14 +22,15 @@ var schema = new mongoose.Schema({
 });
 
 
-schema.statics.searchForPrevious = function(url, userID, viewport) {
+schema.statics.searchForLastSaved = function(url, viewport) {
     return this.find({ 
                 websiteURL: url,
-                userID: userID,
+                // userID: userID,
                 viewport: viewport
-            }).sort({captureTime: 'desc'}).exec(function(err, docs) {
+            }).sort({captureTime: 'desc'}).limit(1).exec(function(err, docs) {
                 if (err) console.log(err);
-                return docs[0]
+                console.log('sorting completed', docs[0])
+                return docs[0];
             })
 };
 
