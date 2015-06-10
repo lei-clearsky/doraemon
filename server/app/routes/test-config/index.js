@@ -1,4 +1,7 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
+process.env.AWS_SECRET_ACCESS_KEY='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';
+
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 
@@ -25,45 +28,7 @@ var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}}),
 AWS.config.region = 'us-standard';
 
 router.get('/', function (req, res, next) {
-	// UserModel.find({}, function (err, users) {
-	// 	if (err) return next(err);
-	// 	res.json(users);
-	// });
-
-	// var allKeys = [];
-	// function listAllKeys(marker, cb) {
-	// 	s3.listObjects({Bucket:'capstone-doraemon', Marker: marker}, function(err, data) {
-	// 		allKeys.push(data.Contents);
-
-	// 		if (data.IsTruncated)
-	// 			listAllKeys(data.Contents.slice(-1)[0].key, cb);
-	// 		else
-	// 			cb();
-	// 	});
-	// }
-
-	// s3.listObjects({Bucket:'capstone-doraemon'}, function(err, data) {
-	// 	if (err) 
-	// 		console.log(err, err.stack);
-	// 	else {
-	// 		var allImages = data.Contents;
-	// 		async.map(allImages, function(img, done){
-	// 			var params = {Bucket: 'capstone-doraemon', Key: img.Key};
-	// 			s3.getObject(params, done);
-	// 			// var imgStream = s3.getObject(params).createReadStream();
-	// 			// imgStream.pipe(res);
-	// 		}, function(err, allData) {
-	// 			if (err) 
-	// 				return console.log(err);
-	// 			res.json(allData);
-	// 			console.log(allData);
-	// 		});
-	// 	}
-	// });
-
 	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
-	// var file = fs.createWriteStream(path.join(__dirname,'/../../../../public/file.jpg'));
-	// s3.getObject(params).createReadStream().pipe(file);
 
 	var imgStream = s3.getObject(params).createReadStream();
 	imgStream.pipe(res);
@@ -125,6 +90,8 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 	var weekday = 6;
 
 	var snapshotPath = createImageDir(config.user, config._id, viewport, 'snapshots', hour, weekday, date.getTime());
+	var snapshotS3Path = snapshotPath.slice(2);
+	var diffS3Path, diffImgPath;
 
 	var viewportObj = { 
 		width: parseInt(viewport.split('x')[0]),
@@ -162,10 +129,16 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 							if (err) throw err;
 							console.log('new imageCapture document saved...');
 
+							// save file to AWS
+							var imgPath = path.join(__dirname, '../../../../' + snapshotS3Path);
+
+							saveToAWS(imgPath, snapshotS3Path);
+
 							// diff the images
-							console.log('diffing the images...');
 
 						    var diffPath = createImageDir(config.user, config._id, viewport, 'diffs', hour, weekday, date.getTime());
+						    diffS3Path = diffPath.slice(2);
+						    diffImgPath = path.join(__dirname, '../../../../' + diffS3Path);
 
 						    var options = {
 						        highlightColor: 'yellow', // optional. Defaults to red
@@ -173,6 +146,7 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 						    };
 
 						    if (lastImg.length > 0) {
+								console.log('diffing the images...');
 				    			gm.compare(lastImg[0].imgURL, newImg.imgURL, options, function (err, isEqual, equality, raw) {    
 				    			    if (err) throw err;
 				    		        // console.log('The images are equal: %s', isEqual);
@@ -212,6 +186,8 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 					imageDiff.create(diffImage, function(err, img) {
 						if (err) throw err;
 						console.log('imageDiff document saved');
+
+						saveToAWS(diffImgPath, diffS3Path);
 					})
 
 				}).then(null, function(error) {
@@ -231,4 +207,30 @@ function createImageDir(userID, configID, viewport, imgType, hour, day, time) {
 	path += '/' + hour + '_' + day + '_' + time +'.png';
 
 	return path;
+}
+
+function saveToAWS(filepath, S3Path) {
+	// save file to AWS
+	var imgPath = path.join(__dirname, '../../../../' + filepath);
+
+	// console.log('this is the path', imgPath)
+
+    fs.readFile(filepath, function (err, data) {
+        if (err) { return console.log(err); }
+		var params = {Key: S3Path, Body: data};
+		// console.log('xky', s3.createBucket.toString());
+		s3.createBucket(function(err, data) {
+			// console.log('error?: ', err);
+			if (err) return console.log(err);
+		  s3.upload(params, function(err, data) {
+		    if (err) {
+		      console.log("Error uploading data: ", err);
+		      console.log(err);
+		    } else {
+		      console.log("Successfully uploaded data to myBucket/myKey");
+		    }
+		  });
+		});
+    });
+    // end save file to AWS
 }
