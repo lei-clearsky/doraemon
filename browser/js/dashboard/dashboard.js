@@ -6,9 +6,34 @@ app.config(function ($stateProvider) {
         templateUrl: 'js/dashboard/dashboard.html',
         controller: 'DashboardCtrl',
         resolve: {
-            currentUser: ['AuthService', function(AuthService) {
+            currentUser: function(AuthService) {
                 return AuthService.getLoggedInUser();
-            }]
+            }
+            // ,
+            // allDiffs: function(Dashboard, AuthService) {
+
+            //     return AuthService.getLoggedInUser()
+            //                 .then(function (user) {
+            //                     Dashboard.allDiffsForUser(user._id);
+            //                 })
+            //                 .catch(function (err) {
+            //                     console.log(err);
+            //                 });
+
+            //     // var currentUserId = AuthService.getLoggedInUser()._id;
+            //     // return Dashboard.allDiffsForUser(currentUserId);
+            // },
+            // allScreenshots: function(Dashboard, AuthService) {
+            //     return AuthService.getLoggedInUser()
+            //                 .then(function (user) {
+            //                     Dashboard.allScreenshotsForUser(user._id);
+            //                 })
+            //                 .catch(function (err) {
+            //                     console.log(err);
+            //                 });
+            //     // var currentUserId = AuthService.getLoggedInUser()._id;
+            //     // return Dashboard.allScreenshotsForUser(currentUserId);
+            // }
         }
     });
 
@@ -23,12 +48,12 @@ app.factory('Dashboard', function ($http) {
                             return response.data;
                         });
         },
-        getDiffsByUserID: function (userID) {
+        getTestsByUserID: function (userID) {
             console.log('get diffs by userID');
             return $http.get('/api/screenshots/' + userID)
                         .then(function (response) {
                             return response.data;
-                        })
+                        });
         },
         searchDiffs: function (params) {
             return $http({
@@ -41,13 +66,67 @@ app.factory('Dashboard', function ($http) {
                 console.log(err);
                 return err;
             })
+        },
+        allDiffsForUser: function (userID) {
+            return $http.get('/api/screenshots/allDiffs/' + userID)
+                        .then(function (response) {
+                            // console.log('allDiffsForUser in Factory: ', response.data);
+                            return response.data;
+                        });
+        },
+        allScreenshotsForUser: function (userID) {
+            return $http.get('/api/screenshots/allScreenshots/' + userID)
+                        .then(function (response) {
+                            // console.log('allScreenshotsForUser in Factory: ', response.data);
+                            return response.data;
+                        });
         }
     };
 
 });
 
 app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser) {
-    $scope.keys = ['myKey.jpg', 'test1.png', 'test3.png', 'diff.png'];
+    // $scope.keys = ['myKey.jpg', 'test1.png', 'test3.png', 'diff.png'];
+    // var path = './temp_images/' + userID + '/' + configID + '/' + viewport + '/' + imgType;
+
+    // $scope.keysElements = {
+    //     userId: currentUser._id,
+    //     configName: 'configName from factory or something',
+    //     viewport: 'viewport name from factory or something',
+    //     imgType: 'imgtype from factory or something',
+    //     hour: 'hour from factory',
+    //     day: 'day from factory',
+    //     time: 'time from factory'
+    // };
+
+    $scope.diffsForUser = null;
+    $scope.screenshotsForUser = null;
+
+    Dashboard.allDiffsForUser(currentUser._id)
+            .then(function(allDiffs) {
+                $scope.diffsForUser = allDiffs;
+                console.log('diffs in controller: ', $scope.diffsForUser);
+
+                $scope.diffsForUser.forEach(function(diff) {
+                    diff.diffImgURL = diff.diffImgURL.slice(2);
+                    diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+                    
+                });
+                
+            });
+
+    Dashboard.allScreenshotsForUser(currentUser._id)
+            .then(function(allScreenshots) {
+                $scope.screenshotsForUser = allScreenshots;
+                // console.log('screenshots in controller: ', $scope.screenshotsForUser);
+            });
+
+
+    
+    
+    
+
+
     $scope.diffImgs = [];
 
     $scope.searchParams = {};
@@ -60,16 +139,16 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             });
     }
     
-    Dashboard.getDiffsByUserID('557886debbc0aa642d30df38')
+    Dashboard.getTestsByUserID(currentUser._id)
             .then(function (returnedDiffImgs) {
                 console.log('tests by this user ', returnedDiffImgs);
                 $scope.diffImgsByUser = returnedDiffImgs
             })
 
 
-    $scope.keys.forEach(function(key, index) {
-        $scope.diffImgs.push('https://s3.amazonaws.com/capstone-doraemon/' + key);
-    });
+    // $scope.keys.forEach(function(key, index) {
+    //     $scope.diffImgs.push('https://s3.amazonaws.com/capstone-doraemon/' + key);
+    // });
 
     $scope.animationsEnabled = true;
     $scope.openDiffModal = function (size) {

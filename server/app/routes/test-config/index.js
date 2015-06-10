@@ -52,7 +52,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '50 33 * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
@@ -179,7 +179,8 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 						diffImgURL: output.file,
 						diffPercent: output.percent,
 						websiteUrl: config.URL,
-						viewport: viewport
+						viewport: viewport,
+						user: config.user
 					}
 
 					imageDiff.create(diffImage, function(err, img) {

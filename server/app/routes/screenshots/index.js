@@ -11,6 +11,8 @@ AWS.config.region = 'us-standard';
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var TestConfig = mongoose.model('TestConfig');
+var ImageDiff = mongoose.model('ImageDiff');
+var ImageCapture = mongoose.model('ImageCapture');
 
 router.get('/:userId', function (req, res, next) {
 
@@ -29,6 +31,21 @@ router.get('/search', function (req, res, next) {
 	console.log('query object ', req.query);
 });
 
+router.get('/allDiffs/:userId', function (req, res, next) {
+	ImageDiff.find({user: req.params.userId})
+			.exec(function(err, allDiffs) {
+				if (err) return next(err);
+				res.json(allDiffs);
+			});
+});
+
+router.get('/allScreenshots/:userId', function (req, res, next) {
+	ImageDiff.find({user: req.params.userId})
+			.exec(function(err, allScreenshots) {
+				if (err) return next(err);
+				res.json(allScreenshots);
+			});
+});
 
 
 
