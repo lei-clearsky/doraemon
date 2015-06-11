@@ -23,10 +23,9 @@ app.factory('Dashboard', function ($http) {
 
 app.controller('DashboardCtrl', function ($scope, Dashboard) {
     $scope.keys = ['myKey.jpg', 'test1.png', 'test3.png'];
-    $scope.screenshots = [];
 
-    $scope.keys.forEach(function(key, index) {
-        $scope.screenshots.push('https://s3.amazonaws.com/capstone-doraemon/' + key);
+    $scope.screenshots = $scope.keys.map(function(key) {
+        return 'https://s3.amazonaws.com/capstone-doraemon/' + key;
     });
     
 

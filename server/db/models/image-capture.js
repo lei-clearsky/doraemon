@@ -23,14 +23,14 @@ var schema = new mongoose.Schema({
 
 
 schema.statics.searchForLastSaved = function(url, viewport) {
-    return this.find({ 
+    return this.findOne({ 
                 websiteURL: url,
                 // userID: userID,
                 viewport: viewport
-            }).sort({captureTime: 'desc'}).limit(1).exec(function(err, docs) {
+            }).sort({captureTime: 'desc'}).exec(function(err, docs) {
                 if (err) console.log(err);
-                console.log('sorting completed', docs[0])
-                return docs[0];
+                console.log('sorting completed', docs)
+                return docs;
             })
 };
 
