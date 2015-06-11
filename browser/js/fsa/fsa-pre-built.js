@@ -57,7 +57,6 @@
         };
 
         this.getLoggedInUser = function () {
-
             // If an authenticated session exists, we
             // return the user attached to that session
             // with a promise. This ensures that we can

@@ -84,7 +84,7 @@ var intervalJob = new CronJob({
   start: false
 });
 
-intervalJob.start();
+// intervalJob.start();
 
 function runTestConfig(config, date) {
 	// var hour = date.getHours();
