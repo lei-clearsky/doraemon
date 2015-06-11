@@ -1,41 +1,60 @@
 <!-- <img src="{{ screenshot }}" ng-repeat="screenshot in screenshots"/> -->
 <div class="container">
+
+	{{ searchParams | json }}
+	{{ testName | json }}
 <h2>Dashboard</h2>
 
 	<div class="row">
 
 	<div class="col-md-12">
 
-		<h4>Test Name</h4>
-		<form name="searchDiffsForm" ng-submit="searchDiffs()">
-			<div class="checkbox" ng-repeat="test in diffImgsByUser | unique: 'name'">
-				<label>
-					<input type="checkbox" value="" >
-					{{ test.name }}
-				</label>
+		<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="form-inline">
+			<div class="form-group">
+				<h4>Tests</h4>
 			</div>
+			<!-- <div class="checkbox" > -->
+				<label class="checkbox-inline" ng-repeat="test in diffImgsByUser | unique: 'name'">
+					<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
+					{{ test.name }} -->
+					<input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
+					{{ test.name }}
+
+				</label>
+			<!-- </div> -->
 			<button type="submit" class="btn btn-primary btn-large">Search</button>
 		</form>
 		<br />
 
+		<div class="jumbotron alert-success" role="alert" >
+        	<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
+        	<strong>No diffs found. Have a nice day!</strong>
+    	</div>
+
 	</div>
+
 
 	</div>
 
 	<div class="row">
 
+		<h3>{{ testName.name }}</h3>
+
 	<div class="col-md-12">
+
+
+
 		<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-		    <div class="thumbnail">
+		    <div class="thumbnail" ng-click="openDiffModal()">
 		    	<div style="height: 200px; overflow: hidden;">
 		      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 		  		</div>
-		      <div class="caption">
-		        <h4>Date: ...</h4>
+		      <!-- <div class="caption"> -->
+		        <!-- <h4>Date: ...</h4>
 		        <h4>Time: ...</h4>
-		        <p>...</p>
-		        <p><a href="#" class="btn btn-default" role="button" ng-click="openDiffModal()">View Detail</a></p>
-		      </div>
+		        <p>...</p> -->
+		        <!-- <p><a href="#" class="btn btn-default" role="button" ng-click="openDiffModal()">View Detail</a></p> -->
+		      <!-- </div> -->
 		    </div>
 	  	</div>
 

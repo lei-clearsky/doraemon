@@ -9,31 +9,6 @@ app.config(function ($stateProvider) {
             currentUser: function(AuthService) {
                 return AuthService.getLoggedInUser();
             }
-            // ,
-            // allDiffs: function(Dashboard, AuthService) {
-
-            //     return AuthService.getLoggedInUser()
-            //                 .then(function (user) {
-            //                     Dashboard.allDiffsForUser(user._id);
-            //                 })
-            //                 .catch(function (err) {
-            //                     console.log(err);
-            //                 });
-
-            //     // var currentUserId = AuthService.getLoggedInUser()._id;
-            //     // return Dashboard.allDiffsForUser(currentUserId);
-            // },
-            // allScreenshots: function(Dashboard, AuthService) {
-            //     return AuthService.getLoggedInUser()
-            //                 .then(function (user) {
-            //                     Dashboard.allScreenshotsForUser(user._id);
-            //                 })
-            //                 .catch(function (err) {
-            //                     console.log(err);
-            //                 });
-            //     // var currentUserId = AuthService.getLoggedInUser()._id;
-            //     // return Dashboard.allScreenshotsForUser(currentUserId);
-            // }
         }
     });
 
@@ -57,7 +32,19 @@ app.factory('Dashboard', function ($http) {
         },
         searchDiffs: function (params) {
             return $http({
-                url: '/api/screenshots/search',
+                url: '/api/screenshots/searchDiffs',
+                method: 'GET',
+                params: params
+            }).then(function(res) {
+                return res.data;
+            }).catch(function(err) {
+                console.log(err);
+                return err;
+            })
+        },
+        searchTestsByName: function (params) {
+            return $http({
+                url: '/api/screenshots/searchByTestName',
                 method: 'GET',
                 params: params
             }).then(function(res) {
@@ -122,20 +109,49 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             });
 
 
-    
-    
-    
-
-
     $scope.diffImgs = [];
 
-    $scope.searchParams = {};
+    $scope.searchParams = {
+        user: currentUser._id,
+        testNames: []
+    };
+
+    $scope.toggleCheckbox = function(option, optionsArray) {
+        var idx = optionsArray.indexOf(option);
+        if(idx > -1) // the option is already in the array, so we remove it
+            optionsArray.splice(idx, 1);
+        else // the option is not in the array, so we add it
+            optionsArray.push(option);
+    };
 
     $scope.searchDiffs = function () {
         Dashboard.searchDiffs($scope.searchParams)
             .then(function (returnedDiffImgs) {
                 console.log('diff images ', returnedDiffImgs);
                 $scope.diffImgs = returnedDiffImgs;
+            });
+    }
+
+    $scope.searchDiffsByName = function () {
+        Dashboard.searchTestsByName($scope.searchParams)
+            .then(function (tests) {
+                var websiteURLs = [];
+                tests.forEach(function(test) {
+                    websiteURLs.push(test.URL);
+                });
+                var diffsParams = {
+                    user: currentUser._id,
+                    websiteURLs: websiteURLs
+                };
+                Dashboard.searchDiffs(diffsParams)
+                        .then(function (diffs) {
+                            $scope.diffsForUser = diffs;
+                            $scope.diffsForUser.forEach(function(diff) {
+                                diff.diffImgURL = diff.diffImgURL.slice(2);
+                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+                                
+                            });
+                        })
             });
     }
     
@@ -145,10 +161,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 $scope.diffImgsByUser = returnedDiffImgs
             })
 
-
-    // $scope.keys.forEach(function(key, index) {
-    //     $scope.diffImgs.push('https://s3.amazonaws.com/capstone-doraemon/' + key);
-    // });
 
     $scope.animationsEnabled = true;
     $scope.openDiffModal = function (size) {
