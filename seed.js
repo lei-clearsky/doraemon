@@ -25,9 +25,11 @@ var User = mongoose.model('User');
 var q = require('q');
 var chalk = require('chalk');
 
-var getCurrentUserData = function () {
-    return q.ninvoke(User, 'find', {});
-};
+var User = mongoose.model('User');
+var TestConfig = mongoose.model('TestConfig');
+var Team = mongoose.model('Team');
+var ImageDiff = mongoose.model('ImageDiff');
+var ImageCapture = mongoose.model('ImageCapture');
 
 var seedUsers = function () {
 
@@ -46,19 +48,29 @@ var seedUsers = function () {
 
 };
 
-connectToDb.then(function () {
-    getCurrentUserData().then(function (users) {
-        if (users.length === 0) {
-            return seedUsers();
-        } else {
-            console.log(chalk.magenta('Seems to already be user data, exiting!'));
-            process.kill(0);
-        }
-    }).then(function () {
-        console.log(chalk.green('Seed successful!'));
+var wipeDB = function () {
+
+    var models = [User, Team, TestConfig, ImageDiff, ImageCapture];
+
+    models.forEach(function (model) {
+        model.find({}).remove(function () {});
+    });
+
+    return q.resolve();
+};
+
+var seed = function () {
+
+    seedUsers().then(function (users) {
+        console.log(chalk.magenta('Seeded Users!'));
         process.kill(0);
     }).catch(function (err) {
         console.error(err);
         process.kill(1);
     });
+
+};
+
+mongoose.connection.once('open', function () {
+    wipeDB().then(seed);
 });
