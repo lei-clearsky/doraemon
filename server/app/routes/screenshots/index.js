@@ -12,7 +12,7 @@ var TestConfig = mongoose.model('TestConfig');
 var ImageDiff = mongoose.model('ImageDiff');
 var ImageCapture = mongoose.model('ImageCapture');
 
-router.get('/searchByTestName', function (req, res, next) {
+router.get('/searchTestByName', function (req, res, next) {
 	console.log('query object ', req.query.testNames);
 
 	var searchQuery;

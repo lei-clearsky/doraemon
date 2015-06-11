@@ -3,9 +3,14 @@
 
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
+	<!-- {{ testsOptions | json }} -->
 <h2>Dashboard</h2>
 
 	<div class="row">
+		<div class="jumbotron alert-success" role="alert" >
+        	<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
+        	<strong>No diffs found. Have a nice day!</strong>
+    	</div>
 
 	<div class="col-md-12">
 
@@ -17,7 +22,7 @@
 				<label class="checkbox-inline" ng-repeat="test in diffImgsByUser | unique: 'name'">
 					<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
 					{{ test.name }} -->
-					<input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
+					<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
 					{{ test.name }}
 
 				</label>
@@ -25,11 +30,18 @@
 			<button type="submit" class="btn btn-primary btn-large">Search</button>
 		</form>
 		<br />
+		<div class="form-group" ng-repeat="testOption in testsOptions">
+			<h4>{{ testOption.name }}</h4>
+			<label class="checkbox-inline" >
+				{{ testOption.URL }}
+			</label>
+			<br />
+			<label class="checkbox-inline">
+				<input type="checkbox" ng-click="toggleOptionCheckbox()">
+				{{ testOption.viewport }}
+			</label>
 
-		<div class="jumbotron alert-success" role="alert" >
-        	<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
-        	<strong>No diffs found. Have a nice day!</strong>
-    	</div>
+		</div>
 
 	</div>
 

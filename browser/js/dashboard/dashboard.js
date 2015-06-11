@@ -44,7 +44,7 @@ app.factory('Dashboard', function ($http) {
         },
         searchTestsByName: function (params) {
             return $http({
-                url: '/api/screenshots/searchByTestName',
+                url: '/api/screenshots/searchTestByName',
                 method: 'GET',
                 params: params
             }).then(function(res) {
@@ -116,12 +116,21 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         testNames: []
     };
 
+    $scope.testsOptions = {};
+
     $scope.toggleCheckbox = function(option, optionsArray) {
         var idx = optionsArray.indexOf(option);
         if(idx > -1) // the option is already in the array, so we remove it
             optionsArray.splice(idx, 1);
         else // the option is not in the array, so we add it
             optionsArray.push(option);
+
+        // add more search options based on test name
+        Dashboard.searchTestsByName($scope.searchParams)
+                .then(function (tests) {
+                    $scope.testsOptions = tests;
+                })
+
     };
 
     $scope.searchDiffs = function () {
