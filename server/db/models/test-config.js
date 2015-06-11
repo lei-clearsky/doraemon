@@ -17,11 +17,11 @@ var schema = new mongoose.Schema({
     hourFrequency: [{
         type: Number
     }],
-    user: {
+    userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
     },
-    team: {
+    teamID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Team'
     }
@@ -29,14 +29,19 @@ var schema = new mongoose.Schema({
 
 
 // returns an array of all URLs that meet hour + day criteria
-schema.statics.findAllURLs = function(hour, day) {
+schema.statics.findAllScheduledTests = function(hour, day) {
     return this.find({ 
-                dayFrequency: {'$in': [day]},
-                hourFrequency: {'$in': [hour]}
+                dayFrequency: day,
+                hourFrequency: hour
             }).exec()
 };
 
+schema.virtual('viewportWidth').get(function () {
+    return parseInt(this.viewport.split('x')[0]);;
+});
 
-
+schema.virtual('viewportHeight').get(function () {
+    return parseInt(this.viewport.split('x')[1]);
+});
 
 mongoose.model('TestConfig', schema);
