@@ -1,8 +1,8 @@
 <!-- <img src="{{ screenshot }}" ng-repeat="screenshot in screenshots"/> -->
 <div class="container">
 
-	{{ searchParams | json }}
-	{{ testName | json }}
+	<!-- {{ searchParams | json }} -->
+	<!-- {{ diffsForUser | json }} -->
 <h2>Dashboard</h2>
 
 	<div class="row">
@@ -45,16 +45,15 @@
 
 
 		<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-		    <div class="thumbnail" ng-click="openDiffModal()">
+		    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
 		    	<div style="height: 200px; overflow: hidden;">
 		      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 		  		</div>
-		      <!-- <div class="caption"> -->
-		        <!-- <h4>Date: ...</h4>
-		        <h4>Time: ...</h4>
-		        <p>...</p> -->
-		        <!-- <p><a href="#" class="btn btn-default" role="button" ng-click="openDiffModal()">View Detail</a></p> -->
-		      <!-- </div> -->
+		      <!-- <div class="caption">
+		      	<h5>{{ diffImg.websiteUrl }}</h5>
+		        <h5>{{ diffImg.viewport }}</h5>
+		        <h5>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</h5>
+		      </div> -->
 		    </div>
 	  	</div>
 

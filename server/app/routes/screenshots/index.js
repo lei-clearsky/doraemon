@@ -60,15 +60,21 @@ router.get('/searchDiffs', function (req, res, next) {
 
 router.get('/:userId', function (req, res, next) {
 
-	// var params = {Bucket: 'capstone-doraemon', Key: req.params.id};
-	// var imgStream = s3.getObject(params).createReadStream();
-	// imgStream.pipe(res);
 	TestConfig.find({user: req.params.userId})
 			.exec()
 			.then(function(tests) {
 				res.json(tests);
 			});
 
+});
+
+router.get('/diff/:id', function (req, res, next) {
+	ImageDiff.findById(req.params.id)
+			.exec()
+			.then(function(diff) {
+				console.log('single diff image ', diff);
+				res.json(diff);
+			})
 });
 
 

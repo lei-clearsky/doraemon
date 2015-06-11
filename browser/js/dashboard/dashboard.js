@@ -163,21 +163,30 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
 
     $scope.animationsEnabled = true;
-    $scope.openDiffModal = function (size) {
+    $scope.openDiffModal = function (diffImgID, size) {
         var modalInstance = $modal.open({
             animation: $scope.animationsEnabled,
             templateUrl: 'js/dashboard/diff-modal.html',
             controller: 'DiffModalCtrl',
-            size: size
+            size: size,
+            resolve: {
+                viewDiff: function($http) {
+                    return $http.get('/api/screenshots/diff/' + diffImgID)
+                        .then(function(response) {
+                            return response.data;
+                    });
+                }
+            }
         });
     }   
 
 });
 
-app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance) {
+app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
-    $scope.test = 'test';
-    
+    $scope.diffInfo = viewDiff;
+    $scope.diffInfo.diffImgURL = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgURL.slice(2);
+  
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
