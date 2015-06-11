@@ -1,4 +1,6 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='access_key';
+process.env.AWS_SECRET_ACCESS_KEY='secret_key';
 
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -34,18 +36,17 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-    testConfig.findById(req.params.id, function (err, user) {
+    testConfig.findById(req.params.id, function (err, testConfigDoc) {
     	if (err) return next(err);
-    	res.json(user);
+    	res.json(testConfigDoc);
     });
 });
 
 router.post('/', function (req, res, next) {
-	testConfig.create(req.body, function (err, user) {
+	testConfig.create(req.body, function (err, testConfigDoc) {
 		if (err) return next(err);
-		var imgPath = path.join(__dirname, '/test.png');
 	
-		res.json(user)
+		res.json(testConfigDoc);
 
 	});
 });
@@ -62,9 +63,9 @@ var intervalJob = new CronJob({
     
     // searches TestConfig model and retrives URL objects
     // currently using 1, 6 as params for testing purposes
-    testConfig.findAllURLs(1, 6).then(function(configs) {
+    testConfig.findAllScheduledTests(1, 6).then(function(configs) {
 		configs.forEach(function(config) {
-			takeSnapshotAndCreateDiff(config, config.viewport, date);
+			takeSnapshotAndCreateDiff(config, date);
 		});
 
 		nightmare.run(function() {
@@ -79,7 +80,7 @@ var intervalJob = new CronJob({
 
 intervalJob.start();
 
-function takeSnapshotAndCreateDiff(config, viewport, date) {
+function takeSnapshotAndCreateDiff(config, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
 
@@ -87,18 +88,13 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 	var hour = 1;
 	var weekday = 6;
 
-	var snapshotPath = createImageDir(config.user, config._id, viewport, 'snapshots', hour, weekday, date.getTime());
+	var snapshotPath = createImageDir(config.user, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
 	var snapshotS3Path = snapshotPath.slice(2);
 	var diffS3Path, diffImgPath;
 
-	var viewportObj = { 
-		width: parseInt(viewport.split('x')[0]),
-		height: parseInt(viewport.split('x')[1])
-	};
-
 	// use nightmare to take a screenshot
 	nightmare
-		.viewport(viewportObj.width, viewportObj.height)
+		.viewport(config.viewport.width, config.viewport.height)
 		.goto(config.URL)	
 		.wait()	
 		.screenshot(snapshotPath)
@@ -108,13 +104,13 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 
 			// searches for last screenshot taken
 			imageCapture
-				.searchForLastSaved(config.URL, viewport) 
+				.searchForLastSaved(config.URL, config.viewport) 
 				.then(function(lastImg) {
 
 					// creating temporary object to be stored in database
 					var newImage = {
 						websiteURL: config.URL,
-						viewport: viewport,	
+						viewport: config.viewport,	
 						imgURL: snapshotPath,
 						userID: config.user
 					}
@@ -134,7 +130,7 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 
 							// diff the images
 
-						    var diffPath = createImageDir(config.user, config._id, viewport, 'diffs', hour, weekday, date.getTime());
+						    var diffPath = createImageDir(config.user, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
 						    diffS3Path = diffPath.slice(2);
 						    diffImgPath = path.join(__dirname, '../../../../' + diffS3Path);
 
@@ -143,9 +139,9 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 						        file: diffPath // required
 						    };
 
-						    if (lastImg.length > 0) {
+						    if (lastImg) {
 								console.log('diffing the images...');
-				    			gm.compare(lastImg[0].imgURL, newImg.imgURL, options, function (err, isEqual, equality, raw) {    
+				    			gm.compare(lastImg.imgURL, newImg.imgURL, options, function (err, isEqual, equality, raw) {    
 				    			    if (err) throw err;
 				    		        // console.log('The images are equal: %s', isEqual);
 				    		        // console.log('Actual equality: %d', equality);
@@ -178,7 +174,7 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 						diffImgURL: output.file,
 						diffPercent: output.percent,
 						websiteUrl: config.URL,
-						viewport: viewport
+						viewport: config.viewport
 					}
 
 					imageDiff.create(diffImage, function(err, img) {
@@ -194,9 +190,9 @@ function takeSnapshotAndCreateDiff(config, viewport, date) {
 		});
 };
 
-function createImageDir(userID, configID, viewport, imgType, hour, day, time) {
-	// temp_images/userID/configID/viewport/imgType/hour_weekday_date.now() + .png
-	var path = './temp_images/' + userID + '/' + configID + '/' + viewport + '/' + imgType;
+function createImageDir(userID, configName, viewport, imgType, hour, day, time) {
+	// temp_images/userID/configName/viewport/imgType/hour_weekday_date.now() + .png
+	var path = './temp_images/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
 
 	mkdirp(path, function (err) {
 	    if (err) console.error(err);
