@@ -36,11 +36,11 @@ schema.statics.findAllScheduledTests = function(hour, day) {
             }).exec()
 };
 
-schema.virtual('viewport.width').get(function () {
-    return parseInt(this.viewport.split('x')[0]);
+schema.virtual('viewportWidth').get(function () {
+    return parseInt(this.viewport.split('x')[0]);;
 });
 
-schema.virtual('viewport.height').get(function () {
+schema.virtual('viewportHeight').get(function () {
     return parseInt(this.viewport.split('x')[1]);
 });
 
