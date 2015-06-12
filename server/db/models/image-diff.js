@@ -26,7 +26,7 @@ var schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'ImageCapture'
     },
-    user: {
+    userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
     }
