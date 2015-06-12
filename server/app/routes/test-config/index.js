@@ -28,8 +28,8 @@ var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
 AWS.config.region = 'us-standard';
 
 // testing purposes
-var hour = 10;
-var weekday = 6;
+// var hour = 10;
+// var weekday = 6;
 
 router.get('/', function (req, res, next) {
 	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
@@ -56,18 +56,18 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 0 * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
     
     var date = new Date();
-    // var hour = date.getHours();
-    // var weekday = date.getDay();
+    var hour = date.getHours();
+    var weekday = date.getDay();
     
     // searches TestConfig model and retrives URL objects
     // currently using 1, 6 as params for testing purposes
-    testConfig.findAllScheduledTests(10, 6).then(function(configs) {
+    testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
 		configs.forEach(function(config) {
 			runTestConfig(config, date);
 		});
@@ -82,11 +82,11 @@ var intervalJob = new CronJob({
   start: false
 });
 
-// intervalJob.start();
+intervalJob.start();
 
 function runTestConfig(config, date) {
-	// var hour = date.getHours();
-	// var weekday = date.getDay();
+	var hour = date.getHours();
+	var weekday = date.getDay();
 
 	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
 
@@ -109,8 +109,8 @@ function runTestConfig(config, date) {
 };
 
 function saveImageCapture(config, snapshotPath, date) {
-	// var hour = date.getHours();
-	// var weekday = date.getDay();
+	var hour = date.getHours();
+	var weekday = date.getDay();
 
 	var snapshotS3Path = snapshotPath.slice(2);
 	var diffS3Path, diffImgPath, lastImageCapture;
@@ -144,8 +144,8 @@ function saveImageCapture(config, snapshotPath, date) {
 
 
 function createDiff(config, ImageCaptures, date) {
-	// var hour = date.getHours();
-	// var weekday = date.getDay();
+	var hour = date.getHours();
+	var weekday = date.getDay();
 
 	// diff the images
     var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
