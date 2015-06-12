@@ -1,6 +1,4 @@
 'use strict';
-process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
-process.env.AWS_SECRET_ACCESS_KEY='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';
 
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -49,7 +47,6 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-
 	testConfig.create(req.body, function (err, testConfigDoc) {
 		if (err) return next(err);
 	
@@ -59,7 +56,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '50 33 * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
@@ -91,7 +88,7 @@ function runTestConfig(config, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
 
-	var snapshotPath = createImageDir(config.user, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
+	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
 
 	// use nightmare to take a screenshot
 	nightmare
@@ -119,7 +116,7 @@ function saveImageCapture(config, snapshotPath, date) {
 	var diffS3Path, diffImgPath, lastImageCapture;
 	// searches for last screenshot taken
 	return imageCapture
-		.searchForLastSaved(config.URL, config.viewport) 
+		.searchForLastSaved(config.URL, config.userID, config.viewport) 
 		.then(function(lastImg) {
 
 			// creating temporary object to be stored in database
@@ -127,7 +124,7 @@ function saveImageCapture(config, snapshotPath, date) {
 				websiteURL: config.URL,
 				viewport: config.viewport,	
 				imgURL: snapshotPath,
-				userID: config.user
+				userID: config.userID
 			}
 
 			lastImageCapture = lastImg;
@@ -151,7 +148,7 @@ function createDiff(config, ImageCaptures, date) {
 	// var weekday = date.getDay();
 
 	// diff the images
-    var diffPath = createImageDir(config.user, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
+    var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
     
     var deferred = Q.defer();
 
@@ -196,7 +193,8 @@ function saveDiffImage(output) {
 		diffImgURL: output.file,
 		diffPercent: output.percent,
 		websiteUrl: output.config.URL,
-		viewport: output.config.viewport
+		viewport: output.config.viewport,
+		userID: output.config.userID
 	};
 
 	return imageDiff.create(diffImage).then(function(img) {

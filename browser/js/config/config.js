@@ -4,7 +4,12 @@ app.config(function ($stateProvider) {
     $stateProvider.state('config', {
         url: '/config',
         templateUrl: 'js/config/config.html',
-        controller: 'ConfigCtrl'
+        controller: 'ConfigCtrl',
+        resolve: {
+            currentUser: function(AuthService) {
+                return AuthService.getLoggedInUser();
+            }
+        }
     });
 
 });
@@ -40,7 +45,7 @@ app.value('hourFrequencyOptions', [
     {label: '10 pm', value: 22}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, viewportOptions, dayFrequencyOptions, hourFrequencyOptions) {
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions) {
 
     $scope.name = '';
     $scope.config = [];
@@ -74,12 +79,12 @@ app.controller('ConfigCtrl', function ($scope, Config, viewportOptions, dayFrequ
             $scope.config.forEach(function(element) {
                 element.viewports.forEach(function(viewport) {
                     Config.create({
-                        name: $scope.name,
+                        name: $scope.name.split(' ').join('_'),
                         URL: element.URL,
                         viewport: viewport,
                         dayFrequency: element.dayFrequency,
                         hourFrequency: element.hourFrequency,
-                        user: '557886debbc0aa642d30df38'
+                        userID: currentUser._id
                     });
                 });                
             });

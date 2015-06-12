@@ -25,7 +25,7 @@ router.get('/searchTestByName', function (req, res, next) {
 	}
 
 	TestConfig.find({
-				user: req.query.user,
+				userID: req.query.user,
 				name: searchQuery
 			})
 			.exec()
@@ -44,7 +44,7 @@ router.get('/searchDiffs', function (req, res, next) {
 	console.log('query object ', req.query);
 
 	ImageDiff.find({
-				user: req.query.user,
+				userID: req.query.user,
 				websiteUrl: {'$in': req.query.websiteURLs}
 			})
 			.exec()
@@ -60,7 +60,7 @@ router.get('/searchDiffs', function (req, res, next) {
 
 router.get('/:userId', function (req, res, next) {
 
-	TestConfig.find({user: req.params.userId})
+	TestConfig.find({userID: req.params.userId})
 			.exec()
 			.then(function(tests) {
 				res.json(tests);
@@ -79,15 +79,18 @@ router.get('/diff/:id', function (req, res, next) {
 
 
 router.get('/allDiffs/:userId', function (req, res, next) {
-	ImageDiff.find({user: req.params.userId})
+	
+	ImageDiff.find({userID: req.params.userId})
 			.exec(function(err, allDiffs) {
 				if (err) return next(err);
+				console.log('userId ', req.params.userId);
+				console.log('all diffsfgfgfg ', allDiffs);
 				res.json(allDiffs);
 			});
 });
 
 router.get('/allScreenshots/:userId', function (req, res, next) {
-	ImageDiff.find({user: req.params.userId})
+	ImageDiff.find({userID: req.params.userId})
 			.exec(function(err, allScreenshots) {
 				if (err) return next(err);
 				res.json(allScreenshots);

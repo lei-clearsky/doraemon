@@ -22,10 +22,10 @@ var schema = new mongoose.Schema({
 });
 
 
-schema.statics.searchForLastSaved = function(url, viewport) {
+schema.statics.searchForLastSaved = function(url, userID, viewport) {
     return this.findOne({ 
                 websiteURL: url,
-                // userID: userID,
+                userID: userID,
                 viewport: viewport
             }).sort({captureTime: 'desc'}).exec(function(err, docs) {
                 if (err) console.log(err);
