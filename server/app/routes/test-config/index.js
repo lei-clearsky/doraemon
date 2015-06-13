@@ -1,6 +1,4 @@
 'use strict';
-process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
-process.env.AWS_SECRET_ACCESS_KEY='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';
 
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -58,7 +56,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 */6 * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 */3 * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
@@ -90,8 +88,7 @@ function runTestConfig(config, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
 
-	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
-
+	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime(), config._id);
 	// use nightmare to take a screenshot
 	nightmare
 		.viewport(config.viewportWidth, config.viewportHeight)
@@ -100,7 +97,8 @@ function runTestConfig(config, date) {
 		.screenshot(snapshotPath)
 		.use(function() {
 			console.log('screenshot completed...');
-			saveImageCapture(config, snapshotPath, date).then(function(ImageCaptures) {
+			saveImageCapture(config, snapshotPath, date)
+			.then(function(ImageCaptures) {
 				return createDiff(config, ImageCaptures, date);
 			}).then(function(output) {
 				return saveDiffImage(output);
@@ -151,7 +149,7 @@ function createDiff(config, ImageCaptures, date) {
 	// var weekday = date.getDay();
 
 	// diff the images
-    var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
+    var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime(), config._id);
     
     var deferred = Q.defer();
 
@@ -175,7 +173,9 @@ function createDiff(config, ImageCaptures, date) {
       	var output = {
 		    percent: equality,
 		    file: options.file,
-		    config: config
+		    config: config,
+		    newImg: ImageCaptures.newImageCapture._id,
+		    lastImg: ImageCaptures.lastImageCapture._id
 		};
 
 		console.log('diff output...', output);
@@ -198,7 +198,10 @@ function saveDiffImage(output) {
 		websiteUrl: output.config.URL,
 		viewport: output.config.viewport,
 		userID: output.config.userID,
-		testName: output.config.name
+		testName: output.config.name,
+		compareFromID: output.lastImg,
+		compareToID: output.newImg
+
 	};
 
 	return imageDiff.create(diffImage).then(function(img) {
@@ -209,15 +212,15 @@ function saveDiffImage(output) {
 	});
 }
 
-function createImageDir(userID, configName, viewport, imgType, hour, day, time) {
-	// temp_images/userID/configName/viewport/imgType/hour_weekday_date.now() + .png
-	var path = './temp_images/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
+function createImageDir(userID, configName, viewport, imgType, hour, day, time, configID) {
+	// tmp/userID/configName/viewport/imgType/hour_weekday_date.now() + .png
+	var path = './tmp/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
 
 	mkdirp(path, function (err) {
 	    if (err) console.error(err);
 	});
 
-	path += '/' + hour + '_' + day + '_' + time +'.png';
+	path += '/' + configID + '_' + hour + '_' + day + '_' + time +'.png';
 
 	return path;
 }
