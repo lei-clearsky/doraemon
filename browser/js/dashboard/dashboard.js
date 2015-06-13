@@ -61,6 +61,7 @@ app.factory('Dashboard', function ($http) {
             })
         },
         allDiffsForUser: function (userID) {
+
             return $http.get('/api/screenshots/allDiffs/' + userID)
                         .then(function (response) {
                             return response.data;
@@ -112,25 +113,29 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
     $scope.diffsForUser = null;
     $scope.screenshotsForUser = null;
+    $scope.viewports;
+    $scope.urls;
+    $scope.dates;
+    // Dashboard.allDiffsForUser(currentUser._id)
+    //         .then(function(allDiffs) {
+    //             $scope.diffsForUser = allDiffs;
+    //             console.log('diffs in controller: ', $scope.diffsForUser);
 
-    Dashboard.allDiffsForUser(currentUser._id)
-            .then(function(allDiffs) {
-                $scope.diffsForUser = allDiffs;
-                console.log('diffs in controller: ', $scope.diffsForUser);
-
-                $scope.diffsForUser.forEach(function(diff) {
-                    diff.diffImgURL = diff.diffImgURL.slice(2);
-                    diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+    //             $scope.diffsForUser.forEach(function(diff) {
+    //                 diff.diffImgURL = diff.diffImgURL.slice(2);
+    //                 diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
                     
-                });
+    //             });
                 
-            });
+    //         });
 
     Dashboard.allScreenshotsForUser(currentUser._id)
             .then(function(allScreenshots) {
                 $scope.screenshotsForUser = allScreenshots;
                 // console.log('screenshots in controller: ', $scope.screenshotsForUser);
             });
+
+
 
 
     $scope.diffImgs = [];
@@ -145,55 +150,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     // byUrl[0].images - ng-repeat
 
     $scope.diffImages = {
-        'byUrl': [
-            // {
-            //     urlName: url1,
-            //     images: [
-            //         image1,
-            //         image2,
-            //         image3,
-            //         image4
-            //     ]
-            // },
-            // {
-            //     urlName: url2,
-            //     images: [
-            //         image1,
-            //         image2,
-            //         image3,
-            //         image4
-            //     ]
-            // }
-        ]
-        // ,
-        // byDate = {
-        //     date1: [
-        //         image1,
-        //         image2,
-        //         image3,
-        //         image4
-        //     ],
-        //     date2: [
-        //         image1,
-        //         image2,
-        //         image3,
-        //         image4
-        //     ]
-        // },
-        // byViewport = {
-        //     viewport1: [
-        //         image1,
-        //         image2,
-        //         image3,
-        //         image4
-        //     ],
-        //     viewport2: [
-        //         image1,
-        //         image2,
-        //         image3,
-        //         image4
-        //     ]
-        // }
+        byUrl: [],
+        byDate: [],
+        byViewport: []
     };
 
     $scope.testsOptions = {};
@@ -263,7 +222,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 return err;
             });
     }
-    
+    // display by URL
     Dashboard.getTestsByUserID(currentUser._id)
             .then(function (tests) {
                 $scope.testsByUser = tests;
@@ -285,7 +244,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                         url: url,
                         name: names[index]
                     };
-                    console.log(params);
                     Dashboard.getDiffsByUrl(params)
                         .then(function(diffs) {
                             diffs.forEach(function(diff) {
@@ -298,7 +256,60 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                             $scope.diffImages.byUrl.push(diffsInUrl);
                         });
                 });
-            })
+            });
+    
+
+    
+
+
+    // display by viewport
+    Dashboard.getTestsByUserID(currentUser._id)
+        .then(function (tests) {
+            var viewports = [];
+            $scope.testsByUser = tests;
+            $scope.testsByUser.forEach(function(test, index) {
+                if (viewports.indexOf(test.viewport) < 0) {
+                    viewports.push(test.viewport);
+                }
+            });
+            $scope.viewports = viewports;
+            // console.log('scope.viewports ', $scope.viewports);
+
+            Dashboard.allDiffsForUser(currentUser._id)
+                .then(function(allDiffs) {
+                    var byViewport = [];
+                    $scope.viewports.forEach(function(viewport) {
+                        var v = {
+                            viewport: '',
+                            images: []
+                        };
+                        v.viewport = viewport;
+                        byViewport.push(v);
+                    });
+
+
+                    Dashboard.allDiffsForUser(currentUser._id)
+                        .then(function(allDiffs) {
+                                allDiffs.forEach(function(diff) {
+
+                                    $scope.viewports.forEach(function (viewport, index) {
+                                        // console.log('viewport ', viewport);
+                                        // console.log('diff.viewport ', diff.viewport);
+
+                                        if (diff.viewport === viewport) {
+                                            diff.diffImgURL = diff.diffImgURL.slice(2);
+                                            diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+                                            byViewport[index].images.push(diff);
+                                        }
+                                    });
+                                    console.log('byViewport ', byViewport);
+                                    $scope.diffImages.byViewport = byViewport;
+                                    // };  
+                                });
+                            
+                        });
+                });
+        });
 
 
     $scope.animationsEnabled = true;

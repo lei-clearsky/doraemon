@@ -23,7 +23,7 @@ var schema = new mongoose.Schema({
     },
     testConfigID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TestConfig'
+        ref: 'Test'
     },
     compareFromID: {
         type: mongoose.Schema.Types.ObjectId, 

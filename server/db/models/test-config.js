@@ -45,7 +45,7 @@ schema.statics.getDiffsByUrl = function(url, name, userID) {
         websiteUrl: url,
         userID: userID
     }
-    // if (name !== null) query.testName = name;
+    if (name !== null) query.testName = name;
 
     console.log(query);
 
@@ -54,10 +54,10 @@ schema.statics.getDiffsByUrl = function(url, name, userID) {
             .exec();
 };
 
-schema.methods.getDiffsByViewport = function(viewport, name) {
+schema.methods.getDiffsByViewport = function(viewport, name, userID) {
     var query = {
         viewport: viewport,
-        userID: this.userID
+        userID: userID
     }
 
     if (name !== null) query.testName = name;

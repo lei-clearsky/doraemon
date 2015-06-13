@@ -76,7 +76,7 @@ var intervalJob = new CronJob({
 			console.log('finished with all');
 		});
 	}).then(null, function(error) {
-       	throw(error);
+       	console.log(error);
     });
   },
   start: false
