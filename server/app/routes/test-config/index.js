@@ -124,7 +124,8 @@ function saveImageCapture(config, snapshotPath, date) {
 				websiteURL: config.URL,
 				viewport: config.viewport,	
 				imgURL: snapshotPath,
-				userID: config.userID
+				userID: config.userID,
+				testName: config.name
 			}
 
 			lastImageCapture = lastImg;
@@ -194,7 +195,8 @@ function saveDiffImage(output) {
 		diffPercent: output.percent,
 		websiteUrl: output.config.URL,
 		viewport: output.config.viewport,
-		userID: output.config.userID
+		userID: output.config.userID,
+		testName: output.config.name
 	};
 
 	return imageDiff.create(diffImage).then(function(img) {

@@ -18,6 +18,13 @@ var schema = new mongoose.Schema({
     viewport: {
         type: String
     },
+    testName: {
+        type: String
+    },
+    testConfigID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TestConfig'
+    },
     compareFromID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'ImageCapture'

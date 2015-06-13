@@ -3,7 +3,8 @@
 
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ testsOptions | json }} -->
+	<!-- {{ diffImages | json }} -->
+
 <h2>Dashboard</h2>
 
 	<div class="row">
@@ -19,7 +20,7 @@
 				<h4>Tests</h4>
 			</div>
 			<!-- <div class="checkbox" > -->
-				<label class="checkbox-inline" ng-repeat="test in diffImgsByUser | unique: 'name'">
+				<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
 					<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
 					{{ test.name }} -->
 					<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
@@ -30,31 +31,30 @@
 			<button type="submit" class="btn btn-primary btn-large">Search</button>
 		</form>
 		<br />
-		<div class="form-group" ng-repeat="testOption in testsOptions">
+<!-- 		<div class="form-group" ng-repeat="testOption in testsOptions">
 			<h4>{{ testOption.name }}</h4>
 			<label class="checkbox-inline" >
 				{{ testOption.URL }}
 			</label>
 			<br />
 			<label class="checkbox-inline">
-				<input type="checkbox" ng-click="toggleOptionCheckbox()">
+				<input type="checkbox" ng-click="toggleOptionsCheckbox(testOptions.URL, testOptions.viewport, searchParams.options[testOptions.])">
 				{{ testOption.viewport }}
 			</label>
 
-		</div>
+		</div> -->
 
 	</div>
 
 
 	</div>
 
-	<div class="row">
+	<!-- <div class="row" ng-repeat=" test in searchParams.testNames "> -->
+	<div class="row" >
 
-		<h3>{{ testName.name }}</h3>
+		<h3>{{ test }}</h3>
 
 	<div class="col-md-12">
-
-
 
 		<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
 		    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">

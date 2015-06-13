@@ -32,6 +32,18 @@ var schema = new mongoose.Schema({
     }
 });
 
+schema.methods.getDiffsByUserID = function() {
+    return mongoose.model('ImageDiff').find({ user: this._id }).exec();
+};
+
+schema.methods.getConfig = function() {
+    return mongoose.model('TestConfig')
+            .find({
+                userID: this._id
+            })
+            .exec();
+};
+
 // generateSalt, encryptPassword and the pre 'save' and 'correctPassword' operations
 // are all used for local authentication security.
 var generateSalt = function () {

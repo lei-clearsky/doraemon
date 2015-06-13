@@ -21,6 +21,9 @@ app.factory('Dashboard', function ($http) {
             return $http.get('/api/screenshots/' + id)
                         .then(function (response) {
                             return response.data;
+                        })
+                        .catch(function(err) {
+                            return err;
                         });
         },
         getTestsByUserID: function (userID) {
@@ -28,7 +31,10 @@ app.factory('Dashboard', function ($http) {
             return $http.get('/api/screenshots/' + userID)
                         .then(function (response) {
                             return response.data;
-                        });
+                        })
+                        .catch(function(err) {
+                            return err;
+                        });;
         },
         searchDiffs: function (params) {
             return $http({
@@ -57,16 +63,34 @@ app.factory('Dashboard', function ($http) {
         allDiffsForUser: function (userID) {
             return $http.get('/api/screenshots/allDiffs/' + userID)
                         .then(function (response) {
-                            // console.log('allDiffsForUser in Factory: ', response.data);
                             return response.data;
-                        });
+                        })
+                        .catch(function(err) {
+                            return err;
+                        });;
         },
         allScreenshotsForUser: function (userID) {
             return $http.get('/api/screenshots/allScreenshots/' + userID)
                         .then(function (response) {
-                            // console.log('allScreenshotsForUser in Factory: ', response.data);
                             return response.data;
-                        });
+                        })
+                        .catch(function(err) {
+                            return err;
+                        });;
+        },
+        getDiffsByUrl: function (params) {
+            return $http({
+                url: '/api/screenshots/diffsByUrl',
+                method: 'GET',
+                params: params
+            })
+            // return $http.get('/api/screenshots/diffsByUrl/' + userID)
+            .then(function (response) {
+                return response.data;
+            })
+            .catch(function (err) {
+                return err;
+            })
         }
     };
 
@@ -113,7 +137,63 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
     $scope.searchParams = {
         user: currentUser._id,
-        testNames: []
+        testNames: [],
+        options: {}
+    };
+
+    // byUrl[0].urlName
+    // byUrl[0].images - ng-repeat
+
+    $scope.diffImages = {
+        'byUrl': [
+            // {
+            //     urlName: url1,
+            //     images: [
+            //         image1,
+            //         image2,
+            //         image3,
+            //         image4
+            //     ]
+            // },
+            // {
+            //     urlName: url2,
+            //     images: [
+            //         image1,
+            //         image2,
+            //         image3,
+            //         image4
+            //     ]
+            // }
+        ]
+        // ,
+        // byDate = {
+        //     date1: [
+        //         image1,
+        //         image2,
+        //         image3,
+        //         image4
+        //     ],
+        //     date2: [
+        //         image1,
+        //         image2,
+        //         image3,
+        //         image4
+        //     ]
+        // },
+        // byViewport = {
+        //     viewport1: [
+        //         image1,
+        //         image2,
+        //         image3,
+        //         image4
+        //     ],
+        //     viewport2: [
+        //         image1,
+        //         image2,
+        //         image3,
+        //         image4
+        //     ]
+        // }
     };
 
     $scope.testsOptions = {};
@@ -126,11 +206,24 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             optionsArray.push(option);
 
         // add more search options based on test name
-        Dashboard.searchTestsByName($scope.searchParams)
-                .then(function (tests) {
-                    $scope.testsOptions = tests;
-                })
+        // Dashboard.searchTestsByName($scope.searchParams)
+        //         .then(function (tests) {
+        //             $scope.testsOptions = tests;
+        //         })
 
+    };
+
+    $scope.toggleOptionsCheckbox = function(url, viewport, optionsObj) {
+        
+        if ('url' in optionsObj) {
+
+        }
+
+        var idx = optionsArray.indexOf(option);
+        if(idx > -1) // the option is already in the array, so we remove it
+            optionsArray.splice(idx, 1);
+        else // the option is not in the array, so we add it
+            optionsArray.push(option);
     };
 
     $scope.searchDiffs = function () {
@@ -152,6 +245,10 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     user: currentUser._id,
                     websiteURLs: websiteURLs
                 };
+                return diffsParams;
+                
+            })
+            .then(function (diffsParams) {
                 Dashboard.searchDiffs(diffsParams)
                         .then(function (diffs) {
                             $scope.diffsForUser = diffs;
@@ -161,13 +258,42 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                 
                             });
                         })
+            })
+            .catch(function(err) {
+                return err;
             });
     }
     
     Dashboard.getTestsByUserID(currentUser._id)
-            .then(function (returnedDiffImgs) {
-                console.log('tests by this user ', returnedDiffImgs);
-                $scope.diffImgsByUser = returnedDiffImgs
+            .then(function (tests) {
+                $scope.testsByUser = tests;
+                tests.forEach(function(test, index) {
+                    var urls = [];
+                    if (urls.indexOf(test.URL) === -1) {
+                        urls.push(test.URL);
+                    }
+                    urls.forEach(function(url) {
+                        var params = {
+                            userID: currentUser._id,
+                            url: url,
+                            name: test.name
+                        };
+                        Dashboard.getDiffsByUrl(params)
+                            .then(function(diffs) {
+
+                                var url = test.URL;
+                                var diffsInUrl = {
+                                    urlName: url,
+                                    images: diffs
+                                };
+                                console.log('diffsInUrl: ', diffsInUrl);
+                                $scope.diffImages.byUrl.push(diffsInUrl);
+                            });
+                    });
+
+
+
+                });
             })
 
 
