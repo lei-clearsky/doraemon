@@ -267,32 +267,36 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     Dashboard.getTestsByUserID(currentUser._id)
             .then(function (tests) {
                 $scope.testsByUser = tests;
+                var urls = [];
+                var names = [];
                 tests.forEach(function(test, index) {
-                    var urls = [];
+                    var p = {};
                     if (urls.indexOf(test.URL) === -1) {
+                        // p.url = test.URL;
+                        // p.name = test.name;
                         urls.push(test.URL);
+                        names.push(test.name);
                     }
-                    urls.forEach(function(url) {
-                        var params = {
-                            userID: currentUser._id,
-                            url: url,
-                            name: test.name
-                        };
-                        Dashboard.getDiffsByUrl(params)
-                            .then(function(diffs) {
+                });
 
-                                var url = test.URL;
-                                var diffsInUrl = {
-                                    urlName: url,
-                                    images: diffs
-                                };
-                                console.log('diffsInUrl: ', diffsInUrl);
-                                $scope.diffImages.byUrl.push(diffsInUrl);
-                            });
-                    });
-
-
-
+                urls.forEach(function(url, index) {
+                    var params = {
+                        userID: currentUser._id,
+                        url: url,
+                        name: names[index]
+                    };
+                    console.log(params);
+                    Dashboard.getDiffsByUrl(params)
+                        .then(function(diffs) {
+                            diffs.forEach(function(diff) {
+                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL.slice(2);
+                            })
+                            var diffsInUrl = {
+                                urlName: url,
+                                images: diffs
+                            };
+                            $scope.diffImages.byUrl.push(diffsInUrl);
+                        });
                 });
             })
 

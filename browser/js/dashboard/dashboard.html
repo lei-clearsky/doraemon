@@ -50,6 +50,25 @@
 	</div>
 
 	<!-- <div class="row" ng-repeat=" test in searchParams.testNames "> -->
+
+	<div class="row" ng-repeat="diff in diffImages.byUrl">
+
+		<h3>{{ diff.urlName }}</h3>
+
+	<div class="col-md-12">
+
+		<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
+		    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+		    	<div style="height: 200px; overflow: hidden;">
+		      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+		  		</div>
+		    </div>
+	  	</div>
+
+	</div>
+	</div>
+
+	<!-- old -->
 	<div class="row" >
 
 		<h3>{{ test }}</h3>
@@ -61,11 +80,6 @@
 		    	<div style="height: 200px; overflow: hidden;">
 		      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 		  		</div>
-		      <!-- <div class="caption">
-		      	<h5>{{ diffImg.websiteUrl }}</h5>
-		        <h5>{{ diffImg.viewport }}</h5>
-		        <h5>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</h5>
-		      </div> -->
 		    </div>
 	  	</div>
 
