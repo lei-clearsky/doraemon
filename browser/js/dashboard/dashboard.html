@@ -3,14 +3,14 @@
 
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	{{ diffImages.byViewport | json }}
+	<!-- {{ diffImages.byViewport | json }} -->
 
 <h2>Dashboard</h2>
 
 	<div class="row">
 		<div class="jumbotron alert-success" role="alert" >
         	<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
-        	<strong>No diffs found. Have a nice day!</strong>
+        	<strong>No changes found. Your site is safe. Have a nice day!</strong>
     	</div>
 
 	<div class="col-md-12">
@@ -54,6 +54,23 @@
 	<div class="row" ng-repeat="diff in diffImages.byUrl">
 
 		<h3>{{ diff.urlName }}</h3>
+
+	<div class="col-md-12">
+
+		<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
+		    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+		    	<div style="height: 200px; overflow: hidden;">
+		      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+		  		</div>
+		    </div>
+	  	</div>
+
+	</div>
+	</div>
+
+	<div class="row" ng-repeat="diff in diffImages.byViewport">
+
+		<h3>{{ diff.viewport }}</h3>
 
 	<div class="col-md-12">
 

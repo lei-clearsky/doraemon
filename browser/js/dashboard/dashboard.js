@@ -231,13 +231,11 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 tests.forEach(function(test, index) {
                     var p = {};
                     if (urls.indexOf(test.URL) === -1) {
-                        // p.url = test.URL;
-                        // p.name = test.name;
                         urls.push(test.URL);
                         names.push(test.name);
                     }
                 });
-
+                console.log('all urls!!!!! ', urls);
                 urls.forEach(function(url, index) {
                     var params = {
                         userID: currentUser._id,

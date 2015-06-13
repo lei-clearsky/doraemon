@@ -1,4 +1,6 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
+process.env.AWS_SECRET_ACCESS_KEY='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';
 
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -56,7 +58,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 */6 * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
@@ -103,7 +105,7 @@ function runTestConfig(config, date) {
 			}).then(function(output) {
 				return saveDiffImage(output);
 			}).then(null, function(err) {
-				throw err;
+				console.log(err);
 			});
 		});
 };
@@ -165,7 +167,7 @@ function createDiff(config, ImageCaptures, date) {
 	
 	console.log('diffing the images...');
 	gm.compare(ImageCaptures.lastImageCapture.imgURL, ImageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
-	    if (err) throw err;
+	    if (err) console.log(err);
         // console.log('The images are equal: %s', isEqual);
         // console.log('Actual equality: %d', equality);
         // console.log('Raw output was: %j', raw);    
