@@ -3,6 +3,12 @@ var path = require('path');
 var express = require('express');
 var app = express();
 module.exports = app;
+var fs = require("fs");
+var temp_dir = path.join(process.cwd(), 'temp_images/');
+
+if (!fs.existsSync(temp_dir)) {
+    fs.mkdirSync(temp_dir);
+}
 
 // Pass our express application pipeline into the configuration
 // function located at server/app/configure/index.js
