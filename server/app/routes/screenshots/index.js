@@ -58,6 +58,20 @@ router.get('/searchDiffs', function (req, res, next) {
 			});
 });
 
+router.get('/diffsByUrl', function (req, res, next) {
+	console.log(req.query.url);
+	console.log(req.query.name);
+
+	TestConfig.getDiffsByUrl(req.query.url, req.query.name, req.query.userID)
+		.then(function(diffs) {
+			console.log('diffs ', diffs);
+			res.json(diffs);
+		})
+		.then(null, function(err) {
+			console.log(err);
+		});
+});
+
 router.get('/:userId', function (req, res, next) {
 
 	TestConfig.find({userID: req.params.userId})
@@ -72,7 +86,7 @@ router.get('/diff/:id', function (req, res, next) {
 	ImageDiff.findById(req.params.id)
 			.exec()
 			.then(function(diff) {
-				console.log('single diff image ', diff);
+				// console.log('single diff image ', diff);
 				res.json(diff);
 			})
 });
@@ -83,8 +97,8 @@ router.get('/allDiffs/:userId', function (req, res, next) {
 	ImageDiff.find({userID: req.params.userId})
 			.exec(function(err, allDiffs) {
 				if (err) return next(err);
-				console.log('userId ', req.params.userId);
-				console.log('all diffsfgfgfg ', allDiffs);
+				// console.log('userId ', req.params.userId);
+				// console.log('all diffsfgfgfg ', allDiffs);
 				res.json(allDiffs);
 			});
 });

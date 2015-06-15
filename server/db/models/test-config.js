@@ -27,10 +27,49 @@ var schema = new mongoose.Schema({
     }
 });
 
+schema.methods.getDiffsByDate = function(date, name) {
+    var query = {
+        captureTime: date,
+        userID: this.userID
+    }
+
+    if (name !== null) query.testName = name;
+    
+    return mongoose.model('ImageDiff')
+            .find(query)
+            .exec();
+};
+
+schema.statics.getDiffsByUrl = function(url, name, userID) {
+    var query = {
+        websiteUrl: url,
+        userID: userID
+    }
+    if (name !== null) query.testName = name;
+
+    console.log(query);
+
+    return mongoose.model('ImageDiff')
+            .find(query)
+            .exec();
+};
+
+schema.methods.getDiffsByViewport = function(viewport, name, userID) {
+    var query = {
+        viewport: viewport,
+        userID: userID
+    }
+
+    if (name !== null) query.testName = name;
+
+    return mongoose.model('ImageDiff')
+            .find(query)
+            .exec();
+};
 
 // returns an array of all URLs that meet hour + day criteria
 schema.statics.findAllScheduledTests = function(hour, day) {
-    return this.find({ 
+    return this.find({
                 dayFrequency: day,
                 hourFrequency: hour
             }).exec()
@@ -45,3 +84,14 @@ schema.virtual('viewportHeight').get(function () {
 });
 
 mongoose.model('TestConfig', schema);
+
+
+
+
+
+
+
+
+
+
+
