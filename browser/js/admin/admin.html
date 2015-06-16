@@ -1,0 +1,13 @@
+<div class="admin">
+	<div class="row">
+		<div class="col-lg-2 left-navigation">
+			<ul id="admin-menu" class="list-group">
+				<li class="list-group-item" ng-repeat= 'adminMenu in adminMenus'>
+					<a ui-sref="{{adminMenu.state}}">{{adminMenu.name}}</a>
+				</li>
+			</ul>
+		</div>
+
+		<div ui-view class="col-lg-10"></div>
+	</div>
+</div>

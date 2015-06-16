@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 
 @mixin clearfix {
@@ -9,7 +10,7 @@
     clear: both;
   }
 }
-
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400,700);
 @import 'directives/main';
 @import 'home/main';
 @import 'about/main';
