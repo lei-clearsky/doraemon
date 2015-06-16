@@ -98,24 +98,33 @@ app.factory('Dashboard', function ($http) {
 });
 
 app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser) {
-    // $scope.keys = ['myKey.jpg', 'test1.png', 'test3.png', 'diff.png'];
-    // var path = './temp_images/' + userID + '/' + configID + '/' + viewport + '/' + imgType;
-
-    // $scope.keysElements = {
-    //     userId: currentUser._id,
-    //     configName: 'configName from factory or something',
-    //     viewport: 'viewport name from factory or something',
-    //     imgType: 'imgtype from factory or something',
-    //     hour: 'hour from factory',
-    //     day: 'day from factory',
-    //     time: 'time from factory'
-    // };
 
     $scope.diffsForUser = null;
     $scope.screenshotsForUser = null;
+    $scope.testsByUser = null;
     $scope.viewports;
     $scope.urls;
     $scope.dates;
+    
+    $scope.dashboard = {
+        alertNum: null,
+        testsNum: null,
+        diffPercent: null
+    };
+
+    $scope.diffImgs = [];
+
+    $scope.searchParams = {
+        user: currentUser._id,
+        testNames: [],
+        options: {}
+    };
+
+    $scope.diffImages = {
+        byUrl: [],
+        byDate: [],
+        byViewport: []
+    };
     // Dashboard.allDiffsForUser(currentUser._id)
     //         .then(function(allDiffs) {
     //             $scope.diffsForUser = allDiffs;
@@ -135,33 +144,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 // console.log('screenshots in controller: ', $scope.screenshotsForUser);
             });
 
-
-
-
-    $scope.diffImgs = [];
-
-    $scope.searchParams = {
-        user: currentUser._id,
-        testNames: [],
-        options: {}
-    };
-
-    // byUrl[0].urlName
-    // byUrl[0].images - ng-repeat
-
-    $scope.diffImages = {
-        byUrl: [],
-        byDate: [],
-        byViewport: []
-    };
-
-    $scope.tabs = [
-        { title:'By Url', content:$scope.diffImages.byUrl },
-        { title:'By Viewport', content:$scope.diffImages.byViewport }
-    ];
-
-    $scope.testsOptions = {};
-
     $scope.toggleCheckbox = function(option, optionsArray) {
         var idx = optionsArray.indexOf(option);
         if(idx > -1) // the option is already in the array, so we remove it
@@ -175,19 +157,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         //             $scope.testsOptions = tests;
         //         })
 
-    };
-
-    $scope.toggleOptionsCheckbox = function(url, viewport, optionsObj) {
-        
-        if ('url' in optionsObj) {
-
-        }
-
-        var idx = optionsArray.indexOf(option);
-        if(idx > -1) // the option is already in the array, so we remove it
-            optionsArray.splice(idx, 1);
-        else // the option is not in the array, so we add it
-            optionsArray.push(option);
     };
 
     $scope.searchDiffs = function () {
@@ -231,6 +200,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     Dashboard.getTestsByUserID(currentUser._id)
             .then(function (tests) {
                 $scope.testsByUser = tests;
+                $scope.dashboard.testsNum = tests.length;
                 var urls = [];
                 var names = [];
                 tests.forEach(function(test, index) {
@@ -240,7 +210,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                         names.push(test.name);
                     }
                 });
-                console.log('all urls!!!!! ', urls);
                 urls.forEach(function(url, index) {
                     var params = {
                         userID: currentUser._id,
@@ -261,10 +230,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 });
             });
     
-
-    
-
-
     // display by viewport
     Dashboard.getTestsByUserID(currentUser._id)
         .then(function (tests) {
@@ -276,7 +241,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 }
             });
             $scope.viewports = viewports;
-            // console.log('scope.viewports ', $scope.viewports);
 
             Dashboard.allDiffsForUser(currentUser._id)
                 .then(function(allDiffs) {

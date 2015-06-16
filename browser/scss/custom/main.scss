@@ -52,7 +52,7 @@
 }
 
 .left-navigation {
-	min-height: 750px;
+	height: 100vh;
 	background: #333;
 }
 
@@ -82,14 +82,6 @@
 	font-weight: 300;
 }
 
-$baseFontSize: 16;
-$slideDistance: 100;
-$slideDuration: .4s;
-
-@function rem($val) {
-  @return #{$val / $baseFontSize}rem;
-}
-
 .tab-content {
 	h3 {
 		margin-left: 30px;
@@ -97,46 +89,6 @@ $slideDuration: .4s;
 		color: #fff;
 		font-weight: 300;
 		padding: 10px;
-	}
-	.checkbox-inline input[type="checkbox"] {
-		position: relative;
-		  top: rem(-6);
-		  
-		  margin: 0 1rem 0 0 ;
-		  
-		  cursor: pointer;
-		  
-		  &:before {
-				@include transition(all .3s ease-in-out);		    
-				content: "";
-				position: absolute;
-				left: 0;
-				z-index: 1;
-				width: 1rem;
-				height: 1rem;
-				border: 2px solid #f2f2f2; 
-		  }
-		  
-		  &:checked {
-		    &:before {
-		       @include transform(rotate(-45deg));		  
-		  		height: .5rem;		  
-		  		border-color: $green;
-		  		border-top-style: none;
-		  		border-right-style: none;
-		    } 
-		  }
-		  
-		  &:after {
-		    content: "";	    
-		    position: absolute;
-		    top: rem(-2);
-		    left: 0;		    
-		    width: 1.1rem;
-		    height: 1.1rem;		    
-		    background: #fff;		    
-		    cursor: pointer;
-		  }
 	}
 }
 

@@ -1,6 +1,7 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffImages | json }} -->
+	<!-- {{ dashboard | json }} -->
 
 	<div class="row">
 		<!-- <div class="jumbotron alert-success" role="alert" >
@@ -24,7 +25,7 @@
     						Tests run today
     					</div>
     					<div class="overview-item-stats">
-    					28
+    					{{ dashboard.testsNum }}
     					</div>
     				</div>
     				<div class="col-md-4 overview-item text-center">
