@@ -21,7 +21,6 @@ var schema = new mongoose.Schema({
     }
 });
 
-
 schema.statics.searchForLastSaved = function(url, userID, viewport) {
     return this.findOne({ 
                 websiteURL: url,
@@ -29,18 +28,9 @@ schema.statics.searchForLastSaved = function(url, userID, viewport) {
                 viewport: viewport
             }).sort({captureTime: 'desc'}).exec(function(err, docs) {
                 if (err) console.log(err);
-                console.log('sorting completed', docs)
+                
                 return docs;
             })
 };
 
-
-
-
-
 mongoose.model('ImageCapture', schema);
-
-
-
-
-
