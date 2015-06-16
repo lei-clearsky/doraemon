@@ -155,6 +155,11 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         byViewport: []
     };
 
+    $scope.tabs = [
+        { title:'By Url', content:$scope.diffImages.byUrl },
+        { title:'By Viewport', content:$scope.diffImages.byViewport }
+    ];
+
     $scope.testsOptions = {};
 
     $scope.toggleCheckbox = function(option, optionsArray) {
@@ -355,6 +360,7 @@ app.filter('unique', function() {
       return output;
    };
 });
+
 
 
 

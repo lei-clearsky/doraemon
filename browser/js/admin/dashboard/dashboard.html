@@ -1,10 +1,7 @@
-<!-- <img src="{{ screenshot }}" ng-repeat="screenshot in screenshots"/> -->
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ diffImages.byViewport | json }} -->
+	<!-- {{ diffImages | json }} -->
 
-<!-- <h2>Dashboard</h2>
- -->
 	<div class="row">
 		<!-- <div class="jumbotron alert-success" role="alert" >
         	<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
@@ -41,65 +38,6 @@
     			</div>
     		</div>
     	</div>
-
-    	<div id="tabs" class="tabs">
-			<nav>
-				<ul>
-					<li><a href="#section-1" class="icon-shop"><span>By Dates</span></a></li>
-					<li><a href="#section-2" class="icon-cup"><span>By URLs</span></a></li>
-					<li><a href="#section-3" class="icon-food"><span>By Tests</span></a></li>
-				</ul>
-			</nav>
-			<div class="content">
-				<section id="section-1">
-					<div class="row" >
-
-						<h3>Search By Test Names</h3>
-
-						<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-						    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
-						    	<div style="height: 200px; overflow: hidden;">
-						      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
-						  		</div>
-						    </div>
-					  	</div>
-
-					</div>
-				</section>
-				<section id="section-2">
-					<div class="row" ng-repeat="diff in diffImages.byUrl">
-
-						<h3>{{ diff.urlName }}</h3>
-
-
-						<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-						    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
-						    	<div style="height: 200px; overflow: hidden;">
-						      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
-						  		</div>
-						    </div>
-					  	</div>
-
-					</div>
-				</section>
-				<section id="section-3">
-					<div class="row" ng-repeat="diff in diffImages.byViewport">
-
-						<h3>{{ diff.viewport }}</h3>
-
-						<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-						    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
-						    	<div style="height: 200px; overflow: hidden;">
-						      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
-						  		</div>
-						    </div>
-					  	</div>
-
-					</div>
-				</section>
-			</div><!-- /content -->
-		</div><!-- /tabs -->
-
 
     	<ul class="cbp_tmtimeline">
 			<li>
@@ -144,41 +82,69 @@
 			</li>
 		</ul>
 
-
-
-		<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="form-inline">
-			<div class="form-group">
-				<h4>Tests</h4>
-			</div>
-			<!-- <div class="checkbox" > -->
-				<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
-					<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
-					{{ test.name }} -->
-					<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
-					{{ test.name }}
-
-				</label>
-			<!-- </div> -->
-			<button type="submit" class="btn btn-primary btn-large">Search</button>
-		</form>
-		<br />
-<!-- 		<div class="form-group" ng-repeat="testOption in testsOptions">
-			<h4>{{ testOption.name }}</h4>
-			<label class="checkbox-inline" >
-				{{ testOption.URL }}
-			</label>
-			<br />
-			<label class="checkbox-inline">
-				<input type="checkbox" ng-click="toggleOptionsCheckbox(testOptions.URL, testOptions.viewport, searchParams.options[testOptions.])">
-				{{ testOption.viewport }}
-			</label>
-
-		</div> -->
-
-
 	</div>
 
 	<!-- <div class="row" ng-repeat=" test in searchParams.testNames "> -->
+	<tabset>
+		<tab heading="By Test Name">
+			<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="text-center">
+				<div class="form-group tab-content-checkbox">
+				<!-- <div class="checkbox" > -->
+					<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
+						<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
+						{{ test.name }} -->
+						<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
+						{{ test.name }}
+
+					</label>
+				</div>
+				<!-- </div> -->
+				<button type="submit" class="btn btn-primary btn-large">Search</button>
+			</form>
+			<div class="row" >
+				<div class="col-md-12">
+				<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
+				    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+				    	<div style="height: 200px; overflow: hidden;">
+				      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+				  		</div>
+				    </div>
+			  	</div>
+			  	</div>
+			</div>
+		</tab>
+
+		<tab heading="By Url">
+			<div class="row" ng-repeat="diff in diffImages.byUrl">
+				<h3>{{ diff.urlName }}</h3>
+				<div class="col-md-12">
+					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+					    	<div style="height: 200px; overflow: hidden;">
+					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+					  		</div>
+					    </div>
+				  	</div>
+				</div>
+			</div>
+		</tab>
+
+		<tab heading="By Viewport">
+		  	<div class="row" ng-repeat="diff in diffImages.byViewport">
+				<h3>{{ diff.viewport }}</h3>
+				<div class="col-md-12">
+					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+					    	<div style="height: 200px; overflow: hidden;">
+					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+					  		</div>
+					    </div>
+				  	</div>
+			  	</div>
+			</div>
+		</tab>
+	</tabset>
+
 
 
 
