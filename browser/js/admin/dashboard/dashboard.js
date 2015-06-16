@@ -300,7 +300,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                             byViewport[index].images.push(diff);
                                         }
                                     });
-                                    console.log('byViewport ', byViewport);
                                     $scope.diffImages.byViewport = byViewport;
                                     // };  
                                 });
