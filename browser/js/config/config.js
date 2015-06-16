@@ -9,6 +9,9 @@ app.config(function ($stateProvider) {
             currentUser: function(AuthService) {
                 return AuthService.getLoggedInUser();
             }
+        },
+        data: {
+            authenticate: true
         }
     });
 
@@ -26,7 +29,15 @@ app.factory('Config', function ($http) {
 
 });
 
-app.value('viewportOptions', ['640x360', '1024x768', '1280x800', '1680x1050']);
+app.value('viewportOptions', [
+    {label: 'Samsung Galaxy S5', value: '360x640'},
+    {label: 'Apple iPhone 6', value: '375x667'},
+    {label: 'Google Nexus 7', value: '603x966'},
+    {label: 'Apple iPad', value: '768x1024'}, 
+    {label: '12\" Notebook', value: '1024x768'},
+    {label: '19\" Desktop', value: '1440x900'},
+    {label: '24\" Desktop', value: '1920x1200'}
+]);
 
 app.value('dayFrequencyOptions', [
     {label: 'Sun', value: 0},
@@ -47,8 +58,14 @@ app.value('hourFrequencyOptions', [
 
 app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions) {
 
-    $scope.name = '';
-    $scope.config = [];
+    $scope.submitAttempted = false;
+    $scope.testName = '';
+    $scope.config = [{
+            URL: '',
+            viewports: [],
+            dayFrequency: [],
+            hourFrequency: []
+        }];
     $scope.viewportOptions = viewportOptions;
     $scope.dayFrequencyOptions = dayFrequencyOptions;
     $scope.hourFrequencyOptions = hourFrequencyOptions;
@@ -74,68 +91,49 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             optionsArray.push(option);
     };
 
-    $scope.submit = function() {
-        if (isValid()) {
-            $scope.config.forEach(function(element) {
-                element.viewports.forEach(function(viewport) {
-                    Config.create({
-                        name: $scope.name.split(' ').join('_'),
-                        URL: element.URL,
-                        viewport: viewport,
-                        dayFrequency: element.dayFrequency,
-                        hourFrequency: element.hourFrequency,
-                        userID: currentUser._id
-                    });
-                });                
-            });
+    // Still cannot find a better way to validate config form
+    $scope.isValid = function() {
+        $scope.submitAttempted = true;
 
-            $scope.name = '';
-            $scope.config = [];
-            $scope.showSuccessAlert = true;
-        } else {
-            $scope.showErrorAlert = true;
-        }        
-    };
-
-    function isValid() {
-
-        if ($scope.name === '') {
-            $scope.errorMessage = "Please enter a UI test name";
-            return false;
-        }
-
-        if ($scope.config.length === 0) {
-            $scope.errorMessage = "You need to test at least one URL";
-            return false;
-        }
+        if ($scope.testName === '') return false;
 
         for (var i = 0; i < $scope.config.length; i++) {
-            if ($scope.config[i].URL === '') {
-                $scope.errorMessage = "Please fill the URL field";
-                return false;
-            }
+            if ($scope.config[i].URL === '') return false;
 
-            if ($scope.config[i].viewports.length === 0) {
-                $scope.errorMessage = "Please choose a viewport to test this URL";
-                return false;
-            }
+            if ($scope.config[i].viewports.length === 0) return false;
 
-            if ($scope.config[i].dayFrequency.length === 0) {
-                $scope.errorMessage = "Please choose which days to test this URL";
-                return false;
-            }
+            if ($scope.config[i].dayFrequency.length === 0) return false;
 
-            if ($scope.config[i].hourFrequency.length === 0) {
-                $scope.errorMessage = "Please choose a time to test this URL";
-                return false;
-            }
-
-            if ($scope.config[i].hourFrequency.length > 4) {
-                $scope.errorMessage = "Please limit times to test a URL to 4";
-                return false;
-            }
+            if ($scope.config[i].hourFrequency.length === 0) return false;
         };
 
         return true;
+    };
+
+    $scope.submit = function() {
+        
+        $scope.config.forEach(function(element) {
+            element.viewports.forEach(function(viewport) {
+                Config.create({
+                    name: $scope.testName.split(' ').join('_'),
+                    URL: element.URL,
+                    viewport: viewport,
+                    dayFrequency: element.dayFrequency,
+                    hourFrequency: element.hourFrequency,
+                    userID: currentUser._id
+                });
+            });                
+        });
+
+        $scope.testName = '';
+        $scope.config = [{
+            URL: '',
+            viewports: [],
+            dayFrequency: [],
+            hourFrequency: []
+        }];
+        $scope.showSuccessAlert = true;
+        $scope.submitAttempted = false;
+
     };
 });
