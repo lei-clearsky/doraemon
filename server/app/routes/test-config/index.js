@@ -56,7 +56,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 */3 * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
     // retrieving information about the date to be used later
     console.log('process begins...');
@@ -76,7 +76,7 @@ var intervalJob = new CronJob({
 			console.log('finished with all');
 		});
 	}).then(null, function(error) {
-       	throw(error);
+       	console.log(error);
     });
   },
   start: false
@@ -88,8 +88,7 @@ function runTestConfig(config, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
 
-	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime());
-
+	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime(), config._id);
 	// use nightmare to take a screenshot
 	nightmare
 		.viewport(config.viewportWidth, config.viewportHeight)
@@ -98,12 +97,13 @@ function runTestConfig(config, date) {
 		.screenshot(snapshotPath)
 		.use(function() {
 			console.log('screenshot completed...');
-			saveImageCapture(config, snapshotPath, date).then(function(ImageCaptures) {
+			saveImageCapture(config, snapshotPath, date)
+			.then(function(ImageCaptures) {
 				return createDiff(config, ImageCaptures, date);
 			}).then(function(output) {
 				return saveDiffImage(output);
 			}).then(null, function(err) {
-				throw err;
+				console.log(err);
 			});
 		});
 };
@@ -124,7 +124,8 @@ function saveImageCapture(config, snapshotPath, date) {
 				websiteURL: config.URL,
 				viewport: config.viewport,	
 				imgURL: snapshotPath,
-				userID: config.userID
+				userID: config.userID,
+				testName: config.name
 			}
 
 			lastImageCapture = lastImg;
@@ -148,7 +149,7 @@ function createDiff(config, ImageCaptures, date) {
 	// var weekday = date.getDay();
 
 	// diff the images
-    var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime());
+    var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime(), config._id);
     
     var deferred = Q.defer();
 
@@ -164,7 +165,7 @@ function createDiff(config, ImageCaptures, date) {
 	
 	console.log('diffing the images...');
 	gm.compare(ImageCaptures.lastImageCapture.imgURL, ImageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
-	    if (err) throw err;
+	    if (err) console.log(err);
         // console.log('The images are equal: %s', isEqual);
         // console.log('Actual equality: %d', equality);
         // console.log('Raw output was: %j', raw);    
@@ -172,7 +173,9 @@ function createDiff(config, ImageCaptures, date) {
       	var output = {
 		    percent: equality,
 		    file: options.file,
-		    config: config
+		    config: config,
+		    newImg: ImageCaptures.newImageCapture._id,
+		    lastImg: ImageCaptures.lastImageCapture._id
 		};
 
 		console.log('diff output...', output);
@@ -194,7 +197,11 @@ function saveDiffImage(output) {
 		diffPercent: output.percent,
 		websiteUrl: output.config.URL,
 		viewport: output.config.viewport,
-		userID: output.config.userID
+		userID: output.config.userID,
+		testName: output.config.name,
+		compareFromID: output.lastImg,
+		compareToID: output.newImg
+
 	};
 
 	return imageDiff.create(diffImage).then(function(img) {
@@ -205,15 +212,15 @@ function saveDiffImage(output) {
 	});
 }
 
-function createImageDir(userID, configName, viewport, imgType, hour, day, time) {
-	// temp_images/userID/configName/viewport/imgType/hour_weekday_date.now() + .png
-	var path = './temp_images/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
+function createImageDir(userID, configName, viewport, imgType, hour, day, time, configID) {
+	// tmp/userID/configName/viewport/imgType/hour_weekday_date.now() + .png
+	var path = './tmp/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
 
 	mkdirp(path, function (err) {
 	    if (err) console.error(err);
 	});
 
-	path += '/' + hour + '_' + day + '_' + time +'.png';
+	path += '/' + configID + '_' + hour + '_' + day + '_' + time +'.png';
 
 	return path;
 }
