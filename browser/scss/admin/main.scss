@@ -1,0 +1,73 @@
+@media screen and (min-width: 768px) {
+  .same-height,
+  .same-height > div[class*='col-'] {  
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      flex: 1 0 auto;
+  }
+}
+
+#admin-menu {
+	&.list-group {
+		background: #333;
+		font-weight: 300;
+
+		.list-group-item {
+			padding: 15px;
+			margin-bottom: -1px;
+			background-color: transparent;
+			border: 0;
+			border-bottom: 1px solid #ccc;
+
+			a {
+				padding: 15px;
+				width:100%;
+				font-size: 18px;
+				color: #ccc;
+				&:hover,
+				&:focus,
+				&:active {
+					background:
+				}
+			}
+		}
+
+	}
+
+}
+
+.row.no-gutters {
+  margin-right: -15px;
+  margin-left: -15px;
+
+  & > [class^="col-"],
+  & > [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.left-navigation {
+	background: #333;
+}
+
+.dashboard-overview {
+	background: #66cc00;
+	color: #fff;
+	.overview-item {
+
+		font-weight: 300;
+		padding:50px 0;
+		.overview-item-heading {
+			font-size: 20px;
+			font-weight: 300;
+			padding: 5px;
+		}
+		.overview-item-stats {
+			font-size: 120px;
+		}
+	}
+}
