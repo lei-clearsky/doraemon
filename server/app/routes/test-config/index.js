@@ -1,4 +1,6 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
+process.env.AWS_SECRET_ACCESS_KEY='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';
 
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
