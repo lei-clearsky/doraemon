@@ -1,5 +1,5 @@
 <div class="admin container-fluid">
-	<div class="row">
+	<div class="row same-height no-gutters">
 		<div class="col-lg-2 left-navigation">
 			<ul id="admin-menu" class="list-group">
 				<li class="list-group-item" ng-repeat= 'adminMenu in adminMenus'>
@@ -8,6 +8,6 @@
 			</ul>
 		</div>
 
-		<div ui-view class="col-lg-10"></div>
+		<ui-view class="col-lg-10"></ui-view>
 	</div>
 </div>

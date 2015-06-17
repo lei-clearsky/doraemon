@@ -18,62 +18,6 @@
 	}
 }
 
-#admin-menu {
-	&.list-group {
-		background: #333;
-		font-weight: 300;
-
-		.list-group-item {
-			padding: 15px;
-			margin-bottom: -1px;
-			background-color: transparent;
-			border: 0;
-			border-bottom: 1px solid #ccc;
-
-			a {
-				padding: 15px;
-				width:100%;
-				font-size: 18px;
-				color: #ccc;
-				&:hover,
-				&:focus,
-				&:active {
-					background:
-				}
-			}
-		}
-
-	}
-
-}
-
-.col-lg-2 {
-	padding-right:0;
-}
-
-.left-navigation {
-	height: 100vh;
-	background: #333;
-}
-
-.dashboard-overview {
-	background: #66cc00;
-	color: #fff;
-	.overview-item {
-
-		font-weight: 300;
-		padding:50px 0;
-		.overview-item-heading {
-			font-size: 20px;
-			font-weight: 300;
-			padding: 5px;
-		}
-		.overview-item-stats {
-			font-size: 120px;
-		}
-	}
-}
-
 .tabs {
 	position: relative;
 	width: 100%;
