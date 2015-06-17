@@ -1,12 +1,19 @@
 #home {
-  fullstack-logo {
-    padding-top: 30px;
-    width: 150px;
-    margin: 0 auto;
-  }
-  h1 {
-    margin-top: 40px;
+	height: calc(100vh - 71px);
+  background: url(/images/home.png) center 33% no-repeat;
+  position: relative;
+  h1, h2 {
+  	font-family: 'Raleway Dots', cursive;
+    margin: 10px 0;
     text-align: center;
+  }
+  .footer {
+  	text-align: center;
+  	position: absolute;
+  	bottom: 10%;
+  	left: 0;
+  	right: 0;
+  	color: pink;
   }
 }
 
