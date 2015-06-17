@@ -254,9 +254,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                 if (diff.diffPercent*100 > 1) {
                                     byDate[index].alerts.push(diff);
                                 }
-                            }
-                            
-                            byDate[index].perc.push(diff.diffPercent);
+
+                                byDate[index].perc.push(diff.diffPercent);
+                            }                            
                         });
                         
                     });

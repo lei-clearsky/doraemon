@@ -45,7 +45,14 @@
 				<div class="cbp_tmlabel">
 					<h2 ng-show="test.alerts.length">There was changes</h2>
 					<h2 ng-hide="test.alerts.length">There was no changes</h2>
-					<p>Alert: <span class="badge btn-danger">{{test.alerts.length}}</span></p>
+					<p>
+						<span class="cbp_tmstats">
+						Alert: <span class="badge btn-danger">{{test.alerts.length}}</span>
+						</span>
+						<span class="cbp_tmstats">
+						Average Diff: <span class="badge btn-danger">{{test.averagePerc}}%</span>
+						</span>
+					</p>
 					<span class="fa">See All Alerts</span>
 				</div>
 			</li>
