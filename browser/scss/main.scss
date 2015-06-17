@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Raleway+Dots);
+
 * {
   box-sizing: border-box;
   font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -17,3 +19,12 @@
 @import 'tutorial/main';
 @import 'login/main';
 @import 'custom/main';
+
+body {
+  background-color: #fafafa;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafafa), to(#ffffff));
+  background: -webkit-linear-gradient(top, #fafafa, #ffffff);
+  background: -moz-linear-gradient(top, #fafafa, #ffffff);
+  background: -ms-linear-gradient(top, #fafafa, #ffffff);
+  background: -o-linear-gradient(top, #fafafa, #ffffff);
+}
