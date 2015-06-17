@@ -2,7 +2,8 @@
 node_modules
 bower_components
 npm-debug.log
-public
+public/main.js
+public/style.css
 .DS_Store
 s3keys.js
 temp_images
