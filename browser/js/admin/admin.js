@@ -14,7 +14,7 @@ app.controller('AdminController', function ($scope, AuthService) {
     $scope.adminMenus = [
         {'name': 'Dashboard', 'state': 'admin.dashboard'},
         {'name': 'Projects', 'state': 'admin.project'},
-        {'name': 'Errors', 'state': 'admin.errors'}
+        {'name': 'Alerts', 'state': 'admin.alerts'}
     ];
 
 });

@@ -105,6 +105,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     $scope.viewports;
     $scope.urls;
     $scope.dates;
+    $scope.testsByDate = null;
     
     $scope.dashboard = {
         alertNum: null,
@@ -125,18 +126,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         byDate: [],
         byViewport: []
     };
-    // Dashboard.allDiffsForUser(currentUser._id)
-    //         .then(function(allDiffs) {
-    //             $scope.diffsForUser = allDiffs;
-    //             console.log('diffs in controller: ', $scope.diffsForUser);
-
-    //             $scope.diffsForUser.forEach(function(diff) {
-    //                 diff.diffImgURL = diff.diffImgURL.slice(2);
-    //                 diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
-                    
-    //             });
-                
-    //         });
 
     Dashboard.allScreenshotsForUser(currentUser._id)
             .then(function(allScreenshots) {
@@ -196,6 +185,62 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 return err;
             });
     }
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // display by Date
+    Dashboard.allDiffsForUser(currentUser._id)
+        .then(function(allDiffs) {
+            var dates = [];
+            allDiffs.forEach(function(diffImg, index) {
+                var formattedDate = formatDate(diffImg.captureTime);
+                if (dates.indexOf(formattedDate) < 0) {
+                    dates.push(formattedDate);
+                }
+            });
+            $scope.dates = dates;
+
+            var byDate = [];
+            $scope.dates.forEach(function(date) {
+                var d = {
+                    date: '',
+                    alerts: [],
+                    perc: []
+                };
+                d.date = date;
+                byDate.push(d);
+            });
+
+            Dashboard.allDiffsForUser(currentUser._id)
+                .then(function(allDiffs) {
+                        allDiffs.forEach(function(diff) {
+                            $scope.dates.forEach(function (date, index) {
+                                if (diff.captureTime === date) {
+                                    byDate[index].date = date;
+                                }
+                                if (diff.diffPercent*100 > 1) {
+                                    byDate[index].alerts.push(diff);
+                                }
+                                byDate[index].perc.push(diff.diffPercent);
+                            });
+
+                            $scope.testsByDate = byDate;
+                            // };  
+                        });
+                    
+                });
+        });
+
     // display by URL
     Dashboard.getTestsByUserID(currentUser._id)
             .then(function (tests) {
@@ -257,6 +302,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
                     Dashboard.allDiffsForUser(currentUser._id)
                         .then(function(allDiffs) {
+                            $scope.diffsForUser = allDiffs;
                                 allDiffs.forEach(function(diff) {
 
                                     $scope.viewports.forEach(function (viewport, index) {
