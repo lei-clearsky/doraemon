@@ -27,7 +27,7 @@
     						Average Diff %
     					</div>
     					<div class="overview-item-stats">
-    					 9%
+    					 {{ testsByDate[0].averagePerc }}%
     					</div>
     				</div>
        		</div>
@@ -45,7 +45,8 @@
 				<div class="cbp_tmlabel">
 					<h2 ng-show="test.alerts.length">There was changes</h2>
 					<h2 ng-hide="test.alerts.length">There was no changes</h2>
-					<p>Alert: {{test.alerts.length}} <span class="fa">See All Alerts</span></p>
+					<p>Alert: <span class="badge btn-danger">{{test.alerts.length}}</span></p>
+					<span class="fa">See All Alerts</span>
 				</div>
 			</li>
 		</ul>

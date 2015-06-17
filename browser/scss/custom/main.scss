@@ -29,10 +29,9 @@
 .tab-content {
 	h3 {
 		margin-left: 30px;
-		background: #6cbfee;
-		color: #fff;
+		color: #333;
 		font-weight: 300;
-		padding: 10px;
+		padding: 10px 0;
 	}
 }
 
@@ -50,11 +49,23 @@
   padding: 15px 20px;
 }
 
+
+
 .cbp_tmtimeline {
 	margin: 30px;
 	padding: 0;
 	list-style: none;
 	position: relative;
+
+	.badge {
+		margin-left: 10px;
+		min-width: 35px;
+		padding: 10px;
+		font-size: 14px;
+		font-weight: 300;
+		background-color: #d9534f;
+		border-radius: 50%;
+	}
 } 
 
 /* The line */
@@ -165,22 +176,6 @@
 	left: 20%;
 	top: 0;
 	margin: 0 0 0 -25px;
-}
-
-.cbp_tmicon-phone:before {
-	content: "\e000";
-}
-
-.cbp_tmicon-screen:before {
-	content: "\e001";
-}
-
-.cbp_tmicon-mail:before {
-	content: "\e002";
-}
-
-.cbp_tmicon-earth:before {
-	content: "\e003";
 }
 
 /* Example Media Queries */

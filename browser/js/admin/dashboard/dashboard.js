@@ -196,6 +196,19 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
+    };
+
+    function calcAveragePerc(percArr) {
+        var sum = 0, 
+            averagePerc;
+        percArr.forEach(function (perc) {
+            if (perc !== undefined)
+                sum += perc * 100;
+        });
+        averagePerc = sum / (percArr.length * 1.0);
+        averagePerc = averagePerc.toString();
+        averagePerc = averagePerc.slice(0, averagePerc.indexOf('.') + 2)
+        return averagePerc;
     }
 
     // display by Date
@@ -221,7 +234,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     date: '',
                     day: '',
                     alerts: [],
-                    perc: []
+                    testsRun: [],
+                    perc: [],
+                    averagePerc: ''
                 };
                 d.date = date;
                 d.day = days[index];
@@ -230,20 +245,29 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
             Dashboard.allDiffsForUser(currentUser._id)
                 .then(function(allDiffs) {
-                        allDiffs.forEach(function(diff) {
-                            $scope.dates.forEach(function (date, index) {
-                                if (diff.captureTime === date) {
-                                    byDate[index].date = date;
-                                }
+                    allDiffs.forEach(function(diff) {
+                        $scope.dates.forEach(function (date, index) {
+                            var diffCaptureTime = formatDate(diff.captureTime);
+                            if (diffCaptureTime === date) {
+                                byDate[index].date = date;
+                               
                                 if (diff.diffPercent*100 > 1) {
                                     byDate[index].alerts.push(diff);
                                 }
-                                byDate[index].perc.push(diff.diffPercent);
-                            });
-
-                            $scope.testsByDate = byDate;
-                            // };  
+                            }
+                            
+                            byDate[index].perc.push(diff.diffPercent);
                         });
+                        
+                    });
+
+                    byDate.forEach(function (el) {
+                        var percArr = el.perc;
+                        var averagePerc = calcAveragePerc(percArr);
+                        el.averagePerc = averagePerc;
+                    });
+
+                    $scope.testsByDate = byDate;
                     
                 });
         });
