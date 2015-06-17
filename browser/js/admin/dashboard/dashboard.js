@@ -202,22 +202,29 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     Dashboard.allDiffsForUser(currentUser._id)
         .then(function(allDiffs) {
             var dates = [];
+            var days = [];
+            var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
             allDiffs.forEach(function(diffImg, index) {
                 var formattedDate = formatDate(diffImg.captureTime);
                 if (dates.indexOf(formattedDate) < 0) {
+                    var d = new Date(diffImg.captureTime);
+                    var day = dayNames[ d.getDay() ];
                     dates.push(formattedDate);
+                    days.push(day);
                 }
             });
             $scope.dates = dates;
 
             var byDate = [];
-            $scope.dates.forEach(function(date) {
+            $scope.dates.forEach(function(date, index) {
                 var d = {
                     date: '',
+                    day: '',
                     alerts: [],
                     perc: []
                 };
                 d.date = date;
+                d.day = days[index];
                 byDate.push(d);
             });
 

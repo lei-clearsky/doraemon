@@ -40,8 +40,8 @@
 		<tab heading="By Date">
 			<ul class="cbp_tmtimeline">
 			<li ng-repeat="test in testsByDate">
-				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span></span></time>
-				<div class="cbp_tmicon cbp_tmicon-phone"></div>
+				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span>{{ test.day }}</span></time>
+				<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
 				<div class="cbp_tmlabel">
 					<h2 ng-show="test.alerts.length">There was changes</h2>
 					<h2 ng-hide="test.alerts.length">There was no changes</h2>
@@ -53,16 +53,11 @@
 		<tab heading="By Test Name">
 			<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="text-center">
 				<div class="form-group tab-content-checkbox">
-				<!-- <div class="checkbox" > -->
 					<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
-						<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
-						{{ test.name }} -->
 						<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
 						{{ test.name }}
-
 					</label>
 				</div>
-				<!-- </div> -->
 				<button type="submit" class="btn btn-primary btn-large">Search</button>
 			</form>
 			<div class="row" >

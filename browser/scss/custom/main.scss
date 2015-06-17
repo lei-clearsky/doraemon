@@ -51,7 +51,7 @@
 }
 
 .cbp_tmtimeline {
-	margin: 30px 0 0 0;
+	margin: 30px;
 	padding: 0;
 	list-style: none;
 	position: relative;
@@ -76,6 +76,7 @@
 /* The date/time */
 .cbp_tmtimeline > li .cbp_tmtime {
 	display: block;
+	font-weight: 300;
 	width: 25%;
 	padding-right: 100px;
 	position: absolute;
@@ -118,6 +119,7 @@
 }
 
 .cbp_tmtimeline > li .cbp_tmlabel h2 { 
+	font-weight: 300;
 	margin-top: 0px;
 	padding: 0 0 10px 0;
 	border-bottom: 1px solid rgba(255,255,255,0.4);

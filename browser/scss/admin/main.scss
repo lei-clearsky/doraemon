@@ -9,28 +9,40 @@
       flex: 1 0 auto;
   }
 }
+$white: #fff;
+$light-gray: #ccc;
+$gray: #333;
 
 #admin-menu {
 	&.list-group {
-		background: #333;
-		font-weight: 300;
+		background: $gray;
+		width:100%;
 
 		.list-group-item {
-			padding: 15px;
-			margin-bottom: -1px;
-			background-color: transparent;
+			padding: 0;
+			margin-bottom: 0;
 			border: 0;
-			border-bottom: 1px solid #ccc;
-
+			xborder-bottom: 1px solid $light-gray;
+			.fa {
+				margin-right: 8px;
+			}
 			a {
-				padding: 15px;
+				display: block;
+				padding: 20px 30px;
 				width:100%;
+				text-decoration: none;
 				font-size: 18px;
-				color: #ccc;
+				font-weight:300;
+				color: $light-gray;
+				background-color: $gray;
+				transition: all 0.3s;
 				&:hover,
 				&:focus,
 				&:active {
-					background:
+					color:$white;
+					background-color: darken($gray, 30%);
+					transition: all 0.3s;
+					cursor: pointer;
 				}
 			}
 		}
@@ -51,12 +63,12 @@
 }
 
 .left-navigation {
-	background: #333;
+	background: $gray;
 }
 
 .dashboard-overview {
 	background: #66cc00;
-	color: #fff;
+	color: $white;
 	.overview-item {
 
 		font-weight: 300;
