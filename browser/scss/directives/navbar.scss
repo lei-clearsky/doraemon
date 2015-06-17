@@ -9,9 +9,9 @@ navbar {
   }
 
   a {
-    color: white;
+    color: #575757;
     &:hover {
-      color: white;
+      color: #000;
     }
   }
 
@@ -29,6 +29,7 @@ navbar {
     }
     &:hover {
       transition: color 0.2s;
+      background: none !important;
     }
     &:focus {
       color: #f30046;
