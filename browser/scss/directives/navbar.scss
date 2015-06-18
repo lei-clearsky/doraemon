@@ -1,7 +1,6 @@
 navbar {
 
   display: block;
-  background: #222;
 
   fullstack-logo {
     padding-top: 10px;
@@ -10,9 +9,9 @@ navbar {
   }
 
   a {
-    color: white;
+    color: #575757;
     &:hover {
-      color: white;
+      color: #000;
     }
   }
 
@@ -30,6 +29,7 @@ navbar {
     }
     &:hover {
       transition: color 0.2s;
+      background: none !important;
     }
     &:focus {
       color: #f30046;
