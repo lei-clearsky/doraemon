@@ -2,6 +2,7 @@
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffImages | json }} -->
 	<!-- {{ testsByDate | json }} -->
+	<!-- {{testsByDate[0] | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
@@ -23,11 +24,13 @@
     					</div>
     				</div>
     				<div class="col-md-4 overview-item text-center">
-    					<div class="overview-item-heading">
-    						Average Diff %
-    					</div>
-    					<div class="overview-item-stats">
-    					 {{ testsByDate[0].averagePerc }}%
+    					<select class="overview-item-heading" ng-model="diffPerc">
+    						<option selected value="{{ testsByDate[0].averagePerc }}">Average Diff %</option>
+    						<option value="{{ testsByDate[0].highestPerc }}" selected="selected">Highest Diff %</option>
+    						<option value="{{ testsByDate[0].lowestPerc }}">Lowest Diff %</option>
+    					</select>
+    					<div ng-show="diffPerc" class="overview-item-stats">
+    					 {{ diffPerc | percentage:2 }}
     					</div>
     				</div>
        		</div>
@@ -47,10 +50,10 @@
 					<h2 ng-hide="test.alerts.length">There was no changes</h2>
 					<p>
 						<span class="cbp_tmstats">
-						Alert: <span class="badge btn-danger">{{test.alerts.length}}</span>
+						Alert: <span class="badge badge-warning">{{test.alerts.length}}</span>
 						</span>
 						<span class="cbp_tmstats">
-						Average Diff: <span class="badge btn-danger">{{test.averagePerc}}%</span>
+						Average Diff: <span class="badge badge-info">{{test.averagePerc | percentage:2}}</span>
 						</span>
 					</p>
 					<span class="fa">See All Alerts</span>

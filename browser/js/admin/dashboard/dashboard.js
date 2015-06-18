@@ -203,12 +203,34 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             averagePerc;
         percArr.forEach(function (perc) {
             if (perc !== undefined)
-                sum += perc * 100;
+                sum += perc;
         });
-        averagePerc = sum / (percArr.length * 1.0);
-        averagePerc = averagePerc.toString();
-        averagePerc = averagePerc.slice(0, averagePerc.indexOf('.') + 2)
+        averagePerc = sum / (percArr.length);
+        // averagePerc = averagePerc.toString();
+        // averagePerc = averagePerc.slice(0, averagePerc.indexOf('.') + 2);
         return averagePerc;
+    }
+
+    function getHighestPerc(percArr) {
+        var highest = 0;
+        percArr.forEach(function(perc) {
+            if (perc !== undefined) {
+                if (perc > highest)
+                    highest = perc;
+            }
+        });
+        return highest;
+    }
+
+    function getLowestPerc(percArr) {
+        var lowest = 1;
+        percArr.forEach(function(perc) {
+            if (perc !== undefined || perc !== 0) {
+                if (perc < lowest)
+                    lowest = perc;
+            }
+        });
+        return lowest;
     }
 
     // display by Date
@@ -236,6 +258,8 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     alerts: [],
                     testsRun: [],
                     perc: [],
+                    lowestPerc: '',
+                    highestPerc: '',
                     averagePerc: ''
                 };
                 d.date = date;
@@ -264,11 +288,15 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     byDate.forEach(function (el) {
                         var percArr = el.perc;
                         var averagePerc = calcAveragePerc(percArr);
+                        var highestPerc = getHighestPerc(percArr);
+                        var lowestPerc = getLowestPerc(percArr);
+                        el.lowestPerc = lowestPerc;
+                        el.highestPerc = highestPerc;
                         el.averagePerc = averagePerc;
                     });
 
                     $scope.testsByDate = byDate;
-                    
+                    $scope.diffPerc = $scope.testsByDate[0].averagePerc;
                 });
         });
 
@@ -402,7 +430,11 @@ app.filter('unique', function() {
    };
 });
 
-
+app.filter('percentage', ['$filter', function ($filter) {
+    return function (input, decimals) {
+        return $filter('number')(input * 100, decimals) + '%';
+    };
+}]);
 
 
 

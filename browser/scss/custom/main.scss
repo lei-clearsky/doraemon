@@ -44,6 +44,7 @@
   line-height: 1.42857143;
   border: 1px solid transparent;
   border-radius: 0;
+  color:#333;
   font-size: 18px;
   font-weight: 300;
   padding: 15px 20px;
@@ -63,11 +64,22 @@
 		padding: 10px;
 		font-size: 14px;
 		font-weight: 300;
-		background-color: #d9534f;
 		border-radius: 50%;
+		&.badge-warning {
+			background-color: #F3A836;
+		}
+		&.badge-info {
+			background-color:#A4A1A1;
+		}
 	}
 	.cbp_tmstats {
 		margin-right:20px;
+	}
+	.cbp_tmlabel {
+		.fa {
+			color: #F3A836;
+  			font-size: 14px;
+		}
 	}
 } 
 
@@ -78,7 +90,7 @@
 	top: 0;
 	bottom: 0;
 	width: 10px;
-	background: #afdcf8;
+	background: #f7f7f7;
 	left: 20%;
 	margin-left: -10px;
 }
@@ -108,18 +120,18 @@
 
 .cbp_tmtimeline > li .cbp_tmtime span:last-child {
 	font-size: 2.9em;
-	color: #3594cb;
+	color: #66cc00;
 }
 
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmtime span:last-child {
-	color: #6cbfee;
+	color: #66cc00;
 }
 
 /* Right content */
 .cbp_tmtimeline > li .cbp_tmlabel {
 	margin: 0 0 15px 25%;
-	background: #3594cb;
-	color: #fff;
+	background: #f4f5f2;
+	color: #333;
 	padding: 2em;
 	font-size: 1.2em;
 	font-weight: 300;
@@ -129,7 +141,7 @@
 }
 
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel {
-	background: #6cbfee;
+	background: #f4f5f2;
 }
 
 .cbp_tmtimeline > li .cbp_tmlabel h2 { 
@@ -148,13 +160,13 @@
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-right-color: #3594cb;
+	border-right-color: #f4f5f2;
 	border-width: 10px;
 	top: 10px;
 }
 
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel:after {
-	border-right-color: #6cbfee;
+	border-right-color: #f4f5f2;
 }
 
 /* The icons */
@@ -172,9 +184,9 @@
 	-webkit-font-smoothing: antialiased;
 	position: absolute;
 	color: #fff;
-	background: #46a4da;
+	background: #b5da9f;
 	border-radius: 50%;
-	box-shadow: 0 0 0 8px #afdcf8;
+	box-shadow: 0 0 0 8px #f7f7f7;
 	text-align: center;
 	left: 20%;
 	top: 0;
