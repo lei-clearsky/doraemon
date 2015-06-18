@@ -50,8 +50,8 @@
 			padding: 15px 20px;
 			&:hover,
 			&:focus {
-				background-color: #66cc00;
-				color: #fff;
+				border-bottom: 3px solid #6c0;
+				background: #fff;
 			}
 		}
 		&.active {
