@@ -1,7 +1,9 @@
+<div class="admin-sub-header">
+    <h1>Configuration Form</h1>
+</div>
 <div class="col-md-8 col-md-offset-2">
 <section id="config">
     <form name="form" novalidate>
-        <h1>Configuration Form</h1>
         <div class="form-group">            
             <input type="text" name="formTestName" ng-model="testName" required>
             <span style="color:red" ng-show="submitAttempted && testName.length === 0">Please name your UI test!</span>

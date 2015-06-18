@@ -1,25 +1,26 @@
-	<!-- {{ searchParams | json }} -->
-	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ diffImages | json }} -->
-	<!-- {{ testsByDate | json }} -->
-	<!-- {{testsByDate[0] | json}} -->
-	
+	<!-- {{ alertsByDate | json }} -->
+
+<div class="admin-sub-header">
+	<h1>Alerts</h1>
+</div>
+
 	<ul class="cbp_tmtimeline">
-		<li ng-repeat="test in testsByDate">
-			<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span>{{ test.day }}</span></time>
+		<li ng-repeat="alert in alertsByDate">
+			<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{alert.date}}</span> <span>{{ alert.day }}</span></time>
 			<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
 			<div class="cbp_tmlabel">
-				<h2 ng-show="test.alerts.length">There was changes</h2>
-				<h2 ng-hide="test.alerts.length">There was no changes</h2>
-				<p>
-					<span class="cbp_tmstats">
-					Alert: <span class="badge badge-warning">{{test.alerts.length}}</span>
-					</span>
-					<span class="cbp_tmstats">
-					Average Diff: <span class="badge badge-info">{{test.averagePerc | percentage:2}}</span>
-					</span>
-				</p>
-				<span class="fa">See All Alerts</span>
+				<h2>
+					Alerts: <span class="badge badge-warning">{{alert.alerts.length}}</span>
+				</h2>
+				<div class="alert-info-box" ng-repeat="diff in alert.alerts">
+					<p><span class="alert-label">Time:</span> {{ diff.captureTime | date:'MM/dd/yyyy @ h:mma'}}</p>
+					<p><span class="alert-label">Diff Percent:</span> {{ diff.diffPercent | percentage:2 }}</p>
+					<p><span class="alert-label">URL:</span> {{ diff.websiteUrl }}</p>
+					<p><span class="alert-label">Viewport:</span> {{ diff.viewport }}</p>					
+				</div>
+
+
+
 			</div>
 		</li>
 	</ul>

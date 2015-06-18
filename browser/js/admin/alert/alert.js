@@ -18,10 +18,6 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
 
     $scope.alertsByDate = null;
 
-    $scope.diffImages = {
-        byDate: []
-    };
-
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
@@ -49,7 +45,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
                     days.push(day);
                 }
             });
-            $scope.dates = dates;
+            // $scope.dates = dates;
 
             var byDate = [];
             dates.forEach(function(date, index) {

@@ -18,7 +18,7 @@ $material-form-active-color: darken($material-form-border-color, 10%) !default;
 $material-form-active-font-size: round($material-form-font-size * 0.8) !default;
 $material-form-active-top: -20px !default;
 $material-form-padding: 2px;
-$material-form-transition-speed: 0.2s;
+$material-form-transition-speed: 0.3s;
 
 .form-radio,.form-group {
 	position: relative; 

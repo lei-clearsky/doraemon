@@ -80,6 +80,7 @@
 		font-size: 14px;
 		font-weight: 300;
 		border-radius: 50%;
+		vertical-align: middle;
 		&.badge-warning {
 			background-color: #F3A836;
 		}
@@ -153,6 +154,13 @@
 	line-height: 1.4;
 	position: relative;
 	border-radius: 5px;
+	.alert-info-box {
+		padding: 15px 0;
+		border-bottom: 1px solid #ccc;
+		.alert-label {
+			font-weight: 400;
+		}
+	}
 }
 
 .cbp_tmtimeline > li:nth-child(odd) .cbp_tmlabel {
