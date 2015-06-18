@@ -35,21 +35,36 @@
 	}
 }
 
-.nav-tabs > li {
-	float: right;
+.nav-tabs {
+	border-bottom: none;
+	> li {
+		float: right;
+		> a {
+			margin-right: 2px;
+			line-height: 1.42857143;
+			border: none;
+			border-radius: 0;
+			color:#333;
+			font-size: 18px;
+			font-weight: 300;
+			padding: 15px 20px;
+			&:hover,
+			&:focus {
+				background-color: #66cc00;
+				color: #fff;
+			}
+		}
+		&.active {
+			> a,
+			> a:hover,
+			> a:focus {
+				cursor: pointer;
+				border: none;
+				border-bottom: 3px solid #6c0;
+			}
+		}
+	}
 }
-
-.nav-tabs > li > a {
-  margin-right: 2px;
-  line-height: 1.42857143;
-  border: 1px solid transparent;
-  border-radius: 0;
-  color:#333;
-  font-size: 18px;
-  font-weight: 300;
-  padding: 15px 20px;
-}
-
 
 
 .cbp_tmtimeline {

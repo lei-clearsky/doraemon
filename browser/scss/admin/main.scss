@@ -22,7 +22,7 @@ $gray: #333;
 			padding: 0;
 			margin-bottom: 0;
 			border: 0;
-			xborder-bottom: 1px solid $light-gray;
+			
 			.fa {
 				margin-right: 8px;
 			}
@@ -33,6 +33,7 @@ $gray: #333;
 				text-decoration: none;
 				font-size: 18px;
 				font-weight:300;
+				border-bottom: 1px solid #434343;
 				color: $light-gray;
 				background-color: $gray;
 				transition: all 0.3s;
