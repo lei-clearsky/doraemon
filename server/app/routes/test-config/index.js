@@ -1,42 +1,35 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
+process.env.AWS_SECRET_ACCESS_KEY='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';
 
+// var Promise = require("bluebird");
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 
 var CronJob = require('cron').CronJob;
 var Q = require('q');
-var Promise = require("bluebird");
 var gm = require('gm');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
+var chalk = require('chalk');
 
 var router = require('express').Router();
-module.exports = router;
-
 var mongoose = require('mongoose');
 var	testConfig = mongoose.model('TestConfig');
 var	imageCapture = mongoose.model('ImageCapture');
 var imageDiff = mongoose.model('ImageDiff');
+module.exports = router;
 
 var path = require('path');
-
 var	AWS = require('aws-sdk');
-// var configPath = path.join(__dirname, '/config.json');
-
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
-    
 AWS.config.region = 'us-standard';
-
-// testing purposes
-var hour = 10;
-var weekday = 6;
 
 router.get('/', function (req, res, next) {
 	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
 
 	var imgStream = s3.getObject(params).createReadStream();
 	imgStream.pipe(res);
-
 });
 
 router.get('/:id', function (req, res, next) {
@@ -56,39 +49,52 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 */3 * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
-    // retrieving information about the date to be used later
-    console.log('process begins...');
-    
-    var date = new Date();
-    // var hour = date.getHours();
-    // var weekday = date.getDay();
-    
-    // searches TestConfig model and retrives URL objects
-    // currently using 1, 6 as params for testing purposes
-    testConfig.findAllScheduledTests(10, 6).then(function(configs) {
-		configs.forEach(function(config) {
-			runTestConfig(config, date);
-		});
+		// retrieving information about the date to be used later
+		var date = new Date();
+		// var hour = date.getHours();
+		// var weekday = date.getDay();
 
-		nightmare.run(function() {
-			console.log('finished with all');
+		// testing purposes
+		var hour = 10;
+		var weekday = 6;
+
+		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+		// searches TestConfig model and retrives URL objects
+		// currently using 10, 6 as params for testing purposes
+		testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
+			var promises = [];
+
+			configs.forEach(function(config) {
+				promises.push(runTestConfig(config, date));
+			});
+
+			nightmare.run();
+
+			return Q.all(promises);
+		}).then(function() {
+			console.log(chalk.magenta('Finished with all jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+		}).then(null, function(error) {
+		   	console.log(error);
 		});
-	}).then(null, function(error) {
-       	console.log(error);
-    });
-  },
-  start: false
+  	},
+  	start: false
 });
 
-// intervalJob.start();
+intervalJob.start();
 
 function runTestConfig(config, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
 
+	// testing purposes
+	var hour = 10;
+	var weekday = 6;
+
+	var deferred = Q.defer();
 	var snapshotPath = createImageDir(config.userID, config.name, config.viewport, 'snapshots', hour, weekday, date.getTime(), config._id);
+	
 	// use nightmare to take a screenshot
 	nightmare
 		.viewport(config.viewportWidth, config.viewportHeight)
@@ -96,24 +102,37 @@ function runTestConfig(config, date) {
 		.wait()	
 		.screenshot(snapshotPath)
 		.use(function() {
-			console.log('screenshot completed...');
+			console.log(chalk.cyan('Starting testConfig job - ' + config._id));
+			console.log(chalk.green('Screenshot created...'));
 			saveImageCapture(config, snapshotPath, date)
 			.then(function(ImageCaptures) {
+				console.log(chalk.green('New imageCapture document saved...'));
 				return createDiff(config, ImageCaptures, date);
 			}).then(function(output) {
-				return saveDiffImage(output);
+				if (output) {
+					console.log(chalk.green('New imageDiff document saved...'));
+					return saveDiffImage(output);
+				} else {
+					console.log(chalk.yellow('No previous snapshot found'));
+					return null;
+				}
+			}).then(function(output) {
+				if (output)
+					console.log(chalk.green('Saved diff image...'));
+				console.log(chalk.cyan('Finished testConfig job - ' + config._id));
+
+				return deferred.resolve(output);
 			}).then(null, function(err) {
-				console.log(err);
+				deferred.reject(err);
 			});
 		});
+
+	return deferred.promise;
 };
 
-function saveImageCapture(config, snapshotPath, date) {
-	// var hour = date.getHours();
-	// var weekday = date.getDay();
-
+function saveImageCapture(config, snapshotPath) {
 	var snapshotS3Path = snapshotPath.slice(2);
-	var diffS3Path, diffImgPath, lastImageCapture;
+	var diffS3Path, diffImgPath, lastImageCapture, newImageCapture;
 	// searches for last screenshot taken
 	return imageCapture
 		.searchForLastSaved(config.URL, config.userID, config.viewport) 
@@ -132,21 +151,27 @@ function saveImageCapture(config, snapshotPath, date) {
 			// creates new image in database
 			return imageCapture.create(newImage);
 		}).then(function(newImg) {
-			console.log('new imageCapture document saved...');
+			newImageCapture = newImg;
 
 			// save file to AWS
 			var imgPath = path.join(__dirname, '../../../../' + snapshotS3Path);
 
-			saveToAWS(imgPath, snapshotS3Path);
-
-			return { newImageCapture: newImg, lastImageCapture: lastImageCapture };
+			return saveToAWS(imgPath, snapshotS3Path);
+		}).then(function() {
+			return { newImageCapture: newImageCapture, lastImageCapture: lastImageCapture };
+		}).then(null, function(err) {
+			return err;
 		});
 };
-
 
 function createDiff(config, ImageCaptures, date) {
 	// var hour = date.getHours();
 	// var weekday = date.getDay();
+	// console.log(ImageCaptures);
+
+	// testing purposes
+	var hour = 10;
+	var weekday = 6;
 
 	// diff the images
     var diffPath = createImageDir(config.userID, config.name, config.viewport, 'diffs', hour, weekday, date.getTime(), config._id);
@@ -158,14 +183,14 @@ function createDiff(config, ImageCaptures, date) {
         file: diffPath // required
     };
 
-    if (!ImageCaptures.lastImageCapture) {
-    	console.log('No previous snapshot created');
-    	deferred.resolve(null);
+    if (ImageCaptures.lastImageCapture === null) {
+    	return deferred.resolve(null);
     }
 	
-	console.log('diffing the images...');
 	gm.compare(ImageCaptures.lastImageCapture.imgURL, ImageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
-	    if (err) console.log(err);
+	    if (err) {
+	    	return deferred.reject(err);
+	    }
         // console.log('The images are equal: %s', isEqual);
         // console.log('Actual equality: %d', equality);
         // console.log('Raw output was: %j', raw);    
@@ -177,19 +202,16 @@ function createDiff(config, ImageCaptures, date) {
 		    newImg: ImageCaptures.newImageCapture._id,
 		    lastImg: ImageCaptures.lastImageCapture._id
 		};
-
-		console.log('diff output...', output);
-	    deferred.resolve(output);
+	    
+	    return deferred.resolve(output);
 	});
 
 	return deferred.promise; 
 };
 
 function saveDiffImage(output) {
-	if (!output)
+	if (output === null)
 		return;
-
-	console.log('saving diff image to database...');
 
 	// temp image object to be save to database
 	var diffImage = {
@@ -201,14 +223,12 @@ function saveDiffImage(output) {
 		testName: output.config.name,
 		compareFromID: output.lastImg,
 		compareToID: output.newImg
-
 	};
 
 	return imageDiff.create(diffImage).then(function(img) {
 		var diffS3Path = output.file.slice(2);
 		var diffImgPath = path.join(__dirname, '../../../../' + diffS3Path);
-		saveToAWS(diffImgPath, diffS3Path);
-		return img;
+		return saveToAWS(diffImgPath, diffS3Path);
 	});
 }
 
@@ -220,33 +240,39 @@ function createImageDir(userID, configName, viewport, imgType, hour, day, time, 
 	    if (err) console.error(err);
 	});
 
-	path += '/' + configID + '_' + hour + '_' + day + '_' + time +'.png';
+	path += '/' + configID + '_' + hour + '_' + day + '_' + time +'.jpg';
 
 	return path;
 }
 
 function saveToAWS(filepath, S3Path) {
 	// save file to AWS
+	var deferred = Q.defer();
 	var imgPath = path.join(__dirname, '../../../../' + filepath);
-
-	// console.log('this is the path', imgPath)
-
     fs.readFile(filepath, function (err, data) {
-        if (err) { return console.log(err); }
-		var params = {Key: S3Path, Body: data};
-		// console.log('xky', s3.createBucket.toString());
+        if (err) { 
+        	return deferred.reject(err); 
+        }
+
+		var params = {
+			Key: S3Path, 
+			Body: data
+		};
+
 		s3.createBucket(function(err, data) {
-			// console.log('error?: ', err);
-			if (err) return console.log(err);
+			if (err) {
+				return deferred.reject(err);
+			}
+
 		  	s3.upload(params, function(err, data) {
 			    if (err) {
-			      	console.log("Error uploading data: ", err);
-			      	console.log(err);
+			      	return deferred.reject(err);
 			    } else {
-			      	console.log("Successfully uploaded data to myBucket/myKey");
-			    }
+			    	return deferred.resolve(data);
+			    } 
 		  	});
 		});
     });
-    // end save file to AWS
+
+    return deferred.promise; 
 }

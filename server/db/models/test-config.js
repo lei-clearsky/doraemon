@@ -72,8 +72,10 @@ schema.statics.findAllScheduledTests = function(hour, day) {
     return this.find({
                 dayFrequency: day,
                 hourFrequency: hour
-            }).exec()
+            }).exec();
 };
+
+
 
 schema.virtual('viewportWidth').get(function () {
     return parseInt(this.viewport.split('x')[0]);;
