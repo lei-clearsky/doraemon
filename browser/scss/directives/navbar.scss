@@ -1,7 +1,9 @@
 navbar {
 
   display: block;
-  background: #000;
+  .admin {
+    background: #000;
+  }
 
   fullstack-logo {
     padding-top: 10px;

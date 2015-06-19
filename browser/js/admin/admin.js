@@ -8,7 +8,9 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('AdminController', function ($scope, AuthService) {
+app.controller('AdminController', function ($scope, $rootScope, AuthService) {
+    
+    $rootScope.stateClass = 'admin';
 
     // admin menus
     $scope.adminMenus = [
