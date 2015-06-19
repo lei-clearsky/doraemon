@@ -20,12 +20,23 @@ $material-form-active-top: -20px !default;
 $material-form-padding: 2px;
 $material-form-transition-speed: 0.3s;
 
+#config {
+	padding-bottom: 40px;
+}
+.radio-inline,
+.checkbox-inline {
+	margin-left: 0 !important;
+	margin-right: 6px !important;
+}
 .form-radio,.form-group {
 	position: relative; 
-	margin-top: $material-form-margin-bottom;
+	margin-top: 0;
 	margin-bottom: $material-form-margin-bottom;
 }
-
+.border-bottom {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 30px;
+}
 .form-help {
 	margin-top: $material-form-padding;
 	margin-left: $material-form-padding;
@@ -220,7 +231,15 @@ $material-form-transition-speed: 0.3s;
 	border-color: none;
 	&:hover,
 	&:focus {
-		background: #A4A1A1;
+		background: #61af13 !important;
+		border-color: #8f963d !important;
+	}
+}
+.btn-success {
+	&:hover,
+	&:focus {
+		background: #00bc47 !important;
+		border-color: #27aa43 !important;
 	}
 }
 

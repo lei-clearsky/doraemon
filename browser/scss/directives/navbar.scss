@@ -20,7 +20,7 @@ navbar {
 
   .navbar {
     margin-bottom:0;
-    padding: 5px 30px;
+    padding: 5px 10px 5px 30px;
   }
 
   .nav > li > a {
@@ -48,13 +48,18 @@ navbar {
   .welcome {
     float: right;
     margin-top: 12px;
+    position: relative;
+    z-index: 9999;
     span {
-      color: white;
+      color: #66cc00;
     }
     a {
-      color: #f30046;
+      color: #333;
       cursor: pointer;
     }
   }
 
+}
+.navbar-static-top {
+  z-index: inherit !important;
 }
