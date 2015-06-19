@@ -15,24 +15,6 @@
       flex: 1 100% auto;
   }
 }
-/*#main-uiview {
-	display: -webkit-box;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-}
-#admin {
-	width: 100%;
-	flex: 1 100%;
-}*/
-.col-lg-2.left-navigation {
-	width: 20% !important;
-}
-
-#admin-board {
-	width: 80% !important;
-}
 
 $white: #fff;
 $light-gray: #ccc;
@@ -53,7 +35,7 @@ $gray: #333;
 			}
 			a {
 				display: block;
-				padding: 20px 30px;
+				padding: 15px 20px;
 				width:100%;
 				text-decoration: none;
 				font-size: 18px;
@@ -79,8 +61,19 @@ $gray: #333;
 
 #admin-board {
 	position: relative;
-	z-index: 9999;
+	z-index: 8000;
 	top: -50px;
+	box-shadow: 0 0 20px #000;
+	.nav-tabs {
+		position: relative;
+		top: -40px;
+		z-index:9988;
+		& > li > a {
+			background: #fff;
+			padding: 10px 20px;
+			font-size: 14px;
+		}
+	}
 }
 
 .admin-sub-header {
