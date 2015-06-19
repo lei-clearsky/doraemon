@@ -1,14 +1,39 @@
 @media screen and (min-width: 768px) {
-  .same-height,
-  .same-height > div[class*='col-'] {  
-      display: -webkit-box;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      flex: 1 0 auto;
+  .same-height {
+  	display: -webkit-box;
+  	display: -moz-box;
+  	display: -ms-flexbox;
+  	display: -webkit-flex;
+  	display: flex;
+  	min-height: calc(100vh - 61px);
+  	&:before,
+  	&:after {
+  		display: none !important;
+  	}
+  }
+  .same-height > div[class*='col-'] {
+      flex: 1 100% auto;
   }
 }
+/*#main-uiview {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+#admin {
+	width: 100%;
+	flex: 1 100%;
+}*/
+.col-lg-2.left-navigation {
+	width: 20% !important;
+}
+
+#admin-board {
+	width: 80% !important;
+}
+
 $white: #fff;
 $light-gray: #ccc;
 $gray: #333;
