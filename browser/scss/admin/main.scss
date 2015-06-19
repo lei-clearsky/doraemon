@@ -93,3 +93,17 @@ $gray: #333;
 		}
 	}
 }
+
+select {
+	background-color: transparent;
+	border: none;
+	border-bottom: 1px solid #fff;
+	border-radius: 0px;
+	-webkit-appearance: none;
+	box-shadow: none;
+    background: transparent;
+    background-image: none;
+	&:focus {
+    	outline: none;
+	}
+}
