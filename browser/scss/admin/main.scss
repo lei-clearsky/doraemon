@@ -52,6 +52,12 @@ $gray: #333;
 
 }
 
+#admin-board {
+	position: relative;
+	z-index: 9999;
+	top: -50px;
+}
+
 .admin-sub-header {
 	padding: 30px 50px 40px 50px;
 	background: #fff;
