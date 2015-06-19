@@ -233,3 +233,60 @@ $material-form-transition-speed: 0.3s;
   border: none;
   border-radius: 0;
 }
+
+.admin-config-listing {
+	margin: 0 20px;
+	.admin-config-listing-item {
+		list-style-type: none;
+		background: transparent;
+		border-bottom:1px solid #333;
+		margin-bottom: 10px;
+		.admin-config-info {
+			width: 70%;
+			padding:10px 0;	
+			display: inline-block;
+			float:left;
+			.admin-config-heading {
+				font-size: 26px;
+				font-weight: 300;	
+			}
+			p {
+
+			}
+		}
+		.admin-config-action {
+			width: 30%;
+			display: inline-block;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

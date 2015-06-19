@@ -56,7 +56,7 @@ app.value('hourFrequencyOptions', [
     {label: '10 pm', value: 22}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions) {
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard) {
 
     $scope.submitAttempted = false;
     $scope.testName = '';
@@ -73,6 +73,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.showSuccessAlert = false;
     $scope.showErrorAlert = false;
     $scope.errorMessage = "Please fill all options";
+    $scope.testsByUserID = [];
 
     $scope.addNewUrl = function() {
         $scope.config.push({
@@ -136,4 +137,37 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         $scope.submitAttempted = false;
 
     };
+
+    Dashboard.getTestsByUserID(currentUser._id)
+        .then(function (tests) {
+            tests.forEach(function(test) {
+                
+            });
+            $scope.testsByUserID = tests;
+        })
+        .catch(function (err) {
+            return err;
+        })
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

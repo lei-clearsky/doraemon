@@ -1,3 +1,10 @@
+/* =============== Group ========================= */
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .btn-add {
 	margin: 10px 0;
 	
