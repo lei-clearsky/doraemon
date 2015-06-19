@@ -3,17 +3,21 @@
 // var mongoose = require('mongoose');
 
 // var supertest = require('supertest');
-// var app = require('../../../server/app');
-// var agent = supertest.agent(app);
+// // var app = require('../../../server/app');
+// // var agent = supertest.agent(app);
 
 // var chai = require('chai');
 // var expect = chai.expect;
 // var spies = require('chai-spies');
 // chai.use(spies);
+
+// require('../../../server/db/models/image-capture');
+// require('../../../server/db/models/image-diff');
 // require('../../../server/db/models/test-config');
 
-// var TestConfig = mongoose.model('TestConfig');
 // var ImageCapture = mongoose.model('ImageCapture');
+// var ImageDiff = mongoose.model('ImageDiff');
+// var TestConfig = mongoose.model('TestConfig');
 
 
 // describe('HTTP requests', function() {
@@ -27,17 +31,17 @@
 //         clearDB(done);
 //     });
 
-// 	// before(function(done) {
-//  //        TestConfig.remove({}, done);
-//  //    });
+// 	before(function(done) {
+//         TestConfig.remove({}, done);
+//     });
 
-//  //    describe('GET /', function() {
-//  //    	 it('should get 200 on api/test-config/', function(done) {
-// 	//         agent
-// 	//           .get('api/test-config/')
-// 	//           .expect(200, done)
-// 	//     })
-//  //    })
+//     // describe('GET /', function() {
+//     // 	 it('should get 200 on api/test-config/', function(done) {
+// 	   //      agent
+// 	   //      	.get('api/test-config/')
+// 	   //       	.expect(200, done)
+// 	   //  })
+//     // })
 
 //     // describe('GET /wiki/:title', function() {
 //     //     it('should get 404 on page that doesnt exist', function(done) {

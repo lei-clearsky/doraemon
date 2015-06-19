@@ -88,7 +88,7 @@ router.get('/diff/:id', function (req, res, next) {
 			.then(function(diff) {
 				// console.log('single diff image ', diff);
 				res.json(diff);
-			})
+			});
 });
 
 

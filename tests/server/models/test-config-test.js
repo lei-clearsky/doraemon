@@ -6,6 +6,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var mongoose = require('mongoose');
 
+require('../../../server/db/models/image-capture');
+require('../../../server/db/models/image-diff');
 require('../../../server/db/models/test-config');
 
 var TestConfig = mongoose.model('TestConfig');
