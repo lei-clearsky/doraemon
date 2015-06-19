@@ -2,6 +2,7 @@
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffImages | json }} -->
 	<!-- {{ testsByDate | json }} -->
+	<!-- {{testsByDate[0] | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
@@ -23,11 +24,13 @@
     					</div>
     				</div>
     				<div class="col-md-4 overview-item text-center">
-    					<div class="overview-item-heading">
-    						Average Diff %
-    					</div>
-    					<div class="overview-item-stats">
-    					 9%
+    					<select class="overview-item-heading" ng-model="diffPerc">
+    						<option selected value="{{ testsByDate[0].averagePerc }}">Average Diff %</option>
+    						<option value="{{ testsByDate[0].highestPerc }}" selected="selected">Highest Diff %</option>
+    						<option value="{{ testsByDate[0].lowestPerc }}">Lowest Diff %</option>
+    					</select>
+    					<div ng-show="diffPerc" class="overview-item-stats">
+    					 {{ diffPerc | percentage:2 }}
     					</div>
     				</div>
        		</div>
@@ -40,12 +43,20 @@
 		<tab heading="By Date">
 			<ul class="cbp_tmtimeline">
 			<li ng-repeat="test in testsByDate">
-				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span></span></time>
-				<div class="cbp_tmicon cbp_tmicon-phone"></div>
+				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span>{{ test.day }}</span></time>
+				<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
 				<div class="cbp_tmlabel">
-					<h2 ng-show="test.alerts.length">There was changes</h2>
-					<h2 ng-hide="test.alerts.length">There was no changes</h2>
-					<p>Alert: {{test.alerts.length}} <span class="fa">See All Alerts</span></p>
+					<h2 ng-show="test.alerts.length">There were changes</h2>
+					<h2 ng-hide="test.alerts.length">There were no changes</h2>
+					<p>
+						<span class="cbp_tmstats">
+						Alert: <span class="badge badge-warning">{{test.alerts.length}}</span>
+						</span>
+						<span class="cbp_tmstats">
+						Average Diff: <span class="badge badge-info">{{test.averagePerc | percentage:2}}</span>
+						</span>
+					</p>
+					<span class="fa">See All Alerts</span>
 				</div>
 			</li>
 		</ul>
@@ -53,16 +64,11 @@
 		<tab heading="By Test Name">
 			<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="text-center">
 				<div class="form-group tab-content-checkbox">
-				<!-- <div class="checkbox" > -->
 					<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
-						<!-- <input type="checkbox" ng-true-value="'{{test.name}}'" name="testconfig" ng-false-value="''" ng-model="searchParams.testName['name' + $index]">
-						{{ test.name }} -->
 						<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
 						{{ test.name }}
-
 					</label>
 				</div>
-				<!-- </div> -->
 				<button type="submit" class="btn btn-primary btn-large">Search</button>
 			</form>
 			<div class="row" >
