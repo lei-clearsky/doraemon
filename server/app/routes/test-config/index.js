@@ -1,4 +1,7 @@
 'use strict';
+var AWSkeys = require('./AWSkeys'); 
+process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
+process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');
@@ -10,7 +13,7 @@ var chalk = require('chalk');
 
 var AWS = require('aws-sdk'); 
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
-AWS.config.region = 'us-standard'; 
+AWS.config.region = AWSkeys.region; 
 
 var router = require('express').Router();
 var mongoose = require('mongoose');

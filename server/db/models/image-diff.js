@@ -96,11 +96,7 @@ schema.statics.saveImageDiff = function(output) {
         compareToID: output.newImg
     };
 
-    return this.create(diffImage).then(function(img) {
-        var diffS3Path = output.file.slice(2);
-        var diffImgPath = path.join(__dirname, '../../../' + diffS3Path);
-        return utilities.saveToAWS(diffImgPath, diffS3Path);
-    });
+    return this.create(diffImage);
 };
 
 mongoose.model('ImageDiff', schema);
