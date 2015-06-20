@@ -57,7 +57,7 @@
                         <label class="label-block">Viewports to test</label>
                         <div class="checkbox checkbox-inline" ng-repeat="viewport in viewportOptions">
                             <label>
-                                <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><i class="helper"></i> <!--{{viewport.label}}--> {{viewport.value}}
+                                <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
                             </label>
                             <span style="color:red" ng-show="submitAttempted && url.viewports.length === 0">Please choose a viewport!</span>
                         </div>
@@ -66,7 +66,7 @@
                         <label class="label-block">Days to run tests</label>
                         <div class="checkbox checkbox-inline" ng-repeat="day in dayFrequencyOptions">
                             <label class="checkbox-inline" >
-                                <input ng-click="toggleCheckbox(day.value, url.dayFrequency)" type="checkbox"><i class="helper"></i> {{day.label}}
+                                <input ng-click="toggleCheckbox(day.value, url.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
                             </label>
                         </div>
                         <span style="color:red" ng-show="submitAttempted && url.dayFrequency.length === 0">Please choose a day to run test!</span>
@@ -75,7 +75,7 @@
                         <label class="label-block">Times to run tests</label>
                         <div class="checkbox checkbox-inline" ng-repeat="hour in hourFrequencyOptions">
                             <label class="checkbox-inline" >
-                                <input ng-click="toggleCheckbox(hour.value, url.hourFrequency)" type="checkbox"><i class="helper"></i> {{hour.label}}
+                                <input ng-click="toggleCheckbox(hour.value, url.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
                             </label>
                         </div>
                         <span style="color:red" ng-show="submitAttempted && url.hourFrequency.length === 0">Please choose the time of day to run test!</span>

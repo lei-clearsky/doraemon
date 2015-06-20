@@ -1,7 +1,8 @@
 navbar {
 
   display: block;
-  .admin {
+  .admin,
+  .dashboard {
     background: #000;
   }
 
@@ -20,9 +21,13 @@ navbar {
 
   .navbar {
     margin-bottom:0;
-    padding: 5px 10px 5px 30px;
-  }
+    padding: 5px 30px;
+    &.admin,
+    &.dashboard {
+      padding-right: 10px;
+    }
 
+  }
   .nav > li > a {
     cursor: pointer;
     font-size: 16px;
@@ -39,12 +44,10 @@ navbar {
       background: transparent;
     }
   }
-
   .login-button {
     float: right;
     margin-top: 8px;
   }
-
   .welcome {
     float: right;
     margin-top: 12px;
@@ -58,8 +61,18 @@ navbar {
       cursor: pointer;
     }
   }
-
+  .dashboard {
+    .welcome {
+      span {
+        color: #bee181;
+      }
+      a {
+        color: #eee;
+      }
+    }
+  }
 }
+
 .navbar-static-top {
   z-index: inherit !important;
 }

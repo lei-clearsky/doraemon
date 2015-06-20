@@ -23,11 +23,6 @@ $material-form-transition-speed: 0.3s;
 #config {
 	padding-bottom: 40px;
 }
-.radio-inline,
-.checkbox-inline {
-	margin-left: 0 !important;
-	margin-right: 6px !important;
-}
 .form-radio,.form-group {
 	position: relative; 
 	margin-top: 0;
@@ -147,23 +142,29 @@ $material-form-transition-speed: 0.3s;
 
 .checkbox, .radio {
 	margin-top: $material-form-margin-bottom / 2;
-	margin-bottom: $material-form-margin-bottom / 2;
+	margin-bottom: $material-form-margin-bottom / 3;
 	&.checkbox-inline {
 		vertical-align: baseline;
 		padding-left: 0;
+		margin-left: 0;
+		margin-right: 13px;
 	}
-
 	label {
 		position: relative;
 		cursor: pointer;
-		padding-left: 25px;
+		padding-left: 20px;
+		font-size: 13px;
+		font-weight: 300;
+		input:checked + span {
+			font-weight: 400;
+		}
 	}
 	.helper {
 		display: block;
 		position: absolute;
 		z-index: 1;
-		height: 18px;
-		width: 18px;
+		height: 16px;
+		width: 16px;
 		border: 1px solid $material-form-border-color;
 		top: 2px;
 		left: 0;
@@ -207,7 +208,12 @@ $material-form-transition-speed: 0.3s;
 .has-error .form-help {
 	color: $brand-danger !important;
 }
-
+.input-helper {
+	color: #9faa97;
+	font-weight: 300;
+	font-size: 12px;
+	padding-top: 3px;
+}
 .has-error {
 	.bar {
 		&:before,&:after {
@@ -224,6 +230,7 @@ $material-form-transition-speed: 0.3s;
 
 .label-block {
 	display: block;
+	font-weight: 400;
 }
 
 .btn-primary {

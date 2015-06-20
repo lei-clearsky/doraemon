@@ -28,7 +28,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
         if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
-    };
+    }
 
     // construct alert obj
     Dashboard.allDiffsForUser(currentUser._id)
@@ -96,7 +96,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
                 }
             }
         });
-    }   
+    };
 
 });
 

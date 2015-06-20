@@ -153,7 +153,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         })
         .catch(function (err) {
             return err;
-        })
+        });
 });
 
 

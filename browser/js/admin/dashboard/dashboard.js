@@ -42,7 +42,7 @@ app.factory('Dashboard', function ($http) {
                         })
                         .catch(function(err) {
                             return err;
-                        });;
+                        });
         },
         searchDiffs: function (params) {
             return $http({
@@ -54,7 +54,7 @@ app.factory('Dashboard', function ($http) {
             }).catch(function(err) {
                 console.log(err);
                 return err;
-            })
+            });
         },
         searchTestsByName: function (params) {
             return $http({
@@ -66,7 +66,7 @@ app.factory('Dashboard', function ($http) {
             }).catch(function(err) {
                 console.log(err);
                 return err;
-            })
+            });
         },
         allDiffsForUser: function (userID) {
 
@@ -76,7 +76,7 @@ app.factory('Dashboard', function ($http) {
                         })
                         .catch(function(err) {
                             return err;
-                        });;
+                        });
         },
         allScreenshotsForUser: function (userID) {
             return $http.get('/api/screenshots/allScreenshots/' + userID)
@@ -85,7 +85,7 @@ app.factory('Dashboard', function ($http) {
                         })
                         .catch(function(err) {
                             return err;
-                        });;
+                        });
         },
         getDiffsByUrl: function (params) {
             return $http({
@@ -98,20 +98,21 @@ app.factory('Dashboard', function ($http) {
             })
             .catch(function (err) {
                 return err;
-            })
+            });
         }
     };
 
 });
 
-app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser, allDiffs) {
+app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser, allDiffs, $rootScope) {
+    $rootScope.stateClass = 'dashboard';
     $scope.allDiffsForUser = allDiffs;
     $scope.diffsForUser = null;
     $scope.screenshotsForUser = null;
     $scope.testsByUser = null;
-    $scope.viewports;
-    $scope.urls;
-    $scope.dates;
+    $scope.viewports = null;
+    $scope.urls = null;
+    $scope.dates = null;
     $scope.testsByDate = null;
     
     $scope.dashboard = {
@@ -152,7 +153,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             .then(function (returnedDiffImgs) {
                 $scope.diffImgs = returnedDiffImgs;
             });
-    }
+    };
 
     $scope.searchDiffsByName = function () {
         Dashboard.searchTestsByName($scope.searchParams)
@@ -177,12 +178,12 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                 diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
                                 
                             });
-                        })
+                        });
             })
             .catch(function(err) {
                 return err;
             });
-    }
+    };
 
     function formatDate(date) {
         var d = new Date(date),
@@ -194,7 +195,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
-    };
+    }
 
     function calcAveragePerc(percArr) {
         var sum = 0, 
@@ -321,7 +322,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                         .then(function(diffs) {
                             diffs.forEach(function(diff) {
                                 diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL.slice(2);
-                            })
+                            });
                             var diffsInUrl = {
                                 urlName: url,
                                 images: diffs
@@ -392,8 +393,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 }
             }
         });
-    }   
-
+    };
 });
 
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {

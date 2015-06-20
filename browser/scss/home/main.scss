@@ -1,11 +1,23 @@
 #home {
 	height: calc(100vh - 71px);
-  background: url(/images/home.png) center 33% no-repeat;
   position: relative;
   h1, h2 {
   	font-family: 'Raleway Dots', cursive;
     margin: 10px 0;
     text-align: center;
+    color: #000;
+  }
+  h1 {
+    font-size: 40px;
+  }
+  h2 {
+    font-size: 60px;
+  }
+  .see {
+    width: 323px;
+    height: 425px;
+    margin: auto;
+    background: url(/images/home.png) center center no-repeat;
   }
   .footer {
   	text-align: center;
