@@ -13,7 +13,7 @@ var chalk = require('chalk');
 
 var AWS = require('aws-sdk'); 
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
-AWS.config.region = AWSkeys.region; 
+AWS.config.region = "us-standard"; 
 
 var router = require('express').Router();
 var mongoose = require('mongoose');
