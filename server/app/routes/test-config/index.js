@@ -1,5 +1,6 @@
 'use strict';
 
+
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -43,7 +44,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '*/30 * * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
 		// retrieving information about the date to be used later
 		

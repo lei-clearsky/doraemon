@@ -4,6 +4,7 @@ var utilities = require('../utilities');
 var Q = require('q');
 var gm = require('gm');
 var path = require('path');
+var fs = require('fs');
 
 var schema = new mongoose.Schema({
     captureTime: { 
@@ -15,6 +16,9 @@ var schema = new mongoose.Schema({
     },
     diffPercent: {
         type: Number
+    },
+    diffImgThumbnail: {
+        type: String
     },
     threshold: {
         type: Number
@@ -49,6 +53,8 @@ var schema = new mongoose.Schema({
 schema.statics.createDiff = function(config, imageCaptures, date) {
     var diffPath = utilities.createImageDir(config.userID, config.name, config.viewport, 'diffs', date.getHours(), date.getDay(), date.getTime(), config._id);
     
+    var diffThumbnailPath = utilities.createImageDir(config.userID, config.name, config.viewport, 'diffsThumbnails', date.getHours(), date.getDay(), date.getTime(), config._id);
+
     var deferred = Q.defer();
 
     var options = {
@@ -59,7 +65,6 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
     if (imageCaptures.lastImageCapture === null) {
         return deferred.resolve(null);
     }
-    
     gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
         if (err) {
             return deferred.reject(err);
@@ -67,15 +72,24 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
         // console.log('The images are equal: %s', isEqual);
         // console.log('Actual equality: %d', equality);
         // console.log('Raw output was: %j', raw);    
-            
+        
+        gm(diffPath)
+            .resize(300)
+            .write(diffThumbnailPath, function(err) {
+                if(err) console.log(err);
+            });
+
         var output = {
             percent: equality,
             file: options.file,
+            thumbnail: diffThumbnailPath,
             config: config,
             newImg: imageCaptures.newImageCapture._id,
             lastImg: imageCaptures.lastImageCapture._id
         };
         
+        utilities.removeImg(imageCaptures.lastImageCapture.imgURL)
+
         return deferred.resolve(output);
     });
 
@@ -89,6 +103,7 @@ schema.statics.saveImageDiff = function(output) {
     // temp image object to be save to database
     var diffImage = {
         diffImgURL: output.file,
+        diffImgThumbnail: output.thumbnail,
         diffPercent: output.percent,
         websiteUrl: output.config.URL,
         viewport: output.config.viewport,
@@ -101,10 +116,23 @@ schema.statics.saveImageDiff = function(output) {
     };
 
     return this.create(diffImage).then(function(img) {
+
         var diffS3Path = output.file.slice(2);
         var diffImgPath = path.join(__dirname, '../../../' + diffS3Path);
-        return utilities.saveToAWS(diffImgPath, diffS3Path);
+
+        var diffThumbnailS3Path = output.thumbnail.slice(2);
+        var diffThumbnailPath = path.join(__dirname, '../../../' + diffThumbnailS3Path);
+   
+         return utilities.saveToAWS(diffImgPath, diffS3Path).then(function(){
+            return utilities.saveToAWS(diffThumbnailPath, diffThumbnailS3Path).then(function() {
+                utilities.removeImg(output.thumbnail);
+                return utilities.removeImg(output.file);
+            })
+         });
+         
     });
 };
+
+
 
 mongoose.model('ImageDiff', schema);
