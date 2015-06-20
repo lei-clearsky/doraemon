@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 var utilities = require('../utilities');
 var Q = require('q');
+var gm = require('gm');
 var path = require('path');
 
 var schema = new mongoose.Schema({
@@ -79,5 +80,7 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
             return err;
         });
 };
+
+
 
 mongoose.model('ImageCapture', schema);

@@ -16,6 +16,9 @@ var schema = new mongoose.Schema({
     diffPercent: {
         type: Number
     },
+    diffImgThumbnail: {
+        type: String
+    },
     websiteUrl: {
         type: String
     },
@@ -56,7 +59,6 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
     if (imageCaptures.lastImageCapture === null) {
         return deferred.resolve(null);
     }
-    
     gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
         if (err) {
             return deferred.reject(err);
@@ -101,6 +103,14 @@ schema.statics.saveImageDiff = function(output) {
         var diffImgPath = path.join(__dirname, '../../../' + diffS3Path);
         return utilities.saveToAWS(diffImgPath, diffS3Path);
     });
+};
+
+schema.statics.resizeImageDiff = function(imgPath, newPath) {
+    gm(imgPath)
+        .resize(300)
+        .write(newPath, function(err) {
+            if(err) console.log(err);
+        });
 };
 
 mongoose.model('ImageDiff', schema);

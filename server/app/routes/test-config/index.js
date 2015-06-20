@@ -1,4 +1,9 @@
+ accessKeyId: "AKIAJWQOU4YHMONC2R5Q"
+ secretAccessKey: "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"
+
+
 'use strict';
+
 
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');

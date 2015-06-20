@@ -96,6 +96,7 @@ schema.statics.runTestConfig = function(nightmare, config, date) {
             console.log(chalk.green('Screenshot created...'));
             imageCapture.saveImageCapture(config, snapshotPath)
             .then(function(imageCaptures) {
+                console.log('this is image captures.....', imageCaptures)
                 console.log(chalk.green('New imageCapture document saved...'));
                 return imageDiff.createDiff(config, imageCaptures, date);
             }).then(function(output) {
