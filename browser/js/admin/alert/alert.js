@@ -46,6 +46,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $r
                 }
             });
             // $scope.dates = dates;
+            console.log('alert dates ', dates);
 
             var byDate = [];
             dates.forEach(function(date, index) {
@@ -77,55 +78,56 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $r
                     });
 
                     $scope.alertsByDate = byDate;
+                    console.log('in controller: ', $scope.alertsByDate)
                 });
         });
 
-    $scope.animationsEnabled = true;
-    $scope.openDiffModal = function (diffImgID, size) {
-        var modalInstance = $modal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: 'js/dashboard/diff-modal.html',
-            controller: 'DiffModalCtrl',
-            size: size,
-            resolve: {
-                viewDiff: function($http) {
-                    return $http.get('/api/screenshots/diff/' + diffImgID)
-                        .then(function(response) {
-                            return response.data;
-                    });
-                }
-            }
-        });
-    };
+    // $scope.animationsEnabled = true;
+    // $scope.openDiffModal = function (diffImgID, size) {
+    //     var modalInstance = $modal.open({
+    //         animation: $scope.animationsEnabled,
+    //         templateUrl: 'js/dashboard/alert-modal.html',
+    //         controller: 'AlertModalCtrl',
+    //         size: size,
+    //         resolve: {
+    //             viewDiff: function($http) {
+    //                 return $http.get('/api/screenshots/diff/' + diffImgID)
+    //                     .then(function(response) {
+    //                         return response.data;
+    //                 });
+    //             }
+    //         }
+    //     });
+    // };
 
 });
 
-app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
+// app.controller('AlertModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
-    $scope.diffInfo = viewDiff;
-    $scope.diffInfo.diffImgURL = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgURL.slice(2);
+//     $scope.diffInfo = viewDiff;
+//     $scope.diffInfo.diffImgURL = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgURL.slice(2);
   
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-});
+//     $scope.cancel = function () {
+//         $modalInstance.dismiss('cancel');
+//     };
+// });
 
-app.filter('unique', function() {
-   return function(collection, keyname) {
-      var output = [], 
-          keys = [];
+// app.filter('unique', function() {
+//    return function(collection, keyname) {
+//       var output = [], 
+//           keys = [];
 
-      angular.forEach(collection, function(item) {
-          var key = item[keyname];
-          if(keys.indexOf(key) === -1) {
-              keys.push(key);
-              output.push(item);
-          }
-      });
+//       angular.forEach(collection, function(item) {
+//           var key = item[keyname];
+//           if(keys.indexOf(key) === -1) {
+//               keys.push(key);
+//               output.push(item);
+//           }
+//       });
 
-      return output;
-   };
-});
+//       return output;
+//    };
+// });
 
 
 
