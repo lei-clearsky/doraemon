@@ -72,6 +72,7 @@ app.factory('Dashboard', function ($http) {
 
             return $http.get('/api/screenshots/allDiffs/' + userID)
                         .then(function (response) {
+                            // console.log('diffs ', response.data);
                             return response.data;
                         })
                         .catch(function(err) {
@@ -174,8 +175,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                         .then(function (diffs) {
                             $scope.diffsForUser = diffs;
                             $scope.diffsForUser.forEach(function(diff) {
-                                diff.diffImgURL = diff.diffImgURL.slice(2);
-                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+                                // diff.diffImgURL = diff.diffImgURL.slice(2);
+                                diff.diffImgThumbnail = diff.diffImgThumbnail.slice(2);
+                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgThumbnail;
                                 
                             });
                         });
@@ -269,7 +271,7 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     if (diffCaptureTime === date) {
                         byDate[index].date = date;
                        
-                        if (diff.diffPercent*100 > 1) {
+                        if (diff.diffPercent*100 > diff.threshold) {
                             byDate[index].alerts.push(diff);
                         }
 
@@ -321,7 +323,8 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                     Dashboard.getDiffsByUrl(params)
                         .then(function(diffs) {
                             diffs.forEach(function(diff) {
-                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL.slice(2);
+                                diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgThumbnail.slice(2);
+                                // diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL.slice(2);
                             });
                             var diffsInUrl = {
                                 urlName: url,
@@ -364,8 +367,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 
                                     $scope.viewports.forEach(function (viewport, index) {
                                         if (diff.viewport === viewport) {
-                                            diff.diffImgURL = diff.diffImgURL.slice(2);
-                                            diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
+                                            diff.diffImgThumbnail = diff.diffImgThumbnail.slice(2);
+                                            diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgThumbnail;
+   
                                             byViewport[index].images.push(diff);
                                         }
                                     });
@@ -399,8 +403,9 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
     $scope.diffInfo = viewDiff;
-    $scope.diffInfo.diffImgURL = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgURL.slice(2);
-  
+    console.log('modal ', viewDiff);
+    // $scope.diffInfo.diffImgURL = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgURL.slice(2);
+    $scope.diffInfo.diffImgThumbnail = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgThumbnail.slice(2);
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
