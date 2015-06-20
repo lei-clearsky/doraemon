@@ -59,10 +59,10 @@ app.value('hourFrequencyOptions', [
 app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard) {
 
     $scope.submitAttempted = false;
-    $scope.testName = '';
+    $scope.testName = 'test';
+    $scope.rootURL = '';
+    $scope.devURL = '';
     $scope.config = [{
-            URL: '',
-            devURL: '',
             path: '',
             threshold: null,
             viewports: [],
@@ -80,8 +80,6 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
 
     $scope.addNewUrl = function() {
         $scope.config.push({
-            URL: '',
-            devURL: '',
             path: '',
             threshold: null,
             viewports: [],
@@ -104,28 +102,28 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
 
         if ($scope.testName === '') return false;
 
-        for (var i = 0; i < $scope.config.length; i++) {
-            if (($scope.config[i].URL === '') || 
-                ($scope.config[i].viewports.length === 0) ||
-                ($scope.config[i].dayFrequency.length === 0) ||
-                ($scope.config[i].hourFrequency.length === 0) ||
-                ($scope.config[i].path === '') ||
-                ($scope.config[i].threshold <= 0)) {
-                return false;
-            }
-        };
+        // for (var i = 0; i < $scope.config.length; i++) {
+        //     if (($scope.config[i].URL === '') || 
+        //         ($scope.config[i].viewports.length === 0) ||
+        //         ($scope.config[i].dayFrequency.length === 0) ||
+        //         ($scope.config[i].hourFrequency.length === 0) ||
+        //         ($scope.config[i].path === '') ||
+        //         ($scope.config[i].threshold <= 0)) {
+        //         return false;
+        //     }
+        // };
         return true;
     };
 
     $scope.submit = function() {
-        
         $scope.config.forEach(function(element) {
             element.viewports.forEach(function(viewport) {
+                console.log('foreach: ', viewport);
                 Config.create({
                     name: $scope.testName.split(' ').join('_'),
-                    URL: 'http://' + element.URL,
-                    devURL: '',
-                    path: 'http://' + element.URL + element.path,
+                    URL: 'http://' + $scope.rootURL,
+                    devURL: 'http://' + $scope.devURL,
+                    path: 'http://' + $scope.rootURL + element.path,
                     threshold: element.threshold,
                     viewport: viewport,
                     dayFrequency: element.dayFrequency,
@@ -136,9 +134,9 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         });
 
         $scope.testName = '';
+        $scope.rootURL = '';
+        $scope.devURL = '';
         $scope.config = [{
-            URL: '',
-            devURL: '',
             path: '',
             threshold: null,
             viewports: [],

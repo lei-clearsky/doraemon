@@ -1,4 +1,6 @@
 'use strict';
+process.env.AWS_ACCESS_KEY_ID='AKIAJWQOU4YHMONC2R5Q';
+process.env.AWS_SECRET_ACCESS_KEY='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';
 
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');
@@ -56,7 +58,7 @@ var intervalJob = new CronJob({
 
 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
 		// searches TestConfig model and retrives URL objects
-		testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
+		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
 			var promises = [];
 
 			configs.forEach(function(config) {
