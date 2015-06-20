@@ -14,8 +14,8 @@ app.config(function ($stateProvider) {
 
 });
 
-app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
-
+app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $rootScope) {
+    $rootScope.stateClass = 'alerts';
     $scope.alertsByDate = null;
 
     function formatDate(date) {
@@ -28,7 +28,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
         if (day.length < 2) day = '0' + day;
 
         return [year, month, day].join('-');
-    };
+    }
 
     // construct alert obj
     Dashboard.allDiffsForUser(currentUser._id)
@@ -67,7 +67,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
                             if (diffCaptureTime === date) {
                                 byDate[index].date = date;
                                
-                                if (diff.diffPercent*100 > 1) {
+                                if (diff.diffPercent * 100 > diff.threshold) {
                                     byDate[index].alerts.push(diff);
                                 }
 
@@ -96,7 +96,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
                 }
             }
         });
-    }   
+    };
 
 });
 

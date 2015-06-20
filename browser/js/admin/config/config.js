@@ -56,12 +56,13 @@ app.value('hourFrequencyOptions', [
     {label: '10 pm', value: 22}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions) {
-
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard, $rootScope) {
+    $rootScope.stateClass = 'config';
     $scope.submitAttempted = false;
-    $scope.testName = '';
+    $scope.configTest = {};
     $scope.config = [{
-            URL: '',
+            path: '',
+            threshold: null,
             viewports: [],
             dayFrequency: [],
             hourFrequency: []
@@ -73,10 +74,12 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.showSuccessAlert = false;
     $scope.showErrorAlert = false;
     $scope.errorMessage = "Please fill all options";
+    $scope.testsByUserID = [];
 
     $scope.addNewUrl = function() {
         $scope.config.push({
-            URL: '',
+            path: '',
+            threshold: null,
             viewports: [],
             dayFrequency: [],
             hourFrequency: []
@@ -95,28 +98,31 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.isValid = function() {
         $scope.submitAttempted = true;
 
-        if ($scope.testName === '') return false;
+        // if ($scope.testName === '') return false;
 
-        for (var i = 0; i < $scope.config.length; i++) {
-            if ($scope.config[i].URL === '') return false;
-
-            if ($scope.config[i].viewports.length === 0) return false;
-
-            if ($scope.config[i].dayFrequency.length === 0) return false;
-
-            if ($scope.config[i].hourFrequency.length === 0) return false;
-        };
-
+        // for (var i = 0; i < $scope.config.length; i++) {
+        //     if (($scope.config[i].URL === '') || 
+        //         ($scope.config[i].viewports.length === 0) ||
+        //         ($scope.config[i].dayFrequency.length === 0) ||
+        //         ($scope.config[i].hourFrequency.length === 0) ||
+        //         ($scope.config[i].path === '') ||
+        //         ($scope.config[i].threshold <= 0)) {
+        //         return false;
+        //     }
+        // };
         return true;
     };
 
     $scope.submit = function() {
-        
         $scope.config.forEach(function(element) {
             element.viewports.forEach(function(viewport) {
+                console.log('foreach: ', viewport);
                 Config.create({
-                    name: $scope.testName.split(' ').join('_'),
-                    URL: element.URL,
+                    name: $scope.configTest.name.split(' ').join('_'),
+                    URL: 'http://' + $scope.configTest.rootURL,
+                    devURL: 'http://' + $scope.configTest.devURL,
+                    path: 'http://' + $scope.configTest.rootURL + element.path,
+                    threshold: element.threshold,
                     viewport: viewport,
                     dayFrequency: element.dayFrequency,
                     hourFrequency: element.hourFrequency,
@@ -125,9 +131,10 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             });                
         });
 
-        $scope.testName = '';
+        $scope.configTest = {};
         $scope.config = [{
-            URL: '',
+            path: '',
+            threshold: null,
             viewports: [],
             dayFrequency: [],
             hourFrequency: []
@@ -136,4 +143,37 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         $scope.submitAttempted = false;
 
     };
+
+    Dashboard.getTestsByUserID(currentUser._id)
+        .then(function (tests) {
+            tests.forEach(function(test) {
+
+            });
+            $scope.testsByUserID = tests;
+        })
+        .catch(function (err) {
+            return err;
+        });
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
