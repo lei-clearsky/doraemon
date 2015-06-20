@@ -51,8 +51,8 @@ var intervalJob = new CronJob({
 		// retrieving information about the date to be used later
 		
 		// currently using Weekday: 6, Hour: 10 as params for testing purposes
-		// var date = new Date();
-		var date = new Date('June 13, 2015 10:00:00');
+		var date = new Date();
+		// var date = new Date('June 13, 2015 10:00:00');
 		
 		var hour = date.getHours();
 		var weekday = date.getDay();
