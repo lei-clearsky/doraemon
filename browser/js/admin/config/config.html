@@ -2,50 +2,35 @@
     <h1>Configuration</h1>
 </div>
 
-{{ rootURL | json}}
-{{ testName | json  }}
+{{ configTest | json  }}
 {{ config | json }}
-
-
-    <form name="form" novalidate>
-        <div class="form-group">
-            <label for="name">Name of UI Test</label>
-            <input type="text" name="formTestName" ng-model="testName" class="form-control" placeholder="Enter the name" required>
-            <span style="color:red" ng-show="submitAttempted && testName.length === 0">Please name your UI test!</span>
-        </div>
-</form>
 
 <tabset>
     <tab heading="Create Test">
         <div class="col-md-11 col-center">
         <section id="config">
-            <form name="form" novalidate>
+            <form name="adminConfigForm" novalidate>
                 <!-- row -->
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="name">Name of UI Test</label>
-                            <input type="text" name="formTestName" ng-model="testName" class="form-control" placeholder="Enter the name" required>
-                            <span style="color:red" ng-show="submitAttempted && testName.length === 0">Please name your UI test!</span>
+                        <div class="form-group">            
+                            <input type="text" name="formTestName" ng-model="configTest.name" required>
+                            <span style="color:red" ng-show="submitAttempted && configTest.name.length === 0">Please name your UI test!</span>
+                            <label for="formTestName">Name of UI Test</label><i class="bar"></i>
                         </div>
-                        <!-- <div class="form-group">            
-                            <input type="text" name="formTestName" ng-model="testName" required>
-                            <span style="color:red" ng-show="submitAttempted && testName.length === 0">Please name your UI test!</span>
-                            <label for="name">Name of UI Test</label><i class="bar"></i>
-                        </div> -->
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">            
-                            <input type="text" name="formTestRootProURL" ng-model="rootURL" required>
-                            <span style="color:red" ng-show="submitAttempted && rootURL.length === 0">Please name your UI test root URL!</span>
+                            <input type="text" name="formTestRootProURL" ng-model="configTest.rootURL" required>
+                            <span style="color:red" ng-show="submitAttempted && configTest.rootURL.length === 0">Please name your UI test root URL!</span>
                             <label for="formTestRootProURL">http://www.</label><i class="bar"></i>
                             <p class="input-helper">Production site. (e.g. yahoo.com)</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">            
-                            <input type="text" name="formTestRootDevURL" ng-model="devURL" disabled>
-                            <span style="color:red" ng-show="submitAttempted && devURL.length === 0">Please name your UI test dev URL!</span>
+                            <input type="text" name="formTestRootDevURL" ng-model="configTest.devURL" disabled>
+                            <span style="color:red" ng-show="submitAttempted && configTest.devURL.length === 0">Please name your UI test dev URL!</span>
                             <label for="formTestRootDevURL">http://</label><i class="bar"></i>
                             <p class="input-helper">Development site. (e.g. localhost:3000)</p>
                         </div>
@@ -72,7 +57,7 @@
                         <label class="label-block">Viewports to test</label>
                         <div class="checkbox checkbox-inline" ng-repeat="viewport in viewportOptions">
                             <label>
-                                <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><i class="helper"></i> <!--{{viewport.label}}--> ({{viewport.value}})
+                                <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><i class="helper"></i> <!--{{viewport.label}}--> {{viewport.value}}
                             </label>
                             <span style="color:red" ng-show="submitAttempted && url.viewports.length === 0">Please choose a viewport!</span>
                         </div>

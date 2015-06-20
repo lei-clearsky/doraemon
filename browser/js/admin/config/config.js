@@ -59,9 +59,7 @@ app.value('hourFrequencyOptions', [
 app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard) {
 
     $scope.submitAttempted = false;
-    $scope.testName = 'test';
-    $scope.rootURL = '';
-    $scope.devURL = '';
+    $scope.configTest = {};
     $scope.config = [{
             path: '',
             threshold: null,
@@ -100,7 +98,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.isValid = function() {
         $scope.submitAttempted = true;
 
-        if ($scope.testName === '') return false;
+        // if ($scope.testName === '') return false;
 
         // for (var i = 0; i < $scope.config.length; i++) {
         //     if (($scope.config[i].URL === '') || 
@@ -120,10 +118,10 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             element.viewports.forEach(function(viewport) {
                 console.log('foreach: ', viewport);
                 Config.create({
-                    name: $scope.testName.split(' ').join('_'),
-                    URL: 'http://' + $scope.rootURL,
-                    devURL: 'http://' + $scope.devURL,
-                    path: 'http://' + $scope.rootURL + element.path,
+                    name: $scope.configTest.name.split(' ').join('_'),
+                    URL: 'http://' + $scope.configTest.rootURL,
+                    devURL: 'http://' + $scope.configTest.devURL,
+                    path: 'http://' + $scope.configTest.rootURL + element.path,
                     threshold: element.threshold,
                     viewport: viewport,
                     dayFrequency: element.dayFrequency,
@@ -133,9 +131,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             });                
         });
 
-        $scope.testName = '';
-        $scope.rootURL = '';
-        $scope.devURL = '';
+        $scope.configTest = {};
         $scope.config = [{
             path: '',
             threshold: null,
