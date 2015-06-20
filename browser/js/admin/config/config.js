@@ -119,9 +119,9 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
                 console.log('foreach: ', viewport);
                 Config.create({
                     name: $scope.configTest.name.split(' ').join('_'),
-                    URL: 'http://' + $scope.configTest.rootURL,
+                    URL: 'http://' + $scope.configTest.rootURL + element.path,
                     devURL: 'http://' + $scope.configTest.devURL,
-                    path: 'http://' + $scope.configTest.rootURL + element.path,
+                    rootURL: 'http://' + $scope.configTest.rootURL,
                     threshold: element.threshold,
                     viewport: viewport,
                     dayFrequency: element.dayFrequency,

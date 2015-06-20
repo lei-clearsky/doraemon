@@ -16,7 +16,7 @@ var schema = new mongoose.Schema({
     devURL: {
         type: String
     },
-    path: {
+    rootURL: {
         type: String
     },
     threshold: {
