@@ -26,7 +26,7 @@ app.controller('SignUpCtrl', function ($scope, AuthService, $state, SignUpFactor
 	        .catch(function(err) {
 	        	$scope.error = 'Sign up form not completed/filled correctly!';
 	        	console.error(err);
-	        })
+	        });
     };
 
 });

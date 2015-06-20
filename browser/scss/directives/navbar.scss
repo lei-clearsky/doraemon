@@ -1,6 +1,15 @@
 navbar {
 
   display: block;
+  .admin,
+  .dashboard,
+  .alerts,
+  .config {
+    background: #000;
+    .navbar-nav {
+      display: none;
+    }
+  }
 
   fullstack-logo {
     padding-top: 10px;
@@ -9,17 +18,21 @@ navbar {
   }
 
   a {
-    color: #575757;
+    color: #676767;
     &:hover {
-      color: #000;
+      color: #ddd;
     }
   }
 
   .navbar {
     margin-bottom:0;
     padding: 5px 30px;
-  }
+    &.admin,
+    &.dashboard {
+      padding-right: 10px;
+    }
 
+  }
   .nav > li > a {
     cursor: pointer;
     font-size: 16px;
@@ -36,22 +49,35 @@ navbar {
       background: transparent;
     }
   }
-
   .login-button {
     float: right;
     margin-top: 8px;
   }
-
   .welcome {
     float: right;
     margin-top: 12px;
+    position: relative;
+    z-index: 9999;
     span {
-      color: white;
+      color: #66cc00;
     }
     a {
-      color: #f30046;
+      color: #333;
       cursor: pointer;
     }
   }
+  .dashboard {
+    .welcome {
+      span {
+        color: #bee181;
+      }
+      a {
+        color: #eee;
+      }
+    }
+  }
+}
 
+.navbar-static-top {
+  z-index: inherit !important;
 }

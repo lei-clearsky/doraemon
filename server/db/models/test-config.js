@@ -15,6 +15,15 @@ var schema = new mongoose.Schema({
     URL: {
         type: String
     },
+    devURL: {
+        type: String
+    },
+    rootURL: {
+        type: String
+    },
+    threshold: {
+        type: Number
+    },
     viewport: {
         type: String
     },
@@ -113,7 +122,12 @@ schema.statics.runTestConfig = function(nightmare, config, date) {
             }).then(function(newImageDiff) {
                 if (newImageDiff) {
                     console.log(chalk.green('New imageDiff document saved...'));
-                    return utilities.saveToAWS(newImageDiff.diffImgURL);
+                    return utilities.saveToAWS(newImageDiff.diffImgURL).then(function(){
+                        return utilities.saveToAWS(newImageDiff.diffImgThumbnail);
+                    }).then(function() {
+                        utilities.removeImg(newImageDiff.diffImgURL);
+                        return utilities.removeImg(newImageDiff.diffImgThumbnail);
+                    });
                 }
                 
                 return null;

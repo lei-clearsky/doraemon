@@ -3,6 +3,7 @@ var AWSkeys = require('./AWSkeys');
 process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
 process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 
+
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
@@ -46,7 +47,7 @@ router.post('/', function (req, res, next) {
 });
 
 var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+  	cronTime: '*/30 * * * * *',  // this is the timer, set to every minuite for testing purposes
   	onTick: function() {
 		// retrieving information about the date to be used later
 		
@@ -59,7 +60,7 @@ var intervalJob = new CronJob({
 
 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
 		// searches TestConfig model and retrives URL objects
-		testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
+		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
 			var promises = [];
 
 			configs.forEach(function(config) {
@@ -79,3 +80,18 @@ var intervalJob = new CronJob({
 });
 
 intervalJob.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
