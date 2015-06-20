@@ -74,7 +74,7 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
             var imgPath = path.join(__dirname, '../../../' + snapshotS3Path);
 
             return utilities.saveToAWS(imgPath, snapshotS3Path);
-        }).then(function() {
+        }).then(function() {            
             return { newImageCapture: newImageCapture, lastImageCapture: lastImageCapture };
         }).then(null, function(err) {
             return err;

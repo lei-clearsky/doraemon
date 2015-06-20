@@ -57,6 +57,21 @@ var utilities = {
 	    });
 
 	    return deferred.promise; 
+	},
+	removeImg: function(filepath) {
+		if (filepath) {
+			fs.unlinkSync(filepath, function (err) {
+	        	if (err) {
+	        		return console.log(err);
+	        	} else {
+	        		return consoel.log('successfully removed file')
+	        	}
+	        });
+		} else {
+			console.log('file path does not exist');
+		}
+
+		return filepath;
 	}
 };
 
