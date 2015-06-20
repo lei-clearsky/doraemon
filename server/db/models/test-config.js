@@ -13,6 +13,15 @@ var schema = new mongoose.Schema({
     URL: {
         type: String
     },
+    devURL: {
+        type: String
+    },
+    path: {
+        type: String
+    },
+    threshold: {
+        type: Number
+    },
     viewport: {
         type: String
     },

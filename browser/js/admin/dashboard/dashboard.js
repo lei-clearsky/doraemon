@@ -7,8 +7,17 @@ app.config(function ($stateProvider) {
         controller: 'DashboardCtrl',
         resolve: {
             currentUser: function(AuthService) {
-                return AuthService.getLoggedInUser();
-            }
+                return AuthService.getLoggedInUser()
+                            .catch(function (err) {
+                                console.log(err);
+                            });
+            },
+            allDiffs: ['currentUser', 'Dashboard', function(currentUser, Dashboard) {
+                return Dashboard.allDiffsForUser(currentUser._id)
+                            .catch(function (err) {
+                                console.log(err);
+                            });
+            }]
         }
     });
 
@@ -27,7 +36,6 @@ app.factory('Dashboard', function ($http) {
                         });
         },
         getTestsByUserID: function (userID) {
-            console.log('get diffs by userID');
             return $http.get('/api/screenshots/' + userID)
                         .then(function (response) {
                             return response.data;
@@ -85,7 +93,6 @@ app.factory('Dashboard', function ($http) {
                 method: 'GET',
                 params: params
             })
-            // return $http.get('/api/screenshots/diffsByUrl/' + userID)
             .then(function (response) {
                 return response.data;
             })
@@ -97,8 +104,8 @@ app.factory('Dashboard', function ($http) {
 
 });
 
-app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser) {
-
+app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser, allDiffs) {
+    $scope.allDiffsForUser = allDiffs;
     $scope.diffsForUser = null;
     $scope.screenshotsForUser = null;
     $scope.testsByUser = null;
@@ -130,7 +137,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
     Dashboard.allScreenshotsForUser(currentUser._id)
             .then(function(allScreenshots) {
                 $scope.screenshotsForUser = allScreenshots;
-                // console.log('screenshots in controller: ', $scope.screenshotsForUser);
             });
 
     $scope.toggleCheckbox = function(option, optionsArray) {
@@ -139,19 +145,11 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
             optionsArray.splice(idx, 1);
         else // the option is not in the array, so we add it
             optionsArray.push(option);
-
-        // add more search options based on test name
-        // Dashboard.searchTestsByName($scope.searchParams)
-        //         .then(function (tests) {
-        //             $scope.testsOptions = tests;
-        //         })
-
     };
 
     $scope.searchDiffs = function () {
         Dashboard.searchDiffs($scope.searchParams)
             .then(function (returnedDiffImgs) {
-                console.log('diff images ', returnedDiffImgs);
                 $scope.diffImgs = returnedDiffImgs;
             });
     }
@@ -206,8 +204,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 sum += perc;
         });
         averagePerc = sum / (percArr.length);
-        // averagePerc = averagePerc.toString();
-        // averagePerc = averagePerc.slice(0, averagePerc.indexOf('.') + 2);
         return averagePerc;
     }
 
@@ -233,13 +229,11 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
         return lowest;
     }
 
-    // display by Date
-    Dashboard.allDiffsForUser(currentUser._id)
-        .then(function(allDiffs) {
+    function displayByDate() {
             var dates = [];
             var days = [];
             var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-            allDiffs.forEach(function(diffImg, index) {
+            $scope.allDiffsForUser.forEach(function(diffImg, index) {
                 var formattedDate = formatDate(diffImg.captureTime);
                 if (dates.indexOf(formattedDate) < 0) {
                     var d = new Date(diffImg.captureTime);
@@ -267,38 +261,39 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                 byDate.push(d);
             });
 
-            Dashboard.allDiffsForUser(currentUser._id)
-                .then(function(allDiffs) {
-                    allDiffs.forEach(function(diff) {
-                        $scope.dates.forEach(function (date, index) {
-                            var diffCaptureTime = formatDate(diff.captureTime);
-                            if (diffCaptureTime === date) {
-                                byDate[index].date = date;
-                               
-                                if (diff.diffPercent*100 > 1) {
-                                    byDate[index].alerts.push(diff);
-                                }
 
-                                byDate[index].perc.push(diff.diffPercent);
-                            }                            
-                        });
-                        
-                    });
+            $scope.allDiffsForUser.forEach(function(diff) {
+                $scope.dates.forEach(function (date, index) {
+                    var diffCaptureTime = formatDate(diff.captureTime);
+                    if (diffCaptureTime === date) {
+                        byDate[index].date = date;
+                       
+                        if (diff.diffPercent*100 > 1) {
+                            byDate[index].alerts.push(diff);
+                        }
 
-                    byDate.forEach(function (el) {
-                        var percArr = el.perc;
-                        var averagePerc = calcAveragePerc(percArr);
-                        var highestPerc = getHighestPerc(percArr);
-                        var lowestPerc = getLowestPerc(percArr);
-                        el.lowestPerc = lowestPerc;
-                        el.highestPerc = highestPerc;
-                        el.averagePerc = averagePerc;
-                    });
-
-                    $scope.testsByDate = byDate;
-                    $scope.diffPerc = $scope.testsByDate[0].averagePerc;
+                        byDate[index].perc.push(diff.diffPercent);
+                    }                            
                 });
-        });
+                
+            });
+
+            byDate.forEach(function (el) {
+                var percArr = el.perc;
+                var averagePerc = calcAveragePerc(percArr);
+                var highestPerc = getHighestPerc(percArr);
+                var lowestPerc = getLowestPerc(percArr);
+                el.lowestPerc = lowestPerc;
+                el.highestPerc = highestPerc;
+                el.averagePerc = averagePerc;
+            });
+
+            $scope.testsByDate = byDate;
+            $scope.diffPerc = $scope.testsByDate[0].averagePerc;
+        
+    }
+
+    displayByDate();
 
     // display by URL
     Dashboard.getTestsByUserID(currentUser._id)
@@ -365,9 +360,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                 allDiffs.forEach(function(diff) {
 
                                     $scope.viewports.forEach(function (viewport, index) {
-                                        // console.log('viewport ', viewport);
-                                        // console.log('diff.viewport ', diff.viewport);
-
                                         if (diff.viewport === viewport) {
                                             diff.diffImgURL = diff.diffImgURL.slice(2);
                                             diff.url = 'https://s3.amazonaws.com/capstone-doraemon/' + diff.diffImgURL;
@@ -375,7 +367,6 @@ app.controller('DashboardCtrl', function ($scope, Dashboard, $modal, currentUser
                                         }
                                     });
                                     $scope.diffImages.byViewport = byViewport;
-                                    // };  
                                 });
                             
                         });

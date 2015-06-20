@@ -14,7 +14,7 @@
             <li><a ui-sref="signup" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sign up</a></li>
         </ul>
         <div ng-show="user" class="welcome">
-            <span>Welcome, {{ user.email }}!</span>
+            <span>{{ user.email }}</span>
             <a ng-click="logout()">Logout</a>
         </div>
     </div>

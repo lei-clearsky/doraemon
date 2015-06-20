@@ -67,7 +67,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
                             if (diffCaptureTime === date) {
                                 byDate[index].date = date;
                                
-                                if (diff.diffPercent*100 > 1) {
+                                if (diff.diffPercent * 100 > diff.threshold) {
                                     byDate[index].alerts.push(diff);
                                 }
 
