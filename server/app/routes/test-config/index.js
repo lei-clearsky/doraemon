@@ -1,7 +1,7 @@
 'use strict';
-var AWSkeys = require('./AWSkeys'); 
-process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
-process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
+// var AWSkeys = require('./AWSkeys'); 
+// process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
+// process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 
 // var Promise = require("bluebird");
 var Nightmare = require('nightmare');
