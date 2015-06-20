@@ -49,6 +49,8 @@ var schema = new mongoose.Schema({
 schema.statics.createDiff = function(config, imageCaptures, date) {
     var diffPath = utilities.createImageDir(config.userID, config.name, config.viewport, 'diffs', date.getHours(), date.getDay(), date.getTime(), config._id);
     
+    var diffThumbnailPath = utilities.createImageDir(config.userID, config.name, config.viewport, 'diffsThumbnails', date.getHours(), date.getDay(), date.getTime(), config._id);
+
     var deferred = Q.defer();
 
     var options = {
@@ -66,10 +68,17 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
         // console.log('The images are equal: %s', isEqual);
         // console.log('Actual equality: %d', equality);
         // console.log('Raw output was: %j', raw);    
-            
+        
+        gm(diffPath)
+            .resize(300)
+            .write(diffThumbnailPath, function(err) {
+                if(err) console.log(err);
+            });
+
         var output = {
             percent: equality,
             file: options.file,
+            thumbnail: diffThumbnailPath,
             config: config,
             newImg: imageCaptures.newImageCapture._id,
             lastImg: imageCaptures.lastImageCapture._id
@@ -88,6 +97,7 @@ schema.statics.saveImageDiff = function(output) {
     // temp image object to be save to database
     var diffImage = {
         diffImgURL: output.file,
+        diffImgThumbnail: output.thumbnail,
         diffPercent: output.percent,
         websiteUrl: output.config.URL,
         viewport: output.config.viewport,
@@ -103,14 +113,6 @@ schema.statics.saveImageDiff = function(output) {
         var diffImgPath = path.join(__dirname, '../../../' + diffS3Path);
         return utilities.saveToAWS(diffImgPath, diffS3Path);
     });
-};
-
-schema.statics.resizeImageDiff = function(imgPath, newPath) {
-    gm(imgPath)
-        .resize(300)
-        .write(newPath, function(err) {
-            if(err) console.log(err);
-        });
 };
 
 mongoose.model('ImageDiff', schema);
