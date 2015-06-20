@@ -14,8 +14,8 @@ app.config(function ($stateProvider) {
 
 });
 
-app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser) {
-
+app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $rootScope) {
+    $rootScope.stateClass = 'alerts';
     $scope.alertsByDate = null;
 
     function formatDate(date) {

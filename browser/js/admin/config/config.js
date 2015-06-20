@@ -56,8 +56,8 @@ app.value('hourFrequencyOptions', [
     {label: '10 pm', value: 22}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard) {
-
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard, $rootScope) {
+    $rootScope.stateClass = 'config';
     $scope.submitAttempted = false;
     $scope.configTest = {};
     $scope.config = [{

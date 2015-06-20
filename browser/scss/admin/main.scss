@@ -48,7 +48,7 @@ $gray: #333;
 				&:focus,
 				&:active {
 					color:$white;
-					background-color: darken($gray, 30%);
+					background-color: #191b08;
 					transition: all 0.3s;
 					cursor: pointer;
 				}
@@ -72,6 +72,9 @@ $gray: #333;
 			background: #fff;
 			padding: 10px 20px;
 			font-size: 14px;
+		}
+		.active a {
+			font-weight: 400;
 		}
 	}
 }

@@ -2,8 +2,13 @@ navbar {
 
   display: block;
   .admin,
-  .dashboard {
+  .dashboard,
+  .alerts,
+  .config {
     background: #000;
+    .navbar-nav {
+      display: none;
+    }
   }
 
   fullstack-logo {
