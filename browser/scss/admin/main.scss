@@ -1,14 +1,21 @@
 @media screen and (min-width: 768px) {
-  .same-height,
-  .same-height > div[class*='col-'] {  
-      display: -webkit-box;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      flex: 1 0 auto;
+  .same-height {
+  	display: -webkit-box;
+  	display: -moz-box;
+  	display: -ms-flexbox;
+  	display: -webkit-flex;
+  	display: flex;
+  	min-height: calc(100vh - 61px);
+  	&:before,
+  	&:after {
+  		display: none !important;
+  	}
+  }
+  .same-height > div[class*='col-'] {
+      flex: 1 100% auto;
   }
 }
+
 $white: #fff;
 $light-gray: #ccc;
 $gray: #333;
@@ -28,7 +35,7 @@ $gray: #333;
 			}
 			a {
 				display: block;
-				padding: 20px 30px;
+				padding: 15px 20px;
 				width:100%;
 				text-decoration: none;
 				font-size: 18px;
@@ -41,7 +48,7 @@ $gray: #333;
 				&:focus,
 				&:active {
 					color:$white;
-					background-color: darken($gray, 30%);
+					background-color: #191b08;
 					transition: all 0.3s;
 					cursor: pointer;
 				}
@@ -50,6 +57,26 @@ $gray: #333;
 
 	}
 
+}
+
+#admin-board {
+	position: relative;
+	z-index: 99;
+	top: -50px;
+	box-shadow: 0 0 20px #000;
+	.nav-tabs {
+		position: relative;
+		top: -40px;
+		z-index:9988;
+		& > li > a {
+			background: #fff;
+			padding: 10px 20px;
+			font-size: 14px;
+		}
+		.active a {
+			font-weight: 400;
+		}
+	}
 }
 
 .admin-sub-header {

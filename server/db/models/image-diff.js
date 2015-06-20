@@ -20,6 +20,9 @@ var schema = new mongoose.Schema({
     diffImgThumbnail: {
         type: String
     },
+    threshold: {
+        type: Number
+    },
     websiteUrl: {
         type: String
     },
@@ -108,7 +111,8 @@ schema.statics.saveImageDiff = function(output) {
         testName: output.config.name,
         testConfigID: output.config._id,
         compareFromID: output.lastImg,
-        compareToID: output.newImg
+        compareToID: output.newImg,
+        threshold: output.config.threshold
     };
 
     return this.create(diffImage).then(function(img) {
