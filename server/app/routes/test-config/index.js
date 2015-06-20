@@ -59,7 +59,7 @@ var intervalJob = new CronJob({
 
 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
 		// searches TestConfig model and retrives URL objects
-		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
+		testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
 			var promises = [];
 
 			configs.forEach(function(config) {
