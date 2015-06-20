@@ -8,3 +8,4 @@ public/style.css
 s3keys.js
 temp_images
 tmp
+server/app/routes/test-config/AWSkeys.js

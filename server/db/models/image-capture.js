@@ -1,9 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
 var utilities = require('../utilities');
-var Q = require('q');
-var gm = require('gm');
-var path = require('path');
 
 var schema = new mongoose.Schema({
     captureTime: { 
@@ -47,8 +44,7 @@ schema.statics.searchForLastSaved = function(url, userID, viewport) {
 };
 
 schema.statics.saveImageCapture = function(config, snapshotPath) {
-    var snapshotS3Path = snapshotPath.slice(2);
-    var diffS3Path, diffImgPath, lastImageCapture, newImageCapture;
+    var lastImageCapture, newImageCapture;
     // searches for last screenshot taken
     return this
         .searchForLastSaved(config.URL, config.userID, config.viewport) 
@@ -68,19 +64,10 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
             // creates new image in database
             return mongoose.model('ImageCapture').create(newImage);
         }).then(function(newImg) {
-            newImageCapture = newImg;
-
-            // save file to AWS
-            var imgPath = path.join(__dirname, '../../../' + snapshotS3Path);
-
-            return utilities.saveToAWS(imgPath, snapshotS3Path);
-        }).then(function() {            
-            return { newImageCapture: newImageCapture, lastImageCapture: lastImageCapture };
+            return { newImageCapture: newImg, lastImageCapture: lastImageCapture };
         }).then(null, function(err) {
             return err;
         });
 };
-
-
 
 mongoose.model('ImageCapture', schema);

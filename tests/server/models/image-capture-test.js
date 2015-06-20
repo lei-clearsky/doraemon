@@ -7,8 +7,16 @@ var expect = chai.expect;
 var mongoose = require('mongoose');
 
 require('../../../server/db/models/image-capture');
+require('../../../server/db/models/image-diff');
+require('../../../server/db/models/user');
+require('../../../server/db/models/test-config');
 
+
+var TestConfig = mongoose.model('TestConfig');
 var ImageCapture = mongoose.model('ImageCapture');
+var User = mongoose.model('User');
+var utilities = require('../../../server/db/utilities');
+
 
 describe('ImageCapture model', function () {
 
@@ -28,45 +36,64 @@ describe('ImageCapture model', function () {
     describe('ImageCapture.create method', function () {
 
         it('should return a new ImageCapture document', function () {
-
+            var user;
             var obj = {
-                websiteURL: 'https://www.google.com/',
-                viewport: '1024x768',
-                userID: null
+                email: 'test@fsa.com',
+                password: 'test'
             };
 
-            return ImageCapture.create(obj).then(function(data) {
+            return User.create(obj).then(function(userObj) {
+                user = userObj;
+
+                var obj = {
+                    websiteURL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    userID: user._id
+                };
+
+                return ImageCapture.create(obj);
+            }).then(function(data) {
                 expect(data).to.have.deep.property('websiteURL','https://www.google.com/');
                 expect(data).to.have.deep.property('viewport','1024x768');
-                expect(data).to.have.deep.property('userID',null);
-            }); 
+                expect(data).to.have.deep.property('userID',user._id);
+            });
+
         });
 
         it('should return multiple new ImageCapture documents', function () {
 
-            var obj1 = {
-                websiteURL: 'https://www.google.com/',
-                viewport: '1024x768',
-                userID: null
+            var user;
+            var obj = {
+                email: 'test@fsa.com',
+                password: 'test'
             };
 
-            var obj2 = {
-                websiteURL: 'https://www.yahoo.com/',
-                viewport: '1024x768',
-                userID: null
-            };
+            return User.create(obj).then(function(userObj) {
 
-            var obj3 = {
-                websiteURL: 'https://www.msn.com/',
-                viewport: '1024x768',
-                userID: null
-            };
+                var obj1 = {
+                    websiteURL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    userID: userObj._id
+                };
 
-            return ImageCapture.create([obj1, obj2, obj3]).then(function(data) {
-                return ImageCapture.find({}).exec().then(function(data) {
-                    expect(data).to.have.length(3);
-                });
-            }); 
+                var obj2 = {
+                    websiteURL: 'https://www.yahoo.com/',
+                    viewport: '1024x768',
+                    userID: userObj._id
+                };
+
+                var obj3 = {
+                    websiteURL: 'https://www.msn.com/',
+                    viewport: '1024x768',
+                    userID: userObj._id
+                };
+
+                return ImageCapture.create([obj1, obj2, obj3]);
+            }).then(function(data) {
+                return ImageCapture.find({}).exec();
+            }).then(function(data) {
+                expect(data).to.have.length(3);
+            });
         });
     });
 
@@ -144,6 +171,44 @@ describe('ImageCapture model', function () {
                 }).then(function(data) {
                     expect(data).to.be.equal(null);
                 }); 
+            });
+
+            it('should save a imageCapture document using saveImageCapture()', function () {
+                var user, testConfig;
+                var obj = {
+                    email: 'test@fsa.com',
+                    password: 'test'
+                };
+
+                return User.create(obj).then(function(userObj) {
+                    user = userObj;
+                    
+                    var obj = {
+                        name: 'imageCaptureTestRun_Test1',
+                        URL: 'https://www.google.com/',
+                        viewport: '1024x768',
+                        dayFrequency: [0],
+                        hourFrequency: [0],
+                        userID: user._id,
+                        teamID: null
+                    };
+
+                    return TestConfig.create(obj);
+                }).then(function(newTestConfig) {
+                    testConfig = newTestConfig;
+                    var snapshotPath = utilities.createImageDir(newTestConfig.userID, newTestConfig.name, newTestConfig.viewport, 'snapshots', 0, 0, Date.now(), newTestConfig._id);
+
+                    return ImageCapture.saveImageCapture(newTestConfig, snapshotPath);
+                }).then(function(imageCaptures) {
+                    expect(imageCaptures).to.be.a('object');
+                    expect(imageCaptures.lastImageCapture).to.be.equal(null);
+                    expect(imageCaptures.newImageCapture).to.be.a('object');
+                    expect(imageCaptures.newImageCapture).to.have.deep.property('websiteURL','https://www.google.com/');
+                    expect(imageCaptures.newImageCapture).to.have.deep.property('viewport','1024x768');
+                    expect(imageCaptures.newImageCapture).to.have.deep.property('testConfigID',testConfig._id);
+                    expect(imageCaptures.newImageCapture).to.have.deep.property('userID',user._id);
+
+                });
             });
         });
     });

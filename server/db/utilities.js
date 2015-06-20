@@ -26,12 +26,12 @@ var utilities = {
 
 	    return path;
 	},
-	saveToAWS: function(filepath, S3Path) {
+	saveToAWS: function(snapshotPath) {
 	    // save file to AWS
 	    var deferred = Q.defer();
-	    var imgPath = path.join(__dirname, '../../' + filepath);
+	    var S3Path = snapshotPath.slice(2);
 	    
-	    fs.readFile(filepath, function (err, data) {
+	    fs.readFile(snapshotPath, function (err, data) {
 	        if (err) { 
 	            return deferred.reject(err); 
 	        }
@@ -64,7 +64,7 @@ var utilities = {
 	        	if (err) {
 	        		return console.log(err);
 	        	} else {
-	        		return consoel.log('successfully removed file')
+	        		return console.log('successfully removed file')
 	        	}
 	        });
 		} else {
