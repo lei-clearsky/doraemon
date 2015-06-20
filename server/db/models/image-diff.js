@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var utilities = require('../utilities');
 var Q = require('q');
-var gm = require('gm');
+var gm = require('gm').subClass({ imageMagick: true });
 var path = require('path');
 var fs = require('fs');
 
