@@ -38,7 +38,6 @@
 
 	</div>
 
-	<!-- <div class="row" ng-repeat=" test in searchParams.testNames "> -->
 	<tabset>
 		<tab heading="By Date">
 			<ul class="cbp_tmtimeline">
@@ -74,7 +73,7 @@
 			<div class="row" >
 				<div class="col-md-12">
 				<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-				    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+				    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 				    	<div style="height: 200px; overflow: hidden;">
 				      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 				  		</div>
@@ -89,7 +88,7 @@
 				<h3>{{ diff.urlName }}</h3>
 				<div class="col-md-12">
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
 					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 					  		</div>
@@ -104,7 +103,7 @@
 				<h3>{{ diff.viewport }}</h3>
 				<div class="col-md-12">
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
 					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 					  		</div>

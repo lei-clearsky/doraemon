@@ -31,7 +31,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $r
     }
 
     // construct alert obj
-    Dashboard.allDiffsForUser(currentUser._id)
+    Dashboard.allDiffsByUser(currentUser._id)
         .then(function(allDiffs) {
             var dates = [];
             var days = [];
@@ -60,7 +60,7 @@ app.controller('AlertCtrl', function ($scope, Dashboard, $modal, currentUser, $r
                 byDate.push(d);
             });
 
-            Dashboard.allDiffsForUser(currentUser._id)
+            Dashboard.allDiffsByUser(currentUser._id)
                 .then(function(allDiffs) {
                     allDiffs.forEach(function(diff) {
                         dates.forEach(function (date, index) {
