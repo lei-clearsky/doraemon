@@ -40,7 +40,6 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     $scope.testsByUser = null;
     $scope.viewports = null;
     $scope.urls = null;
-    // $scope.dates = null;
     $scope.testsByDate = null;
     
     $scope.dashboard = {
@@ -125,7 +124,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     Dashboard.getTestsByUserID(currentUser._id)
             .then(function (tests) {
                 $scope.testsByUser = tests;
-                $scope.dashboard.testsNum = tests.length;
+                // $scope.dashboard.testsNum = tests.length;
                 var urls = [];
                 var names = [];
                 tests.forEach(function(test, index) {
@@ -201,12 +200,20 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
 
     $scope.openDiffModal = Modal.openModal;
     displayByDate();
+
+    // display alerts for today
+    $scope.dashboard.alertNum = Dashboard.getStatsToday($scope.testsByDate, MathUtils).alertsToday;
+
+    // display diff percent for today
+    $scope.dashboard.diffPercent = Dashboard.getStatsToday($scope.testsByDate, MathUtils).diffPercentToday;
+
+    // display tests ran for today
+    $scope.dashboard.testsNum = Dashboard.getTestsToday($scope.allDiffsByUser, MathUtils);
 });
 
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
     $scope.diffInfo = viewDiff;
-    // $scope.diffInfo.thumbnail = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgThumbnail.slice(2);
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

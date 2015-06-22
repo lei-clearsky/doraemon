@@ -51,9 +51,6 @@ router.get('/searchDiffs', function (req, res, next) {
 });
 
 router.get('/diffsByUrl', function (req, res, next) {
-	console.log(req.query.url);
-	console.log(req.query.name);
-
 	TestConfig.getDiffsByUrl(req.query.url, req.query.name, req.query.userID)
 		.then(function(diffs) {
 			console.log('diffs ', diffs);
@@ -90,7 +87,6 @@ router.get('/allDiffs/:userId', function (req, res, next) {
 			.populate('compareToID')
 			.exec(function(err, allDiffs) {
 				if (err) return next(err);
-				console.log('all diffsfgfgfg ', allDiffs);
 				res.json(allDiffs);
 			});
 });

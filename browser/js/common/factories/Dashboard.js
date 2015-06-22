@@ -46,7 +46,6 @@ app.factory('Dashboard', function ($http) {
             });
         },
         allDiffsByUser: function (userID) {
-
             return $http.get('/api/screenshots/allDiffs/' + userID)
                         .then(function (response) {
                             // console.log('diffs ', response.data);
@@ -77,6 +76,40 @@ app.factory('Dashboard', function ($http) {
             .catch(function (err) {
                 return err;
             });
+        },
+        // get tests ran today
+        getTestsToday: function (allDiffsByUser, MathUtils) {
+            var testsToday = 0;
+            var today = new Date();
+            var formattedToday = MathUtils.formatDate(today);
+            allDiffsByUser.forEach(function(diffImg, index){
+                var formattedDate = MathUtils.formatDate(diffImg.captureTime);
+                if (formattedDate === formattedToday) {
+                    testsToday ++;
+                }
+            });
+            return testsToday;
+        },
+        // get today's alerts and diff percent
+        getStatsToday: function (testsByDate, MathUtils) {
+            var today = new Date();
+            var formattedToday = MathUtils.formatDate(today);
+            if (testsByDate[0] !== undefined && testsByDate[0].date === formattedToday) {
+                return {
+                    alertsToday: testsByDate[0].alerts.length,
+                    diffPercentToday: testsByDate[0]
+                }
+            }
+            else {
+                return {
+                    alertsToday: 0,
+                    diffPercentToday: {
+                                        averagePerc: 0,
+                                        highestPerc: 0,
+                                        lowestPerc: 0
+                                        }
+                };
+            }
         },
         // get unique dates
         getUniqueDates: function (allDiffsByUser, MathUtils) {

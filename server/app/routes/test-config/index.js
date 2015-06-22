@@ -23,10 +23,10 @@ var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
 router.get('/', function (req, res, next) {
-	var params = {Bucket: 'capstone-doraemon', Key: 'myKey'};
-
-	var imgStream = s3.getObject(params).createReadStream();
-	imgStream.pipe(res);
+	testConfig.findById(req.params.id, function (err, testConfigDoc) {
+    	if (err) return next(err);
+    	res.json(testConfigDoc);
+    });
 });
 
 router.get('/:id', function (req, res, next) {
