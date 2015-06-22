@@ -2,10 +2,7 @@
 
 var router = require('express').Router();
 module.exports = router;
-// var	AWS = require('aws-sdk'),
-// 	s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}}),
-//     fs = require('fs');
-// AWS.config.region = 'us-standard';
+
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var TestConfig = mongoose.model('TestConfig');
@@ -13,8 +10,6 @@ var ImageDiff = mongoose.model('ImageDiff');
 var ImageCapture = mongoose.model('ImageCapture');
 
 router.get('/searchTestByName', function (req, res, next) {
-	console.log('query object ', req.query.testNames);
-
 	var searchQuery;
 	console.log('req.query.testNames ', req.query.testNames);
 
@@ -40,9 +35,6 @@ router.get('/searchTestByName', function (req, res, next) {
 });
 
 router.get('/searchDiffs', function (req, res, next) {
-	console.log('test');
-	console.log('query object ', req.query);
-
 	ImageDiff.find({
 				userID: req.query.user,
 				websiteUrl: {'$in': req.query.websiteURLs}
@@ -86,7 +78,6 @@ router.get('/diff/:id', function (req, res, next) {
 	ImageDiff.findById(req.params.id)
 			.exec()
 			.then(function(diff) {
-				// console.log('single diff image ', diff);
 				res.json(diff);
 			});
 });
@@ -95,10 +86,11 @@ router.get('/diff/:id', function (req, res, next) {
 router.get('/allDiffs/:userId', function (req, res, next) {
 	
 	ImageDiff.find({userID: req.params.userId})
+			.populate('compareFromID')
+			.populate('compareToID')
 			.exec(function(err, allDiffs) {
 				if (err) return next(err);
-				// console.log('userId ', req.params.userId);
-				// console.log('all diffsfgfgfg ', allDiffs);
+				console.log('all diffsfgfgfg ', allDiffs);
 				res.json(allDiffs);
 			});
 });

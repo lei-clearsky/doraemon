@@ -40,7 +40,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     $scope.testsByUser = null;
     $scope.viewports = null;
     $scope.urls = null;
-    $scope.dates = null;
+    // $scope.dates = null;
     $scope.testsByDate = null;
     
     $scope.dashboard = {
@@ -65,26 +65,24 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
 
     // display by date
     var displayByDate = function () {
-            var uniqueDatesObj = Dashboard.getUniqueDates($scope.allDiffsByUser, MathUtils);
-            var days = uniqueDatesObj.days;
-            var dates = uniqueDatesObj.dates;
-            var byDateObj = Dashboard.getByDateBaseObj(dates, days);
-            byDateObj = Dashboard.getByDateObj($scope.allDiffsByUser, dates, byDateObj, MathUtils);
+        var uniqueDatesObj = Dashboard.getUniqueDates($scope.allDiffsByUser, MathUtils);
+        var days = uniqueDatesObj.days;
+        var dates = uniqueDatesObj.dates;
+        var byDateObj = Dashboard.getByDateBaseObj(dates, days);
+        byDateObj = Dashboard.getByDateObj($scope.allDiffsByUser, dates, byDateObj, MathUtils);
 
-            byDateObj.forEach(function (el) {
-                var percArr = el.perc;
-                el.lowestPerc = MathUtils.getLowestPerc(percArr);
-                el.highestPerc = MathUtils.getHighestPerc(percArr);
-                el.averagePerc = MathUtils.calcAveragePerc(percArr);
-            });
+        byDateObj.forEach(function (el) {
+            var percArr = el.perc;
+            el.lowestPerc = MathUtils.getLowestPerc(percArr);
+            el.highestPerc = MathUtils.getHighestPerc(percArr);
+            el.averagePerc = MathUtils.calcAveragePerc(percArr);
+        });
 
-            $scope.testsByDate = byDateObj;
-            if ($scope.testsByDate.length !== 0) {
-                $scope.diffPerc = $scope.testsByDate[0].averagePerc;
-            }      
+        $scope.testsByDate = byDateObj;
+        if ($scope.testsByDate.length !== 0) {
+            $scope.diffPerc = $scope.testsByDate[0].averagePerc;
+        }      
     };
-
-    displayByDate();
 
     $scope.searchDiffs = function () {
         Dashboard.searchDiffs($scope.searchParams)
@@ -196,19 +194,19 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
                                         }
                                     });
                                     $scope.diffImages.byViewport = byViewport;
-                                });
-                            
+                                });                           
                         });
                 });
         });
 
     $scope.openDiffModal = Modal.openModal;
+    displayByDate();
 });
 
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
     $scope.diffInfo = viewDiff;
-    $scope.diffInfo.thumbnail = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgThumbnail.slice(2);
+    // $scope.diffInfo.thumbnail = 'https://s3.amazonaws.com/capstone-doraemon/' + $scope.diffInfo.diffImgThumbnail.slice(2);
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

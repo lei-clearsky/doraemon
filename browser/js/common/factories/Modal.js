@@ -2,7 +2,7 @@
 
 app.factory('Modal', function ($http, $modal) {
     return {
-        openModal: function (diffImgID, size, animation, tempUrl, ctrl) {
+        openModal: function (imgID, size, animation, tempUrl, ctrl) {
             var modalInstance = $modal.open({
                 animation: animation,
                 templateUrl: tempUrl,
@@ -10,11 +10,18 @@ app.factory('Modal', function ($http, $modal) {
                 size: size,
                 resolve: {
                     viewDiff: function($http) {
-                        return $http.get('/api/screenshots/diff/' + diffImgID)
+                        return $http.get('/api/screenshots/diff/' + imgID)
                             .then(function(response) {
                                 return response.data;
                         });
                     }
+                    // ,
+                    // viewImgCapture: function($http) {
+                    //     return $http.get('/api/imageCaptures/imageCapture/' + imgID)
+                    //         .then(function(response) {
+                    //             return response.data;
+                    //     });
+                    // }
                 }
             });
         }

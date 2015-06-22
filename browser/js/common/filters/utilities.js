@@ -20,3 +20,9 @@ app.filter('percentage', ['$filter', function ($filter) {
         return $filter('number')(input * 100, decimals) + '%';
     };
 }]);
+
+app.filter('awsImg', function() {
+  return function (input) {
+    return 'https://s3.amazonaws.com/capstone-doraemon/' + input.slice(2);
+  }
+})
