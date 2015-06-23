@@ -18,6 +18,7 @@
     "bluebird": "^2.9.27",
     "body-parser": "^1.12.0",
     "bootstrap": "^3.3.4",
+    "bootstrap-horizon": "^0.1.0",
     "chai": "^2.1.0",
     "chalk": "^1.0.0",
     "connect-mongo": "^0.7.0",

@@ -5,14 +5,16 @@
   	display: -ms-flexbox;
   	display: -webkit-flex;
   	display: flex;
-  	min-height: calc(100vh - 61px);
   	&:before,
   	&:after {
   		display: none !important;
   	}
+  	&.full-height {
+  		min-height: calc(100vh - 51px);
+  	}
   }
   .same-height > div[class*='col-'] {
-      flex: 1 100% auto;
+      flex: 1 1;
   }
 }
 
@@ -62,7 +64,7 @@ $gray: #333;
 #admin-board {
 	position: relative;
 	z-index: 99;
-	top: -50px;
+	top: -40px;
 	box-shadow: 0 0 20px #000;
 	.nav-tabs {
 		position: relative;
@@ -104,19 +106,38 @@ $gray: #333;
 }
 
 .dashboard-overview {
-	background: #66cc00;
-	color: $white;
-	.overview-item {
+	height: 50vh;
+	background: #333;
+	font-weight: 300;
 
-		font-weight: 300;
-		padding:50px 0;
-		.overview-item-heading {
-			font-size: 20px;
-			font-weight: 300;
-			padding: 5px;
+	.stats-all,
+	.stats-test {
+		.overview-item {
+			height: 30vh;
+			.vcenter {
+				font-size: 16px;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+			}
 		}
-		.overview-item-stats {
-			font-size: 120px;
+	}
+	.stats-all {
+		background: #66cc00;
+		color: $white;
+		.overview-item-heading {
+			font-size: 30px;
+		}
+	}
+	.stats-test {
+		background: #ddd;
+		color: $white;
+		.overview-item-heading {
+			font-size: 16px;
+		}
+		.overview-item {
+			height: 20vh;
 		}
 	}
 }

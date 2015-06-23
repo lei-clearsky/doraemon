@@ -111,6 +111,19 @@ app.factory('Dashboard', function ($http) {
                 };
             }
         },
+        getStatsTest: function (testsToday, testName, MathUtils) {
+            testsToday.forEach(function(test, index) {
+                if (test.name !== testName) {
+                    testsToday.splice(index, 1);
+                }
+            });
+            return {
+                alerts: testsToday.alerts.length,
+                diffPerc: {
+                    
+                }
+            }
+        },
         // get unique dates
         getUniqueDates: function (allDiffsByUser, MathUtils) {
             var dates = [];
