@@ -1,44 +1,98 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ diffImages | json }} -->
-	<!-- {{ testsByDate | json }} -->
-	<!-- {{testsByDate[0] | json}} -->
+	<!-- {{ diffImages.byUrl | json }} -->
+	
+	<!-- {{allTestsByUser | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
-    			<div class="row">
-    				<div class="col-md-4 overview-item text-center">
+			<div class="row">
+    			<div class="col-md-12 stats-all">
+    				<div class="row group">	
+    				<div class="col-md-4 overview-item text-center group">
+    					<div class="vcenter">
     					<div class="overview-item-heading">
     						Alerts for Today
     					</div>
     					<div class="overview-item-stats">
-    					{{ testsByDate[0].alerts.length }}
+    					{{ dashboard.alertNum }}
     					</div>
+	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-4 overview-item text-center group">
+    					<div class="vcenter">
     					<div class="overview-item-heading">
     						Tests run today
     					</div>
     					<div class="overview-item-stats">
     					{{ dashboard.testsNum }}
     					</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-4 overview-item text-center group">
+    					<div class="vcenter">
+    						<div class="select">
+		    					<select class="overview-item-heading" ng-options="label for perc in diffPerc">
+		    						<optgroup>
+		    						<option ng-selected="diffPerc" value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
+		    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
+		    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
+		    						</optgroup>
+		    					</select>
+    						</div>
+    					<div ng-show="diffPerc" class="overview-item-stats">
+    					 {{ diffPerc | percentage:2 }}
+    					</div>
+	    				</div>
+    				</div>
+	    			</div>
+    			</div>
+    			<div class="col-md-12 stats-test">
+    				<select ng-model="searchParams.testName" ng-change="updateDashboard()">
+						<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
+					</select>
+    				<div class="row">
+    				<div class="col-md-4 overview-item text-center">
+    					<div class="vcenter">
+    					<div class="overview-item-heading">
+    						Alerts
+    					</div>
+    					<div class="overview-item-stats">
+    					{{ dashboard.alertNum }}
+    					</div>
+	    				</div>
+	    			</div>
+    				<div class="col-md-4 overview-item text-center">
+    					<div class="vcenter">
+    					<div class="overview-item-heading">
+    						Tests
+    					</div>
+    					<div class="overview-item-stats">
+    					{{ dashboard.testsNum }}
+    					</div>
+	    				</div>
     				</div>
     				<div class="col-md-4 overview-item text-center">
+    					<div class="vcenter">
     					<select class="overview-item-heading" ng-model="diffPerc">
-    						<option selected value="{{ testsByDate[0].averagePerc }}">Average Diff %</option>
-    						<option value="{{ testsByDate[0].highestPerc }}" selected="selected">Highest Diff %</option>
-    						<option value="{{ testsByDate[0].lowestPerc }}">Lowest Diff %</option>
+    						<option selected value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
+    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
+    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
     					</select>
     					<div ng-show="diffPerc" class="overview-item-stats">
     					 {{ diffPerc | percentage:2 }}
     					</div>
+	    				</div>
     				</div>
+	    			</div>
+    			</div>
        		</div>
     	</div>
 
 	</div>
 
-	<!-- <div class="row" ng-repeat=" test in searchParams.testNames "> -->
+
+
 	<tabset>
 		<tab heading="By Date">
 			<ul class="cbp_tmtimeline">
@@ -61,7 +115,7 @@
 			</li>
 		</ul>
 		</tab>
-		<tab heading="By Test Name">
+		<!--<tab heading="By Test Name">
 			<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="text-center">
 				<div class="form-group tab-content-checkbox">
 					<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
@@ -71,30 +125,34 @@
 				</div>
 				<button type="submit" class="btn btn-primary btn-large">Search</button>
 			</form>
-			<div class="row" >
+			<div class="row">
+				<h3>{{ diff.testName }}</h3>
 				<div class="col-md-12">
-				<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-				    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
-				    	<div style="height: 200px; overflow: hidden;">
-				      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
-				  		</div>
-				    </div>
-			  	</div>
-			  	</div>
-			</div>
-		</tab>
-
-		<tab heading="By Url">
-			<div class="row" ng-repeat="diff in diffImages.byUrl">
-				<h3>{{ diff.urlName }}</h3>
-				<div class="col-md-12">
-					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+				<div class="row row-horizon">
+					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
 					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
 				  	</div>
+				</div>
+			  	</div>
+			</div>
+		</tab>-->
+		<tab heading="By Url">
+			<div class="row" ng-repeat="diff in diffImages.byUrl">
+				<h3>{{ diff.urlName }}</h3>
+				<div class="col-md-12">
+					<div class="row row-horizon">
+					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+					    	<div style="height: 200px; overflow: hidden;">
+					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
+					  		</div>
+					    </div>
+				  	</div>
+					</div>
 				</div>
 			</div>
 		</tab>
@@ -103,12 +161,14 @@
 		  	<div class="row" ng-repeat="diff in diffImages.byViewport">
 				<h3>{{ diff.viewport }}</h3>
 				<div class="col-md-12">
+					<div class="row row-horizon">
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg')">
+					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
-					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
+				  	</div>
 				  	</div>
 			  	</div>
 			</div>

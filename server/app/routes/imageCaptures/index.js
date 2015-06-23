@@ -4,7 +4,15 @@ var mongoose = require('mongoose');
 var ImageCapture = mongoose.model('ImageCapture');
 var User = mongoose.model('User');
 
-// - api/user/:userId/imageCaptures
+router.get('/imageCapture/:id', function (req, res, next) {
+	console.log('test test');
+	ImageCapture.findById(req.params.id)
+			.exec()
+			.then(function(img) {
+				res.json(img);
+				console.log('image capture ', img);
+			});
+});
 
 router.get('/', function(req, res, next) {
 
