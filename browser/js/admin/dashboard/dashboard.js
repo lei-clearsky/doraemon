@@ -33,7 +33,8 @@ app.config(function ($stateProvider) {
 app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, Modal, $modal, currentUser, allDiffsByUser, allTestsByUser, $rootScope) {
     $rootScope.stateClass = 'dashboard';
     $scope.allDiffsByUser = allDiffsByUser;
-    $scope.allTestsByUser = allTestsByUser;
+    // $scope.allTestsByUser = allTestsByUser;
+    $scope.uniqueTestsByUser = Dashboard.getUniqueTests(allTestsByUser);
     $scope.toggleCheckbox = Utils.toggleCheckbox;
     $scope.diffsForUser = null;
     $scope.diffsForUserByTest = null;
@@ -85,14 +86,18 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     // display by dates
     displayByDate();
 
-    Dashboard.searchDiffsByTest($scope.searchParams)
-        .then(function (diffs) {
-            $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
-            $scope.diffImages.byViewport = Dashboard.displayByViewport(diffs);
-        })
-        .catch(function(err) {
-            return err;
-        });
+    $scope.updateDashboard = function () {
+        console.log('onchange!!!');
+        Dashboard.searchDiffsByTest($scope.searchParams)
+            .then(function (diffs) {
+                $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
+                $scope.diffImages.byViewport = Dashboard.displayByViewport(diffs);
+            })
+            .catch(function(err) {
+                return err;
+            });
+        };
+    
 
     // diff image modal
     $scope.openDiffModal = Modal.openModal;

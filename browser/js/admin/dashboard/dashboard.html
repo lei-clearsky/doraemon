@@ -1,8 +1,8 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffImages.byUrl | json }} -->
-	<!-- {{ testsByDate | json }} -->
-	<!-- {{testsByDate[0] | json}} -->
+	
+	<!-- {{allTestsByUser | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
@@ -48,6 +48,9 @@
 	    			</div>
     			</div>
     			<div class="col-md-12 stats-test">
+    				<select ng-model="searchParams.testName" ng-change="updateDashboard()">
+						<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
+					</select>
     				<div class="row">
     				<div class="col-md-4 overview-item text-center">
     					<div class="vcenter">
@@ -87,6 +90,8 @@
     	</div>
 
 	</div>
+
+
 
 	<tabset>
 		<tab heading="By Date">

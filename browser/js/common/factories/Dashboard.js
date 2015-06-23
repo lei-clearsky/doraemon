@@ -21,6 +21,15 @@ app.factory('Dashboard', function ($http) {
                             return err;
                         });
         },
+        getUniqueTests: function (allTestsByUser) {
+            var tests = [];
+            allTestsByUser.forEach(function (test, index) {
+                if (tests.indexOf(test.name) === -1) {
+                    tests.push(test.name);
+                }
+            });
+            return tests;
+        },
         searchDiffs: function (params) {
             return $http({
                 url: '/api/screenshots/searchDiffs',
