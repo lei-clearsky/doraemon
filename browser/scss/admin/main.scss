@@ -151,13 +151,45 @@ $gray: #333;
 select {
 	background-color: transparent;
 	border: none;
-	border-bottom: 1px solid #fff;
 	border-radius: 0px;
 	-webkit-appearance: none;
 	box-shadow: none;
-    background: transparent;
-    background-image: none;
+  background: transparent;
+  background-image: none;
+  display: inline-block;
+
 	&:focus {
-    	outline: none;
+   	outline: none;
 	}
+}
+
+.select {
+	display: inline-block;
+	optgroup {
+		font-size: 13px;
+		color: #aaa;
+	}
+	&:after, 
+	&:before {
+		display: block;
+		content: " ";
+		position: relative;
+		right: -120px;
+	}
+	&:after {
+		width: 0; 
+		height: 0; 
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-top: 5px solid #fff;
+		top: -10px;
+	}
+	&:before {
+		width: 0; 
+		height: 0;
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-bottom: 5px solid #fff;
+		top: 10px;
+	}	
 }

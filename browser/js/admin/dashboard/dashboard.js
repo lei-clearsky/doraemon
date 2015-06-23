@@ -38,7 +38,8 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     $scope.diffsForUser = null;
     $scope.diffsForUserByTest = null;
     $scope.testsByDate = null;
-    
+    $scope.diffPerc = {};
+
     $scope.dashboard = {
         alertNum: null,
         testsNum: null,
@@ -77,6 +78,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         $scope.testsByDate = byDateObj;
         if ($scope.testsByDate.length !== 0) {
             $scope.diffPerc = $scope.testsByDate[0].averagePerc;
+            console.log($scope.diffPerc);
         }      
     };
 

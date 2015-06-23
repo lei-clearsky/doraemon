@@ -31,11 +31,15 @@
     				</div>
     				<div class="col-md-4 overview-item text-center group">
     					<div class="vcenter">
-    					<select class="overview-item-heading" ng-model="diffPerc">
-    						<option selected value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
-    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
-    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
-    					</select>
+    						<div class="select">
+		    					<select class="overview-item-heading" ng-options="label for perc in diffPerc">
+		    						<optgroup>
+		    						<option ng-selected="diffPerc" value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
+		    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
+		    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
+		    						</optgroup>
+		    					</select>
+    						</div>
     					<div ng-show="diffPerc" class="overview-item-stats">
     					 {{ diffPerc | percentage:2 }}
     					</div>
