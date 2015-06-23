@@ -50,6 +50,23 @@ router.get('/searchDiffs', function (req, res, next) {
 			});
 });
 
+router.get('/searchDiffsByTest', function (req, res, next) {
+	ImageDiff.find({
+				userID: req.query.user,
+				testName: req.query.testName
+			})
+			.exec()
+			.then(function(diffs) {
+				console.log('found diffs!!');
+				res.json(diffs);
+			}, function(err) {
+				console.log('err finding diffs');
+				console.log(err);
+				res.json(err);
+
+			});
+});
+
 router.get('/diffsByUrl', function (req, res, next) {
 	TestConfig.getDiffsByUrl(req.query.url, req.query.name, req.query.userID)
 		.then(function(diffs) {

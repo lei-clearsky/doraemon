@@ -1,6 +1,6 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ diffImages | json }} -->
+	<!-- {{ diffImages.byUrl | json }} -->
 	<!-- {{ testsByDate | json }} -->
 	<!-- {{testsByDate[0] | json}} -->
 
@@ -139,7 +139,7 @@
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
 					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
-					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
 				  	</div>
@@ -156,7 +156,7 @@
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
 					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 					    	<div style="height: 200px; overflow: hidden;">
-					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
+					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
 				  	</div>

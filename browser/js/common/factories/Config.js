@@ -34,6 +34,7 @@ app.factory('Config', function ($http) {
             });
             return testsToday;
         }
+    }
         // ,
         // get unique tests
     //     getUniqueTests: function (allTestsByUser) {

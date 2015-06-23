@@ -33,6 +33,18 @@ app.factory('Dashboard', function ($http) {
                 return err;
             });
         },
+        searchDiffsByTest: function (params) {
+            return $http({
+                url: '/api/screenshots/searchDiffsByTest',
+                method: 'GET',
+                params: params
+            }).then(function(res) {
+                return res.data;
+            }).catch(function(err) {
+                console.log(err);
+                return err;
+            });
+        },
         searchTestsByName: function (params) {
             return $http({
                 url: '/api/screenshots/searchTestByName',
@@ -181,6 +193,48 @@ app.factory('Dashboard', function ($http) {
                 
             });
             return byDateObj;
+        },
+        // display by viewport
+        displayByViewport: function (diffsForUserByTest) {
+            var viewports = [];
+            var byViewports = [];
+            // get unique urls 
+            diffsForUserByTest.forEach(function(diff, index) {
+                if (viewports.indexOf(diff.viewport) === -1) {
+                    viewports.push(diff.viewport);
+                    byViewports.push({
+                        viewport: diff.viewport,
+                        images: []
+                    });
+                }
+            });
+            // display diffs by unique viewports
+            diffsForUserByTest.forEach(function(diff) {
+                var viewportsIndex = viewports.indexOf(diff.viewport);
+                byViewports[viewportsIndex].images.push(diff);
+            })
+            return byViewports;
+        },
+            // display by URL
+        displayByURL: function (diffsForUserByTest) {
+            var urls = [];
+            var byUrls = [];
+            // get unique urls 
+            diffsForUserByTest.forEach(function(diff, index) {
+                if (urls.indexOf(diff.websiteUrl) === -1) {
+                    urls.push(diff.websiteUrl);
+                    byUrls.push({
+                        urlName: diff.websiteUrl,
+                        images: []
+                    });
+                }
+            });
+            // display diffs by unique urls
+            diffsForUserByTest.forEach(function(diff) {
+                var urlsIndex = urls.indexOf(diff.websiteUrl);
+                byUrls[urlsIndex].images.push(diff);
+            });
+            return byUrls;
         }
     };
 
