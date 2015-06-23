@@ -106,14 +106,14 @@ $gray: #333;
 }
 
 .dashboard-overview {
-	height: 50vh;
+	height: 60vh;
 	background: #333;
 	font-weight: 300;
 
 	.stats-all,
 	.stats-test {
 		.overview-item {
-			height: 30vh;
+			height: 40vh;
 			.vcenter {
 				font-size: 16px;
 				position: relative;
@@ -127,14 +127,20 @@ $gray: #333;
 		background: #66cc00;
 		color: $white;
 		.overview-item-heading {
-			font-size: 30px;
+			font-size: 18px;
+		}
+		.overview-item-stats {
+			font-size: 120px;
 		}
 	}
 	.stats-test {
 		background: #ddd;
 		color: $white;
 		.overview-item-heading {
-			font-size: 16px;
+			font-size: 18px;
+		}
+		.overview-item-stats {
+			font-size: 70px;
 		}
 		.overview-item {
 			height: 20vh;

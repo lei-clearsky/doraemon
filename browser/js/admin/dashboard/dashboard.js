@@ -80,6 +80,9 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         }      
     };
 
+    // display by dates
+    displayByDate();
+
     Dashboard.searchDiffsByTest($scope.searchParams)
         .then(function (diffs) {
             $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
@@ -101,8 +104,6 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     // display tests ran for today
     $scope.dashboard.testsNum = Dashboard.getTestsToday($scope.allDiffsByUser, MathUtils);
 
-    // display by dates
-    displayByDate();
 });
 
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
