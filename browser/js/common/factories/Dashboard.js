@@ -7,18 +7,12 @@ app.factory('Dashboard', function ($http) {
             return $http.get('/api/screenshots/' + id)
                         .then(function (response) {
                             return response.data;
-                        })
-                        .catch(function(err) {
-                            return err;
                         });
         },
         getTestsByUserID: function (userID) {
             return $http.get('/api/screenshots/' + userID)
                         .then(function (response) {
                             return response.data;
-                        })
-                        .catch(function(err) {
-                            return err;
                         });
         },
         getUniqueTests: function (allTestsByUser) {
@@ -37,9 +31,6 @@ app.factory('Dashboard', function ($http) {
                 params: params
             }).then(function(res) {
                 return res.data;
-            }).catch(function(err) {
-                console.log(err);
-                return err;
             });
         },
         searchDiffsByTest: function (params) {
@@ -49,9 +40,6 @@ app.factory('Dashboard', function ($http) {
                 params: params
             }).then(function(res) {
                 return res.data;
-            }).catch(function(err) {
-                console.log(err);
-                return err;
             });
         },
         searchTestsByName: function (params) {
@@ -61,9 +49,6 @@ app.factory('Dashboard', function ($http) {
                 params: params
             }).then(function(res) {
                 return res.data;
-            }).catch(function(err) {
-                console.log(err);
-                return err;
             });
         },
         allDiffsByUser: function (userID) {
@@ -71,18 +56,12 @@ app.factory('Dashboard', function ($http) {
                         .then(function (response) {
                             // console.log('diffs ', response.data);
                             return response.data;
-                        })
-                        .catch(function(err) {
-                            return err;
                         });
         },
         allScreenshotsForUser: function (userID) {
             return $http.get('/api/screenshots/allScreenshots/' + userID)
                         .then(function (response) {
                             return response.data;
-                        })
-                        .catch(function(err) {
-                            return err;
                         });
         },
         getDiffsByUrl: function (params) {
@@ -93,9 +72,6 @@ app.factory('Dashboard', function ($http) {
             })
             .then(function (response) {
                 return response.data;
-            })
-            .catch(function (err) {
-                return err;
             });
         },
         // get tests ran today

@@ -93,9 +93,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
                 $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
                 $scope.diffImages.byViewport = Dashboard.displayByViewport(diffs);
             })
-            .catch(function(err) {
-                return err;
-            });
+            .catch(console.log);
         };
     
 
