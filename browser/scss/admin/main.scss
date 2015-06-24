@@ -5,14 +5,16 @@
   	display: -ms-flexbox;
   	display: -webkit-flex;
   	display: flex;
-  	min-height: calc(100vh - 61px);
   	&:before,
   	&:after {
   		display: none !important;
   	}
+  	&.full-height {
+  		min-height: calc(100vh - 51px);
+  	}
   }
   .same-height > div[class*='col-'] {
-      flex: 1 100% auto;
+      flex: 1 1;
   }
 }
 
@@ -62,7 +64,7 @@ $gray: #333;
 #admin-board {
 	position: relative;
 	z-index: 99;
-	top: -50px;
+	top: -40px;
 	box-shadow: 0 0 20px #000;
 	.nav-tabs {
 		position: relative;
@@ -104,19 +106,44 @@ $gray: #333;
 }
 
 .dashboard-overview {
-	background: #66cc00;
-	color: $white;
-	.overview-item {
+	height: 60vh;
+	background: #333;
+	font-weight: 300;
 
-		font-weight: 300;
-		padding:50px 0;
+	.stats-all,
+	.stats-test {
+		.overview-item {
+			height: 40vh;
+			.vcenter {
+				font-size: 16px;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+			}
+		}
+	}
+	.stats-all {
+		background: #66cc00;
+		color: $white;
 		.overview-item-heading {
-			font-size: 20px;
-			font-weight: 300;
-			padding: 5px;
+			font-size: 18px;
 		}
 		.overview-item-stats {
 			font-size: 120px;
+		}
+	}
+	.stats-test {
+		background: #ddd;
+		color: $white;
+		.overview-item-heading {
+			font-size: 18px;
+		}
+		.overview-item-stats {
+			font-size: 70px;
+		}
+		.overview-item {
+			height: 20vh;
 		}
 	}
 }
@@ -124,13 +151,45 @@ $gray: #333;
 select {
 	background-color: transparent;
 	border: none;
-	border-bottom: 1px solid #fff;
 	border-radius: 0px;
 	-webkit-appearance: none;
 	box-shadow: none;
-    background: transparent;
-    background-image: none;
+  background: transparent;
+  background-image: none;
+  display: inline-block;
+
 	&:focus {
-    	outline: none;
+   	outline: none;
 	}
+}
+
+.select {
+	display: inline-block;
+	optgroup {
+		font-size: 13px;
+		color: #aaa;
+	}
+	&:after, 
+	&:before {
+		display: block;
+		content: " ";
+		position: relative;
+		right: -120px;
+	}
+	&:after {
+		width: 0; 
+		height: 0; 
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-top: 5px solid #fff;
+		top: -10px;
+	}
+	&:before {
+		width: 0; 
+		height: 0;
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-bottom: 5px solid #fff;
+		top: 10px;
+	}	
 }
