@@ -4,7 +4,8 @@ navbar {
   .admin,
   .dashboard,
   .alerts,
-  .config {
+  .config,
+  .diffs {
     background: #000;
     .navbar-nav {
       display: none;
@@ -68,6 +69,7 @@ navbar {
   }
   .dashboard {
     .welcome {
+      margin-top: 0;
       span {
         color: #bee181;
       }

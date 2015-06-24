@@ -8,90 +8,84 @@
     	<div class="dashboard-overview container-fluid">
 			<div class="row">
     			<div class="col-md-12 stats-all">
+    				<div class="stats-label">TODAY</div>
     				<div class="row group">	
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Alerts for Today
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.alertNum }}
-    					</div>
+    					<div class="overview-item-heading">Alerts for Today</div>
+    					<div class="overview-item-stats">{{ dashboard.alertNum }}</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Tests run today
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.testsNum }}
-    					</div>
+    					<div class="overview-item-heading">Tests run today</div>
+    					<div class="overview-item-stats">{{ dashboard.testsNum }}</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    						<div class="select">
-		    					<select class="overview-item-heading" ng-options="label for perc in diffPerc">
-		    						<optgroup>
-		    						<option ng-selected="diffPerc" value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
-		    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
-		    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
-		    						</optgroup>
-		    					</select>
-    						</div>
-    					<div ng-show="diffPerc" class="overview-item-stats">
-    					 {{ diffPerc | percentage:2 }}
-    					</div>
+    						<div class="overview-item-heading">Highest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center group">
+    					<div class="vcenter">
+    						<div class="overview-item-heading">Average(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center group">
+    					<div class="vcenter">
+    						<div class="overview-item-heading">Lowest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div>
 	    				</div>
     				</div>
 	    			</div>
     			</div>
     			<div class="col-md-12 stats-test">
-    				<select ng-model="searchParams.testName" ng-change="updateDashboard()">
-						<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
-					</select>
+    				<div class="stats-label">
+    					<select ng-model="searchParams.testName" ng-change="updateDashboard()">
+    						<optgroup>
+								<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
+								</optgroup>
+							</select>
+    				</div>
     				<div class="row">
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Alerts
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.alertNum }}
-    					</div>
+	    					<div class="overview-item-heading">Alerts</div>
+	    					<div class="overview-item-stats">{{ dashboard.alertNum }}</div>
 	    				</div>
 	    			</div>
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Tests
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.testsNum }}
-    					</div>
+	    					<div class="overview-item-heading">Tests</div>
+	    					<div class="overview-item-stats">{{ dashboard.testsNum }}</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<select class="overview-item-heading" ng-model="diffPerc">
-    						<option selected value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
-    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
-    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
-    					</select>
-    					<div ng-show="diffPerc" class="overview-item-stats">
-    					 {{ diffPerc | percentage:2 }}
-    					</div>
+	    					<div class="overview-item-heading">Highest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center">
+    					<div class="vcenter">
+	    					<div class="overview-item-heading">Average(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center">
+    					<div class="vcenter">
+	    					<div class="overview-item-heading">Lowest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div>
 	    				</div>
     				</div>
 	    			</div>
     			</div>
        		</div>
     	</div>
-
 	</div>
-
-
 
 	<tabset>
 		<tab heading="By Date">
