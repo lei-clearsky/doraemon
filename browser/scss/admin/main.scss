@@ -37,15 +37,16 @@ $gray: #333;
 			}
 			a {
 				display: block;
-				padding: 15px 20px;
+				padding: 15px;
 				width:100%;
 				text-decoration: none;
-				font-size: 18px;
+				font-size: 16px;
 				font-weight:300;
 				border-bottom: 1px solid #434343;
 				color: $light-gray;
 				background-color: $gray;
 				transition: all 0.3s;
+
 				&:hover,
 				&:focus,
 				&:active {
@@ -56,15 +57,13 @@ $gray: #333;
 				}
 			}
 		}
-
 	}
-
 }
 
 #admin-board {
 	position: relative;
 	z-index: 99;
-	top: -40px;
+	top: -25px;
 	box-shadow: 0 0 20px #000;
 	.nav-tabs {
 		position: relative;
@@ -101,19 +100,28 @@ $gray: #333;
   }
 }
 
-.left-navigation {
-	background: $gray;
+@media (min-width: 1200px) {
+	#admin {
+		.left-navigation {
+		  width: 12.66666667%;
+			background: $gray;
+		}
+		#admin-board {
+			width: 87.33333333%
+		}
+	}
 }
 
 .dashboard-overview {
-	height: 60vh;
+	height: 440px;
 	background: #333;
 	font-weight: 300;
 
 	.stats-all,
 	.stats-test {
+		position: relative;
 		.overview-item {
-			height: 40vh;
+			height: 280px;
 			.vcenter {
 				font-size: 16px;
 				position: relative;
@@ -122,32 +130,60 @@ $gray: #333;
 				-webkit-transform: translateY(-50%);
 			}
 		}
+
+		.stats-label {
+			position: absolute;
+			text-align: center;
+			padding: 3px;
+			z-index: 1200;
+			top: -13px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 250px;
+		}
 	}
 	.stats-all {
-		background: #66cc00;
-		color: $white;
+		background: #fff;
+		color: #92C360;
 		.overview-item-heading {
-			font-size: 18px;
+			font-size: 17px;
 		}
 		.overview-item-stats {
-			font-size: 120px;
+			font-size: 70px;
+		}
+		.stats-label {
+			background: #fff;
 		}
 	}
 	.stats-test {
 		background: #ddd;
 		color: $white;
 		.overview-item-heading {
-			font-size: 18px;
+			font-size: 14px;
 		}
 		.overview-item-stats {
-			font-size: 70px;
+			font-size: 40px;
 		}
 		.overview-item {
-			height: 20vh;
+			height: 160px;
+		}
+		.stats-label {
+			background: #ddd;
 		}
 	}
 }
-
+@media (min-width: 992px) {
+	.stats-test {
+		.col-md-2 {
+		  width: 14%;
+		}
+	}
+	.stats-all {
+		.col-md-2 {
+		  width: 20%;
+		}
+	}
+}
 select {
 	background-color: transparent;
 	border: none;
