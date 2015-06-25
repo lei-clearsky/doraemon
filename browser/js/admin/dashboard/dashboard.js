@@ -30,6 +30,8 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, Modal, $modal, currentUser, allDiffsByUser, allTestsByUser, $rootScope) {
+    $scope.diffsToday = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+    $scope.diffsTest = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
     $rootScope.stateClass = 'dashboard';
     $scope.allDiffsByUser = allDiffsByUser;
     $scope.uniqueTestsByUser = Dashboard.getUniqueTests(allTestsByUser);
