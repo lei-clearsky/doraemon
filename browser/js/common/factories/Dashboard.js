@@ -1,6 +1,98 @@
 'use strict';
 
 app.factory('Dashboard', function ($http) {
+    var getUniqueDates = function (allDiffsByUser, MathUtils) {
+        var dates = [];
+        var days = [];
+        var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        allDiffsByUser.forEach(function(diffImg, index) {
+            var formattedDate = MathUtils.formatDate(diffImg.captureTime);
+            if (dates.indexOf(formattedDate) < 0) {
+                var d = new Date(diffImg.captureTime);
+                var day = dayNames[ d.getDay() ];
+                dates.push(formattedDate);
+                days.push(day);
+            }
+        });
+        return {
+            dates: dates,
+            days: days   
+        };
+    };
+    // construct display by date base obj
+    var getByDateBaseObj = function (dates, days) {
+        var byDate = [];
+        dates.forEach(function(date, index) {
+            var d = {
+                date: '',
+                day: '',
+                alerts: [],
+                testsRun: [],
+                perc: [],
+                lowestPerc: '',
+                highestPerc: '',
+                averagePerc: ''
+            };
+            d.date = date;
+            d.day = days[index];
+            byDate.push(d);
+        });
+        return byDate;
+    };
+    // construct display by date obj
+    var getByDateObj = function (allDiffsByUser, dates, byDateObj, MathUtils) {
+        allDiffsByUser.forEach(function(diff) {
+            dates.forEach(function (date, index) {
+                var diffCaptureTime = MathUtils.formatDate(diff.captureTime);
+                if (diffCaptureTime === date) {
+                    byDateObj[index].date = date;
+                   
+                    if (diff.diffPercent*100 > diff.threshold) {
+                        byDateObj[index].alerts.push(diff);
+                    }
+
+                    byDateObj[index].perc.push(diff.diffPercent);
+                }                            
+            });
+            
+        });
+        return byDateObj;
+    };
+
+    var displayByDate = function (allDiffsByUser, MathUtils) {
+        var uniqueDatesObj = getUniqueDates(allDiffsByUser, MathUtils);
+        var days = uniqueDatesObj.days;
+        var dates = uniqueDatesObj.dates;
+        var byDateObj = getByDateBaseObj(dates, days);
+        byDateObj = getByDateObj(allDiffsByUser, dates, byDateObj, MathUtils);
+
+        byDateObj.forEach(function (el) {
+            var percArr = el.perc;
+            el.lowestPerc = MathUtils.getLowestPerc(percArr);
+            el.highestPerc = MathUtils.getHighestPerc(percArr);
+            el.averagePerc = MathUtils.calcAveragePerc(percArr);
+        });
+        return byDateObj;
+    };
+
+    var getStatsOneTest = function (diffsOneTest, MathUtils) {
+        var alertsOneTest = [];
+        var diffPercentArr = [];
+        diffsOneTest.forEach(function(diff, index) {
+            if (diff.diffPercent*100 > diff.threshold) {
+                alertsOneTest.push(diff);
+            }
+            diffPercentArr.push(diff.diffPercent);
+        });
+        return {
+            alerts: alertsOneTest.length,
+            diffPerc: {
+                averagePerc: MathUtils.calcAveragePerc(diffPercentArr),
+                highestPerc: MathUtils.getHighestPerc(diffPercentArr),
+                lowestPerc: MathUtils.getLowestPerc(diffPercentArr)
+            }
+        }
+    }
 
     return {
         getOne: function (id) {
@@ -109,77 +201,10 @@ app.factory('Dashboard', function ($http) {
                 };
             }
         },
-        getStatsTest: function (testsToday, testName, MathUtils) {
-            testsToday.forEach(function(test, index) {
-                if (test.name !== testName) {
-                    testsToday.splice(index, 1);
-                }
-            });
-            return {
-                alerts: testsToday.alerts.length,
-                diffPerc: {
-                    
-                }
-            }
-        },
-        // get unique dates
-        getUniqueDates: function (allDiffsByUser, MathUtils) {
-            var dates = [];
-            var days = [];
-            var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-            allDiffsByUser.forEach(function(diffImg, index) {
-                var formattedDate = MathUtils.formatDate(diffImg.captureTime);
-                if (dates.indexOf(formattedDate) < 0) {
-                    var d = new Date(diffImg.captureTime);
-                    var day = dayNames[ d.getDay() ];
-                    dates.push(formattedDate);
-                    days.push(day);
-                }
-            });
-            return {
-                dates: dates,
-                days: days   
-            };
-        },
-        // construct display by date base obj
-        getByDateBaseObj: function (dates, days) {
-            var byDate = [];
-            dates.forEach(function(date, index) {
-                var d = {
-                    date: '',
-                    day: '',
-                    alerts: [],
-                    testsRun: [],
-                    perc: [],
-                    lowestPerc: '',
-                    highestPerc: '',
-                    averagePerc: ''
-                };
-                d.date = date;
-                d.day = days[index];
-                byDate.push(d);
-            });
-            return byDate;
-        },
-        // construct display by date obj
-        getByDateObj: function (allDiffsByUser, dates, byDateObj, MathUtils) {
-            allDiffsByUser.forEach(function(diff) {
-                dates.forEach(function (date, index) {
-                    var diffCaptureTime = MathUtils.formatDate(diff.captureTime);
-                    if (diffCaptureTime === date) {
-                        byDateObj[index].date = date;
-                       
-                        if (diff.diffPercent*100 > diff.threshold) {
-                            byDateObj[index].alerts.push(diff);
-                        }
 
-                        byDateObj[index].perc.push(diff.diffPercent);
-                    }                            
-                });
-                
-            });
-            return byDateObj;
-        },
+        displayByDate: displayByDate,
+        getStatsOneTest: getStatsOneTest,
+
         // display by viewport
         displayByViewport: function (diffsForUserByTest) {
             var viewports = [];
