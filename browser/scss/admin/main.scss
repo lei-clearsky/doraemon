@@ -1,9 +1,12 @@
 .diff-bars {
-	position: absolute;
-	bottom: -4px;
+	position: relative;
+	z-index: 6000;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
 }
 .ls-bar {
-	width: 9px;
+	width: 30px;
 	background: #eee;
 	display: inline-block;
 	margin: 0 5px;
@@ -82,7 +85,9 @@ $green: #38A139;
 	.nav-tabs {
 		position: relative;
 		top: -40px;
-		z-index:9988;
+		z-index: 9988;
+		width: 300px;
+		left: calc(100% - 300px);
 		& > li > a {
 			background: #fff;
 			padding: 10px 20px;
