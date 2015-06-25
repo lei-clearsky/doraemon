@@ -3,10 +3,10 @@
 	bottom: -4px;
 }
 .ls-bar {
-	width: 20px;
+	width: 9px;
 	background: #eee;
 	display: inline-block;
-	margin: 0 6px;
+	margin: 0 5px;
 }
 @media screen and (min-width: 768px) {
   .same-height {
@@ -31,6 +31,8 @@
 $white: #fff;
 $light-gray: #ccc;
 $gray: #333;
+$blue: #3892D0;
+$green: #38A139;
 
 #admin-menu {
 	&.list-group {
@@ -155,16 +157,19 @@ $gray: #333;
 	}
 	.stats-all {
 		background: #fff;
-		color: #92C360;
+		color: $green;
 		.group-one {
 			display: inline-block;
 			float:left;
 		}
 		.overview-item-heading {
 			font-size: 17px;
+			margin-bottom:15px;
 		}
 		.overview-item-stats {
 			font-size: 70px;
+			position: relative;
+			height:160px;
 			.progress-stats {
 				position: absolute;
 				top: 50%;
@@ -173,8 +178,9 @@ $gray: #333;
 				transform: translateX(-50%) translateY(-50%);
 				-webkit-transform: translateX(-50%) translateY(-50%);
 				.progress-stats-num {
-					font-size: 30px;
+					font-size: 42px;
 					line-height:1;
+					color:$green;
 					&.highest {
 						color: #E75757;
 					}
@@ -195,7 +201,7 @@ $gray: #333;
 		}
 	}
 	.stats-test {
-		background: #ddd;
+		background: $green;
 		color: $white;
 		.overview-item-heading {
 			font-size: 14px;
@@ -207,7 +213,7 @@ $gray: #333;
 			height: 160px;
 		}
 		.stats-label {
-			background: #ddd;
+			background: $green;
 		}
 	}
 }

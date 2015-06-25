@@ -30,8 +30,9 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, Modal, $modal, currentUser, allDiffsByUser, allTestsByUser, $rootScope) {
-    $scope.diffsToday = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
-    $scope.diffsTest = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+    // $scope.diffsToday = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
+    // $scope.diffsToday = $scope.diffImages.byDate.perc;
+    // $scope.diffsTest = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
     $rootScope.stateClass = 'dashboard';
     $scope.allDiffsByUser = allDiffsByUser;
     $scope.uniqueTestsByUser = Dashboard.getUniqueTests(allTestsByUser);
@@ -50,6 +51,8 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         byDate: Dashboard.displayByDate($scope.allDiffsByUser, MathUtils),
         byViewport: Dashboard.displayByViewport($scope.allDiffsByUser)
     };
+    $scope.diffsToday = $scope.diffImages.byDate[0].percObjArr;
+    $scope.diffsTest = $scope.diffImages.byDate[0].percObjArr;
     // display dashboard stats
     $scope.dashboard = {
         alertNum: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).alertsToday,
@@ -57,7 +60,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         diffPercent: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).diffPercentToday,
         alertNumOneTest: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).alertsToday,
         testsNumOneTest: Dashboard.getTestsToday($scope.allDiffsByUser, MathUtils),
-        diffPercentOneTest: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).diffPercentToday,
+        diffPercentOneTest: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).diffPercentToday
     };
     // update dashboard by selecting test name
     $scope.updateDashboard = function () {
@@ -69,6 +72,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
                 $scope.dashboard.alertNumOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).alerts;
                 $scope.dashboard.testsNumOneTest = diffs.length;
                 $scope.dashboard.diffPercentOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).diffPerc;
+                $scope.diffsTest = Dashboard.getStatsOneTest(diffs, MathUtils).percObjArr;
             })
             .catch(console.log);
         };

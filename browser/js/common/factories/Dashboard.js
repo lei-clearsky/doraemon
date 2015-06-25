@@ -29,6 +29,7 @@ app.factory('Dashboard', function ($http) {
                 alerts: [],
                 testsRun: [],
                 perc: [],
+                percObjArr: [],
                 lowestPerc: '',
                 highestPerc: '',
                 averagePerc: ''
@@ -52,6 +53,9 @@ app.factory('Dashboard', function ($http) {
                     }
 
                     byDateObj[index].perc.push(diff.diffPercent);
+
+                    if (diff.diffPercent*100 > 0)
+                        byDateObj[index].percObjArr.push({index: diff.diffPercent});
                 }                            
             });
             
@@ -78,14 +82,18 @@ app.factory('Dashboard', function ($http) {
     var getStatsOneTest = function (diffsOneTest, MathUtils) {
         var alertsOneTest = [];
         var diffPercentArr = [];
+        var percObjArr = [];
         diffsOneTest.forEach(function(diff, index) {
             if (diff.diffPercent*100 > diff.threshold) {
                 alertsOneTest.push(diff);
             }
             diffPercentArr.push(diff.diffPercent);
+            if (diff.diffPercent*100 > 0) 
+                percObjArr.push({index:diff.diffPercent});
         });
         return {
             alerts: alertsOneTest.length,
+            percObjArr: percObjArr,
             diffPerc: {
                 averagePerc: MathUtils.calcAveragePerc(diffPercentArr),
                 highestPerc: MathUtils.getHighestPerc(diffPercentArr),
@@ -146,7 +154,6 @@ app.factory('Dashboard', function ($http) {
         allDiffsByUser: function (userID) {
             return $http.get('/api/screenshots/allDiffs/' + userID)
                         .then(function (response) {
-                            // console.log('diffs ', response.data);
                             return response.data;
                         });
         },
