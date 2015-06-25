@@ -2,47 +2,107 @@
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffImages.byUrl | json }} -->
 	
-	<!-- {{allTestsByUser | json}} -->
+	<!-- {{dashboard.diffPercent | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
 			<div class="row">
     			<div class="col-md-12 stats-all">
     				<div class="stats-label">TODAY</div>
-    				<div class="row group">	
-    				<div class="col-md-2 overview-item text-center group">
-    					<div class="vcenter">
-    					<div class="overview-item-heading">Alerts for Today</div>
-    					<div class="overview-item-stats">{{ dashboard.alertNum }}</div>
-	    				</div>
-    				</div>
-    				<div class="col-md-2 overview-item text-center group">
-    					<div class="vcenter">
-    					<div class="overview-item-heading">Tests run today</div>
-    					<div class="overview-item-stats">{{ dashboard.testsNum }}</div>
-	    				</div>
-    				</div>
+    				
+	    			<div class="row group">	
+		    				<div class="col-md-2 overview-item text-center group">
+		    					<div class="vcenter">
+		    					<div class="overview-item-heading">Alerts for Today</div>
+		    					<div class="overview-item-stats">{{ dashboard.alertNum }}</div>
+			    				</div>
+		    				</div>
+		    				<div class="col-md-2 overview-item text-center group">
+		    					<div class="vcenter">
+		    					<div class="overview-item-heading">Tests run today</div>
+		    					<div class="overview-item-stats">{{ dashboard.testsNum }}</div>
+			    				</div>
+		    				</div>
     				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
     						<div class="overview-item-heading">Highest(%)</div>
-	    					<div class="overview-item-stats">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num highest">{{ dashboard.diffPercent.highestPerc | percentage:2 }}%</div>
+	    						<!-- <div class="progress-stats-title">Highest(%)</div> -->
+	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.highestPerc"
+							    color="#E75757"
+							    bgcolor="#eee"
+							    radius="70"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
     				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
     						<div class="overview-item-heading">Average(%)</div>
-	    					<div class="overview-item-stats">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num average">{{ dashboard.diffPercent.averagePerc | percentage:2 }}%</div>
+<!-- 	    						<div class="progress-stats-title">Average(%)</div>
+ -->	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.averagePerc"
+							    color="#4495DC"
+							    bgcolor="#eee"
+							    radius="70"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
     				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
     						<div class="overview-item-heading">Lowest(%)</div>
-	    					<div class="overview-item-stats">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num lowest">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}%</div>
+	    						<!-- <div class="progress-stats-title">Lowest(%)</div> -->
+	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.lowestPerc"
+							    color="#2AAD15"
+							    bgcolor="#eee"
+							    radius="70"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
 	    			</div>
     			</div>
+
     			<div class="col-md-12 stats-test">
+
     				<div class="stats-label">
     					<select ng-model="searchParams.testName" ng-change="updateDashboard()">
     						<optgroup>
@@ -169,6 +229,20 @@
 		</tab>
 	</tabset>
 
+    			<div class="row">
+					<div class="col-md-6">
+						<canvas id="line" class="chart chart-line" data="data"
+						  labels="labels" legend="true" series="series"
+						  click="onClick">
+						</canvas>
+					</div>
+					<div class="col-md-6">
+						<canvas id="line" class="chart chart-line" data="data"
+						  labels="labels" legend="true" series="series"
+						  click="onClick">
+						</canvas>
+					</div>
+    			</div>
 
 
 

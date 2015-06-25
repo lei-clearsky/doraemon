@@ -32,18 +32,16 @@ $gray: #333;
 			margin-bottom: 0;
 			border: 0;
 			
-			.fa {
-				margin-right: 8px;
-			}
 			a {
 				display: block;
-				padding: 15px;
+				padding: 25px 10px;
 				width:100%;
+				text-align: center;
 				text-decoration: none;
 				font-size: 16px;
 				font-weight:300;
 				border-bottom: 1px solid #434343;
-				color: $light-gray;
+				color: $white;
 				background-color: $gray;
 				transition: all 0.3s;
 
@@ -51,9 +49,13 @@ $gray: #333;
 				&:focus,
 				&:active {
 					color:$white;
-					background-color: #191b08;
+					background-color: #38A139;
 					transition: all 0.3s;
 					cursor: pointer;
+				}
+				.fa {
+					display: block;
+					font-size: 34px;
 				}
 			}
 		}
@@ -103,11 +105,10 @@ $gray: #333;
 @media (min-width: 1200px) {
 	#admin {
 		.left-navigation {
-		  width: 12.66666667%;
 			background: $gray;
 		}
 		#admin-board {
-			width: 87.33333333%
+
 		}
 	}
 }
@@ -136,7 +137,7 @@ $gray: #333;
 			text-align: center;
 			padding: 3px;
 			z-index: 1200;
-			top: -13px;
+			xtop: -13px;
 			left: 50%;
 			transform: translateX(-50%);
 			width: 250px;
@@ -145,11 +146,39 @@ $gray: #333;
 	.stats-all {
 		background: #fff;
 		color: #92C360;
+		.group-one {
+			display: inline-block;
+			float:left;
+		}
 		.overview-item-heading {
 			font-size: 17px;
 		}
 		.overview-item-stats {
 			font-size: 70px;
+			.progress-stats {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				color: #333;
+				transform: translateX(-50%) translateY(-50%);
+				-webkit-transform: translateX(-50%) translateY(-50%);
+				.progress-stats-num {
+					font-size: 30px;
+					line-height:1;
+					&.highest {
+						color: #E75757;
+					}
+					&.average {
+						color: #4495DC;
+					}
+					&.lowest {
+						color: #2AAD15;
+					}
+				}
+				.progress-stats-title {
+					font-size: 14px;
+				}
+			}
 		}
 		.stats-label {
 			background: #fff;

@@ -90,7 +90,8 @@ app.factory('Dashboard', function ($http) {
         // get today's alerts and diff percent
         getStatsToday: function (testsByDate, MathUtils) {
             var today = new Date();
-            var formattedToday = MathUtils.formatDate(today);
+            // var formattedToday = MathUtils.formatDate(today);
+            var formattedToday = '2015-06-20';
             if (testsByDate[0] !== undefined && testsByDate[0].date === formattedToday) {
                 return {
                     alertsToday: testsByDate[0].alerts.length,
