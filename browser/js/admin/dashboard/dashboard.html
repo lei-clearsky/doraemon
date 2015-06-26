@@ -1,102 +1,200 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
-	<!-- {{ diffImages.byUrl | json }} -->
-	
-	<!-- {{allTestsByUser | json}} -->
+	<!-- {{ diffImages.byDate | json }} -->
+	<!-- {{diffsToday | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
 			<div class="row">
     			<div class="col-md-12 stats-all">
-    				<div class="row group">	
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="stats-label">TODAY</div>
+    				
+	    			<div class="row group">	
+		    				<div class="col-md-2 overview-item text-center group">
+		    					<div class="vcenter">
+		    					<div class="overview-item-heading">Alerts for Today</div>
+		    					<div class="overview-item-stats">
+			    					<div class="progress-stats">
+			    						<div class="progress-stats-num">{{ dashboard.alertNum }}</div>
+			    					</div>
+									    <div
+									    round-progress
+									    max="10"
+									    current="dashboard.alertNum"
+									    color="#38A139"
+									    bgcolor="#eee"
+									    radius="80"
+									    stroke="5"
+									    semi="false"
+									    rounded="false"
+									    clockwise="true"
+									    iterations="50"
+									    animation="easeInOutQuart"></div>
+								</div>
+			    				</div>
+		    				</div>
+		    				<div class="col-md-2 overview-item text-center group">
+		    					<div class="vcenter">
+		    					<div class="overview-item-heading">Tests run today</div>
+		    					<div class="overview-item-stats">
+			    					<div class="progress-stats">
+			    						<div class="progress-stats-num">{{ dashboard.testsNum }}</div>
+			    					</div>
+									    <div
+									    round-progress
+									    max="10"
+									    current="dashboard.testsNum"
+									    color="#38A139"
+									    bgcolor="#eee"
+									    radius="80"
+									    stroke="5"
+									    semi="false"
+									    rounded="false"
+									    clockwise="true"
+									    iterations="50"
+									    animation="easeInOutQuart"></div>
+								</div>
+			    				</div>
+		    				</div>
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Alerts for Today
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.alertNum }}
-    					</div>
+    						<div class="overview-item-heading">Highest(%)</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num">{{ dashboard.diffPercent.highestPerc | percentage:2 }}</div>
+	    						<!-- <div class="progress-stats-title">Highest(%)</div> -->
+	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.highestPerc"
+							    color="#38A139"
+							    bgcolor="#eee"
+							    radius="80"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Tests run today
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.testsNum }}
-    					</div>
+    						<div class="overview-item-heading">Average(%)</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num">{{ dashboard.diffPercent.averagePerc | percentage:2 }}</div>
+<!-- 	    						<div class="progress-stats-title">Average(%)</div>
+ -->	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.averagePerc"
+							    color="#38A139"
+							    bgcolor="#eee"
+							    radius="80"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center group">
+    				<div class="col-md-2 overview-item text-center group">
     					<div class="vcenter">
-    						<div class="select">
-		    					<select class="overview-item-heading" ng-options="label for perc in diffPerc">
-		    						<optgroup>
-		    						<option ng-selected="diffPerc" value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
-		    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
-		    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
-		    						</optgroup>
-		    					</select>
-    						</div>
-    					<div ng-show="diffPerc" class="overview-item-stats">
-    					 {{ diffPerc | percentage:2 }}
-    					</div>
+    						<div class="overview-item-heading">Lowest(%)</div>
+	    					<!-- <div class="overview-item-stats">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div> -->
+	    					<div class="overview-item-stats">
+	    					<div class="progress-stats">
+	    						<div class="progress-stats-num">{{ dashboard.diffPercent.lowestPerc | percentage:2 }}</div>
+	    						<!-- <div class="progress-stats-title">Lowest(%)</div> -->
+	    					</div>
+							    <div
+							    round-progress
+							    max="1"
+							    current="dashboard.diffPercent.lowestPerc"
+							    color="#38A139"
+							    bgcolor="#eee"
+							    radius="80"
+							    stroke="5"
+							    semi="false"
+							    rounded="false"
+							    clockwise="true"
+							    iterations="50"
+							    animation="easeInOutQuart"></div>
+							</div>
 	    				</div>
     				</div>
+	    			</div>
+
+	    			<div class="diff-bars">
+		    			<div ls-bar height="diff.index" ng-repeat="diff in diffsToday"></div>
 	    			</div>
     			</div>
+
     			<div class="col-md-12 stats-test">
-    				<select ng-model="searchParams.testName" ng-change="updateDashboard()">
-						<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
-					</select>
+
+    				<div class="stats-label">
+    					<select ng-model="searchParams.testName" ng-change="updateDashboard()">
+    						<optgroup>
+								<!-- <option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> --> 
+								<option value="DramaFever1">DramaFever1</option>
+								<option value="DramaFever2">DramaFever2</option>
+							</optgroup>
+						</select>
+    				</div>
     				<div class="row">
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Alerts
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.alertNum }}
-    					</div>
+	    					<div class="overview-item-heading">Alerts</div>
+	    					<div class="overview-item-stats">{{ dashboard.alertNumOneTest }}</div>
 	    				</div>
 	    			</div>
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<div class="overview-item-heading">
-    						Tests
-    					</div>
-    					<div class="overview-item-stats">
-    					{{ dashboard.testsNum }}
-    					</div>
+	    					<div class="overview-item-heading">Tests</div>
+	    					<div class="overview-item-stats">{{ dashboard.testsNumOneTest }}</div>
 	    				</div>
     				</div>
-    				<div class="col-md-4 overview-item text-center">
+    				<div class="col-md-2 overview-item text-center">
     					<div class="vcenter">
-    					<select class="overview-item-heading" ng-model="diffPerc">
-    						<option selected value="{{ dashboard.diffPercent.averagePerc }}">Average Diff %</option>
-    						<option value="{{ dashboard.diffPercent.highestPerc }}" selected="selected">Highest Diff %</option>
-    						<option value="{{ dashboard.diffPercent.lowestPerc }}">Lowest Diff %</option>
-    					</select>
-    					<div ng-show="diffPerc" class="overview-item-stats">
-    					 {{ diffPerc | percentage:2 }}
-    					</div>
+	    					<div class="overview-item-heading">Highest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercentOneTest.highestPerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center">
+    					<div class="vcenter">
+	    					<div class="overview-item-heading">Average(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercentOneTest.averagePerc | percentage:2 }}</div>
+	    				</div>
+    				</div>
+    				<div class="col-md-2 overview-item text-center">
+    					<div class="vcenter">
+	    					<div class="overview-item-heading">Lowest(%)</div>
+	    					<div class="overview-item-stats">{{ dashboard.diffPercentOneTest.lowestPerc | percentage:2 }}</div>
 	    				</div>
     				</div>
 	    			</div>
+
+	    			<div class="diff-bars">
+		    			<div ls-bar height="diff.index" ng-repeat="diff in diffsTest"></div>
+	    			</div>
+
     			</div>
        		</div>
     	</div>
-
 	</div>
-
-
 
 	<tabset>
 		<tab heading="By Date">
 			<ul class="cbp_tmtimeline">
-			<li ng-repeat="test in testsByDate">
+			<li ng-repeat="test in diffImages.byDate">
 				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span>{{ test.day }}</span></time>
 				<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
 				<div class="cbp_tmlabel">
@@ -115,31 +213,6 @@
 			</li>
 		</ul>
 		</tab>
-		<!--<tab heading="By Test Name">
-			<form name="searchDiffsForm" ng-submit="searchDiffsByName()" class="text-center">
-				<div class="form-group tab-content-checkbox">
-					<label class="checkbox-inline" ng-repeat="test in testsByUser | unique: 'name'">
-						<input type="checkbox" name="testconfig" ng-click="toggleCheckbox(test.name, searchParams.testNames)">
-						{{ test.name }}
-					</label>
-				</div>
-				<button type="submit" class="btn btn-primary btn-large">Search</button>
-			</form>
-			<div class="row">
-				<h3>{{ diff.testName }}</h3>
-				<div class="col-md-12">
-				<div class="row row-horizon">
-					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diffsForUser">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
-					    	<div style="height: 200px; overflow: hidden;">
-					      		<img src="{{ diffImg.url }}" alt="..." style="width: 100%;">
-					  		</div>
-					    </div>
-				  	</div>
-				</div>
-			  	</div>
-			</div>
-		</tab>-->
 		<tab heading="By Url">
 			<div class="row" ng-repeat="diff in diffImages.byUrl">
 				<h3>{{ diff.urlName }}</h3>
@@ -175,6 +248,20 @@
 		</tab>
 	</tabset>
 
+	<!-- <div class="row">
+		<div class="col-md-6">
+			<canvas id="line" class="chart chart-line" data="data"
+			  labels="labels" legend="true" series="series"
+			  click="onClick">
+			</canvas>
+		</div>
+		<div class="col-md-6">
+			<canvas id="line" class="chart chart-line" data="data"
+			  labels="labels" legend="true" series="series"
+			  click="onClick">
+			</canvas>
+		</div>
+	</div> -->
 
 
 

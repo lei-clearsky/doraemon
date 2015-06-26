@@ -16,10 +16,8 @@ app.controller('AdminController', function ($scope, $rootScope, AuthService) {
     $scope.adminMenus = [
         {'name': 'Dashboard', 'state': 'admin.dashboard', 'icon': 'fa fa-tachometer'},
         {'name': 'Config Form', 'state': 'admin.config', 'icon': 'fa fa-pencil-square'},
-        // ,
-        // {'name': 'Team', 'state': 'admin.team', 'icon': 'fa fa-users'},
-        {'name': 'Alerts', 'state': 'admin.alert', 'icon': 'fa fa-exclamation-triangle'}
-
+        {'name': 'Alerts', 'state': 'admin.alert', 'icon': 'fa fa-exclamation-triangle'},
+        {'name': 'Diffs', 'state': 'admin.diffs', 'icon': 'fa fa-users'},
     ];
 
 });
