@@ -30,9 +30,6 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, Modal, $modal, currentUser, allDiffsByUser, allTestsByUser, $rootScope) {
-    // $scope.diffsToday = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
-    // $scope.diffsToday = $scope.diffImages.byDate.perc;
-    // $scope.diffsTest = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
     $rootScope.stateClass = 'dashboard';
     $scope.allDiffsByUser = allDiffsByUser;
     $scope.uniqueTestsByUser = Dashboard.getUniqueTests(allTestsByUser);
@@ -51,8 +48,10 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         byDate: Dashboard.displayByDate($scope.allDiffsByUser, MathUtils),
         byViewport: Dashboard.displayByViewport($scope.allDiffsByUser)
     };
-    $scope.diffsToday = $scope.diffImages.byDate[0].percObjArr;
-    $scope.diffsTest = $scope.diffImages.byDate[0].percObjArr;
+    if ($scope.diffImages.byDate[0] !== undefined) {
+        $scope.diffsToday = $scope.diffImages.byDate[0].percObjArr;
+        $scope.diffsTest = $scope.diffImages.byDate[0].percObjArr;
+    }
     // display dashboard stats
     $scope.dashboard = {
         alertNum: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).alertsToday,

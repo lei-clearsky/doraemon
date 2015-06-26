@@ -25,21 +25,9 @@ app.config(function ($stateProvider) {
 
 app.controller('AlertCtrl', function ($scope, MathUtils, Modal, Dashboard, allDiffsByUser, $modal, currentUser, $rootScope) {
     $rootScope.stateClass = 'alerts';
-    $scope.alertsByDate = null;
+    $scope.alertsByDate = Dashboard.displayByDate(allDiffsByUser, MathUtils);
     $scope.allDiffsByUser = allDiffsByUser;
-
-    // display alert details by date
-    var displayAlertsByDate = function () {
-        var uniqueDatesObj = Dashboard.getUniqueDates($scope.allDiffsByUser, MathUtils);
-        var days = uniqueDatesObj.days;
-        var dates = uniqueDatesObj.dates;
-        var byDateObj = Dashboard.getByDateBaseObj(dates, days);
-        byDateObj = Dashboard.getByDateObj($scope.allDiffsByUser, dates, byDateObj, MathUtils);
-
-        $scope.alertsByDate = byDateObj;   
-    };
     $scope.openAlertModal = Modal.openModal;
-    displayAlertsByDate();
 });
 
 app.controller('AlertModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
