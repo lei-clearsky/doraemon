@@ -8,7 +8,7 @@ app.directive('lsBar', function (RandomGreetings) {
             height: '='
         },
         link: function (scope, element, attrs) {
-        		console.log(scope.height);
+        	// console.log(scope.height);
             element.css('height', scope.height * 100 + 'px');
             element.addClass('ls-bar');
         }

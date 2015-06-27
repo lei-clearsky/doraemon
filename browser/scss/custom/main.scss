@@ -9,7 +9,10 @@
 	margin: 0 auto;
 	float: none;
 }
-
+.col-no-padding {
+	padding-right: 0; 
+	padding-left: 0;
+}
 .btn-add {
 	margin: 10px 0;
 	

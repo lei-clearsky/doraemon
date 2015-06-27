@@ -2,8 +2,7 @@
 <div class="admin-sub-header">
 	<h1>Diffs.</h1>
 </div>
-<!-- {{ alertsByDate | json }}
- -->	<ul class="cbp_tmtimeline">
+	<!-- <ul class="cbp_tmtimeline">
 		<li ng-repeat="alert in alertsByDate">
 			<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{alert.date}}</span><span>{{ alert.day }}</span></time>
 			<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
@@ -33,7 +32,16 @@
 				</div>
 			</div>
 		</li>
-	</ul>
+	</ul> -->
+
+	<div ng-repeat="diff in allDiffsByUser">
+		<h3>{{ diff.urlName }}</h3>
+			<div class="col-sm-4 col-md-1 col-no-padding" ng-click="openDiffModal(diff._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+		    	<div style="height: 150px; overflow: hidden;">
+		      		<img src="{{ diff.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
+		  		</div>
+		  	</div>
+	</div>
 
 
 
