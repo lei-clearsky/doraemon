@@ -27,6 +27,7 @@ app.controller('DiffsCtrl', function ($scope, MathUtils, Modal, Dashboard, allDi
     $rootScope.stateClass = 'diffs';
     $scope.alertsByDate = null;
     $scope.allDiffsByUser = allDiffsByUser;
+    $scope.openDiffModal = Modal.openModal;
 
 });
 

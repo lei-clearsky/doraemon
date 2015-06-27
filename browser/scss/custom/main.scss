@@ -9,11 +9,23 @@
 	margin: 0 auto;
 	float: none;
 }
-
+.col-no-padding {
+	padding-right: 0; 
+	padding-left: 0;
+}
 .btn-add {
 	margin: 10px 0;
 	
 } 
+.btn-center {
+	left: 50%;
+	position: relative;
+	transform: translateX(-50%);
+}
+.form-heading {
+	font-weight: 300;
+	margin-bottom: 50px;
+}
 .caption {
 	h5 {
 		-ms-word-break: break-all;
