@@ -3,6 +3,16 @@
 app.factory('Config', function ($http) {
 
     return {
+        createBulk: function (config) {
+            return $http.post('/api/test-config/bulk', config).then(function (response) {
+                return response.data;
+            });
+        },
+        create: function (config) {
+            return $http.post('/api/test-config', config).then(function (response) {
+                return response.data;
+            });
+        },
         getOne: function (id) {
             return $http.get('/api/test-config/' + id)
                         .then(function (response) {
@@ -33,7 +43,8 @@ app.factory('Config', function ($http) {
                 }
             });
             return testsToday;
-        }
+        },
+        getConfigTests
     }
         // ,
         // get unique tests

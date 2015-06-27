@@ -7,6 +7,9 @@ process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 
+var roboto = require('roboto');
+
+
 var CronJob = require('cron').CronJob;
 var Q = require('q');
 var chalk = require('chalk');
@@ -22,19 +25,47 @@ var	imageCapture = mongoose.model('ImageCapture');
 var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
-router.get('/', function (req, res, next) {
-	testConfig.findById(req.params.id, function (err, testConfigDoc) {
-    	if (err) return next(err);
-    	res.json(testConfigDoc);
-    });
+
+// router.get('/', function (req, res, next) {
+// 	testConfig.findById(req.params.id, function (err, testConfigDoc) {
+//     	if (err) return next(err);
+//     	res.json(testConfigDoc);
+//     });
+// });
+
+// router.get('/:id', function (req, res, next) {
+// 	console.log(req.params)
+//     testConfig.findById(req.params.id, function (err, testConfigDoc) {
+//     	if (err) return next(err);
+//     	res.json(testConfigDoc);
+//     });
+// });
+
+router.get('/byURLs/:id', function (req, res, next) {
+
+	testConfig.getTestNamesForUser(req.params.id)
+		.then(function(testNames) {
+			var promises = []			
+
+			testNames.map(function(el){
+				promises.push(testConfig.getURLsForTest(req.params.id, el)
+					.then(function(urls){
+						return {testName: el, URLs: urls}
+					})
+				);
+			});
+
+		return Q.all(promises);
+
+	 	}).then(function(temp){
+	 		res.json(temp);
+	 	}).then(null, function(error) {
+		   	console.log(error);
+		});
 });
 
-router.get('/:id', function (req, res, next) {
-    testConfig.findById(req.params.id, function (err, testConfigDoc) {
-    	if (err) return next(err);
-    	res.json(testConfigDoc);
-    });
-});
+
+
 
 router.post('/', function (req, res, next) {
 	testConfig.create(req.body, function (err, testConfigDoc) {
@@ -44,6 +75,56 @@ router.post('/', function (req, res, next) {
 
 	});
 });
+
+router.post('/bulk', function (req, res, next) {
+	getURLs(req.body)
+});
+
+
+
+
+var getURLs = function(obj) {
+	
+	var crawlObj = {
+		startUrls: [obj.startURL],
+		maxDepth: 1,
+		constrainToRootDomains: true,
+		statsDumpInverval: 50
+	};
+
+	if (obj.blacklist) {
+		crawlObj.blacklist = [obj.blacklist];
+	};
+	if (obj.whitelist) {
+		crawlObj.whitelist = [obj.whitelist];
+	};
+
+	var crawler = new roboto.Crawler(crawlObj);
+
+	crawler.parseField('url', function(response, $){
+	return response.url;
+	});
+
+	crawler.on('item', function(item) {
+        obj.viewport.forEach(function(viewport) {
+            testConfig.create({
+                name: obj.testName,
+                URL: item.url,
+                rootURL: obj.startURL,
+                threshold: obj.threshold,
+                viewport: viewport,
+                dayFrequency: obj.dayFrequency,
+                hourFrequency: obj.hourFrequency,
+                userID: obj.userID
+            });
+		});      
+    });
+
+	crawler.crawl();	
+}; 
+
+
+
 
 var intervalJob = new CronJob({
   	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
@@ -79,6 +160,10 @@ var intervalJob = new CronJob({
 });
 
 // intervalJob.start();
+
+
+
+
 
 
 

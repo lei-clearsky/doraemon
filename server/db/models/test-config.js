@@ -10,10 +10,14 @@ var chalk = require('chalk');
 
 var schema = new mongoose.Schema({
     name: {
-        type: String
+        type: String,
+        index: true,
+        require: true
     },
     URL: {
-        type: String
+        type: String,
+        index: true,
+        require: true
     },
     devURL: {
         type: String
@@ -25,7 +29,9 @@ var schema = new mongoose.Schema({
         type: Number
     },
     viewport: {
-        type: String
+        type: String,
+        index: true,
+        require: true
     },
     dayFrequency: [{
         type: Number
@@ -35,13 +41,65 @@ var schema = new mongoose.Schema({
     }],
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
+        ref: 'User',
+        require: true
     },
     teamID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Team'
+    },
+    enabled: {
+        type: Boolean,
+        default: false
     }
 });
+
+schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
+
+
+schema.statics.getViewportsForURL = function(userID, testName, URL) {
+    var query = {
+        name: testName,
+        userID: userID,
+        URL: URL 
+    };
+
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('viewport', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
+
+schema.statics.getURLsForTest = function(userID, testName) {
+    var query = {
+        name: testName,
+        userID: userID
+    }
+
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('URL', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
+schema.statics.getTestNamesForUser = function(userID) {
+    var query = {
+        userID: userID
+    };
+
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('name', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
 
 schema.methods.getDiffsByDate = function(date, name) {
     var query = {

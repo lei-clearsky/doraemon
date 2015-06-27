@@ -17,18 +17,6 @@ app.config(function ($stateProvider) {
 
 });
 
-app.factory('Config', function ($http) {
-
-    return {
-        create: function (config) {
-            return $http.post('/api/test-config', config).then(function (response) {
-                return response.data;
-            });
-        }
-    };
-
-});
-
 app.value('viewportOptions', [
     {label: 'Samsung Galaxy S5', value: '360x640'},
     {label: 'Apple iPhone 6', value: '375x667'},
@@ -56,20 +44,29 @@ app.value('hourFrequencyOptions', [
     {label: '10 pm', value: 22}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, Dashboard, $rootScope) {
+app.value('maxDepthOptions', [
+    {label: 'One', value: 1},
+    {label: 'Two', value: 2},
+    {label: 'Three', value: 3}
+]);
+
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, maxDepthOptions, Dashboard, $rootScope) {
     $rootScope.stateClass = 'config';
     $scope.submitAttempted = false;
     $scope.configTest = {};
+    $scope.configBulkTest = {};
     $scope.config = [{
             path: '',
             threshold: null,
             viewports: [],
             dayFrequency: [],
-            hourFrequency: []
+            hourFrequency: [],
+            depth: []
         }];
     $scope.viewportOptions = viewportOptions;
     $scope.dayFrequencyOptions = dayFrequencyOptions;
     $scope.hourFrequencyOptions = hourFrequencyOptions;
+    $scope.maxDepthOptions = maxDepthOptions;
     
     $scope.showSuccessAlert = false;
     $scope.showErrorAlert = false;
@@ -143,6 +140,28 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         $scope.submitAttempted = false;
 
     };
+
+    $scope.submitBulk = function() { 
+        var object = {
+            testName: $scope.configBulkTest.name,
+            startURL: 'http://www.' + $scope.configBulkTest.startURL, 
+            maxDepth: $scope.configBulkTest.depth,
+            blacklist: $scope.configBulkTest.blacklist,
+            whitelist: $scope.configBulkTest.whitelist,
+            threshold: $scope.configBulkTest.threshold,
+            viewport: $scope.config[0].viewports,
+            dayFrequency: $scope.config[0].dayFrequency,
+            hourFrequency: $scope.config[0].hourFrequency,
+            userID: currentUser._id
+        };
+
+
+        // Config.createBulk(object);
+
+        $scope.showSuccessAlert = true;
+        $scope.submitAttempted = false;
+    };
+
 
     Dashboard.getTestsByUserID(currentUser._id)
         .then(function (tests) {

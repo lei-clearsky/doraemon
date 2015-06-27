@@ -96,6 +96,113 @@
         </div>
     </tab>
 
+<!-- Bulk Create Tab -->
+<tab heading="Bulk Create Test">
+        <div class="col-md-11 col-center">
+        <section id="config">
+            <form name="adminBulkConfigForm" novalidate>
+                <!-- row -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">            
+                            <input type="text" name="formTestName" ng-model="configBulkTest.name" required>
+                            <span style="color:red" ng-show="submitAttempted && configBulkTest.name.length === 0">Please name your UI test!</span>
+                            <label for="formTestName">Name of UI Test</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="text" name="threshold" ng-model="configBulkTest.threshold" required>
+                            <span style="color:red" ng-show="submitAttempted && configBulk.threshold.length === 0">Please enter threshold!</span>
+                            <label for="threshold">Threshold %</label><i class="bar"></i>
+                            <p class="input-helper">Any diff above this will get alerted.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+                <!-- row start -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">            
+                            <input type="text" name="formTestRootProURL" ng-model="configBulkTest.startURL" required>
+                            <span style="color:red" ng-show="submitAttempted && configBulkTest.startURL.length === 0">Please name your UI test root URL!</span>
+                            <label for="formTestRootProURL">http://www.</label><i class="bar"></i>
+                            <p class="input-helper">Production site. (e.g. yahoo.com)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">            
+                            <input type="text" name="formTestRootProURL" ng-model="configBulkTest.whitelist" required>
+                            <span style="color:red" ng-show="submitAttempted && configBulkTest.whitelist.length === 0">Please name your UI test root URL!</span>
+                            <label for="formTestRootProURL">Whitelist</label><i class="bar"></i>
+                            <p class="input-helper">Optional (e.g. /foo/, /bar/)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">            
+                            <input type="text" name="formTestRootProURL" ng-model="configBulkTest.blacklist" required>
+                            <span style="color:red" ng-show="submitAttempted && configBulkTest.blacklist.length === 0">Please name your UI test root URL!</span>
+                            <label for="formTestRootProURL">Blacklist</label><i class="bar"></i>
+                            <p class="input-helper">Optional (e.g. /foo/, /bar/)</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- row end -->
+                <!-- row start -->
+                <div class="row border-bottom" ng-repeat="url in config">
+                    <div class="col-md-3">
+                        <label class="label-block">Max Depth</label>
+                        <div class="checkbox checkbox-inline" ng-repeat="depth in maxDepthOptions">
+                            <label>
+                                <input ng-click="toggleCheckbox(depth.value, url.depth)" type="checkbox"><span>{{depth.value}}</span><i class="helper"></i>
+                            </label>
+                            <span style="color:red" ng-show="submitAttempted && url.depth.length === 0">Please choose a depth!</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="label-block">Viewports to test</label>
+                        <div class="checkbox checkbox-inline" ng-repeat="viewport in viewportOptions">
+                            <label>
+                                <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
+                            </label>
+                            <span style="color:red" ng-show="submitAttempted && url.viewports.length === 0">Please choose a viewport!</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="label-block">Days to run tests</label>
+                        <div class="checkbox checkbox-inline" ng-repeat="day in dayFrequencyOptions">
+                            <label class="checkbox-inline" >
+                                <input ng-click="toggleCheckbox(day.value, url.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
+                            </label>
+                        </div>
+                        <span style="color:red" ng-show="submitAttempted && url.dayFrequency.length === 0">Please choose a day to run test!</span>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="label-block">Times to run tests</label>
+                        <div class="checkbox checkbox-inline" ng-repeat="hour in hourFrequencyOptions">
+                            <label class="checkbox-inline" >
+                                <input ng-click="toggleCheckbox(hour.value, url.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
+                            </label>
+                        </div>
+                        <span style="color:red" ng-show="submitAttempted && url.hourFrequency.length === 0">Please choose the time of day to run test!</span>
+                    </div>
+                </div>
+                <!-- row end -->
+
+                <button type="button" class="btn btn-success btn-large" ng-click="submitBulk()">Save</button>
+
+                <div class="alert alert-success" role="alert" ng-show="showSuccessAlert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
+                    <strong>Sucecss!</strong> Your test has been submitted
+                </div>
+            </form>
+        </section>
+        </div>
+    </tab>
+<!-- End of Buld Create Test -->
+
+
+
     <tab heading="Config Tests">
         <ul class="admin-config-listing">
             <li class="admin-config-listing-item group" ng-repeat="test in testsByUserID">
@@ -103,13 +210,12 @@
                     <div class="admin-config-heading">
                         {{ test.name }}
                     </div>
-                    <p>
+                    <!-- <p>
                         {{ test.URL }}
-                    </p>
-                    <p>
-                        <!-- {{ test }} -->
+                    </p> -->
+                    <!-- <p>
                         Viewport: {{ test.viewport }}, Hour Frequency: {{ test.hourFrequency }}, Day Frequency: {{ test.dayFrequency }}
-                    </p>
+                    </p> -->
                 </div>
                 <div class="admin-config-action">
                     Update, Delete 
