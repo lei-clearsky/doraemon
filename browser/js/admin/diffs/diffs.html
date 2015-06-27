@@ -2,37 +2,6 @@
 <div class="admin-sub-header">
 	<h1>Diffs.</h1>
 </div>
-	<!-- <ul class="cbp_tmtimeline">
-		<li ng-repeat="alert in alertsByDate">
-			<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{alert.date}}</span><span>{{ alert.day }}</span></time>
-			<div class="cbp_tmicon"><i class="fa fa-calendar"></i></div>
-			<div class="cbp_tmlabel">
-				<h2>
-					Alerts: <span class="badge badge-warning">{{alert.alerts.length}}</span>
-				</h2>
-				<div class="alert-info-box group" ng-repeat="diff in alert.alerts">
-					<div class="alert-info-display">
-						<p><span class="alert-label">Time:</span> {{ diff.captureTime | date:'MM/dd/yyyy @ h:mma'}}</p>
-						<p><span class="alert-label">Diff Percent:</span> {{ diff.diffPercent | percentage:2 }}</p>
-						<p><span class="alert-label">URL:</span> {{ diff.websiteUrl }}</p>
-						<p><span class="alert-label">Viewport:</span> {{ diff.viewport }}</p>
-					</div>
-					<div class="alert-img-container" ng-click="openAlertModal(diff._id, 'lg', true, 'js/admin/alert/alert-modal.html', 'AlertModalCtrl')">
-						Diff:
-						<img ng-src="{{  diff.diffImgThumbnail | awsImg }}">
-					</div>
-					<div class="alert-img-container" ng-click="openAlertModal(diff.compareFromID._id, 'lg', true, 'js/admin/alert/alert-modal.html', 'AlertModalCtrl')">
-						Compare From:
-						<img ng-src="{{  diff.compareFromID.imgURL | awsImg }}">
-					</div>
-					<div class="alert-img-container" ng-click="openAlertModal(diffImg.compareToID_id, 'lg', true, 'js/admin/alert/alert-modal.html', 'AlertModalCtrl')">
-						Compare To:
-						<img ng-src="{{  diff.compareToID.imgURL | awsImg }}">
-					</div>			
-				</div>
-			</div>
-		</li>
-	</ul> -->
 
 	<div ng-repeat="diff in allDiffsByUser">
 		<h3>{{ diff.urlName }}</h3>
