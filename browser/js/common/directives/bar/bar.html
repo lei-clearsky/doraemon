@@ -1,1 +1,9 @@
-<div><a href="#" title="This is the title to show" style="width: 100%; height: 100%"></a></div>
+<a href="#" title="" style="width: 100%; height: 100%"></a>
+<div class="ls-bar-info">
+	<div class="info-line">Diff %: {{ diff.diffPercent }}</div>
+	<div class="info-line">Threshold %: {{ diff.threshold }}</div>
+	<div class="info-line">{{ diff.websiteUrl }}</div>
+	<div class="info-line">{{ diff.viewport }}</div>
+	<div class="info-line">{{ diff.captureTime | date:"MM/dd/yyyy @ h:mma" }}</div>
+</div>
+

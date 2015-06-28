@@ -55,7 +55,10 @@ app.factory('Dashboard', function ($http) {
                     byDateObj[index].perc.push(diff.diffPercent);
 
                     if (diff.diffPercent*100 > 0)
-                        byDateObj[index].percObjArr.push({index: diff.diffPercent});
+                        byDateObj[index].percObjArr.push({
+                            diffPercent: diff.diffPercent,
+                            diffObj: diff
+                        });
                 }                            
             });
             
