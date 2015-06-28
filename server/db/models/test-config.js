@@ -10,10 +10,12 @@ var chalk = require('chalk');
 
 var schema = new mongoose.Schema({
     name: {
-        type: String
+        type: String,
+        required: true
     },
     URL: {
-        type: String
+        type: String,
+        required: true
     },
     devURL: {
         type: String
@@ -25,7 +27,8 @@ var schema = new mongoose.Schema({
         type: Number
     },
     viewport: {
-        type: String
+        type: String,
+        required: true
     },
     dayFrequency: [{
         type: Number
@@ -35,7 +38,8 @@ var schema = new mongoose.Schema({
     }],
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     teamID: {
         type: mongoose.Schema.Types.ObjectId, 
@@ -92,59 +96,61 @@ schema.statics.findAllScheduledTests = function(hour, day) {
             }).exec();
 };
 
-schema.statics.runTestConfig = function(nightmare, config, date) {
+schema.method.runTestConfig = function(nightmare, date) {
     var deferred = Q.defer();
-    var snapshotPath = utilities.createImageDir(config.userID, config.name, config.viewport, 'snapshots', date.getHours(), date.getDay(), date.getTime(), config._id);
+    var snapshotPath = utilities.createImageDir(this.userID, this.name, this.viewport, 'snapshots', date.getHours(), date.getDay(), date.getTime(), this._id);
 
     // use nightmare to take a screenshot
     nightmare
-        .viewport(config.viewportWidth, config.viewportHeight)
-        .goto(config.URL)   
+        .viewport(this.viewportWidth, this.viewportHeight)
+        .goto(this.URL)   
         .wait() 
         .screenshot(snapshotPath)
-        .use(function() {
-            console.log(chalk.cyan('Starting testConfig job - ' + config._id));
-
-            utilities.saveToAWS(snapshotPath).then(function(output) {
-                console.log(chalk.green('Screenshot saved to AWS...'));
-                return imageCapture.saveImageCapture(config, snapshotPath);
-            }).then(function(imageCaptures) {
-                console.log(chalk.green('New imageCapture document saved...'));
-                return imageDiff.createDiff(config, imageCaptures, date);
-            }).then(function(output) {
-                if (output) {
-                    console.log(chalk.green('Diff Screenshot created...'));
-                    return imageDiff.saveImageDiff(output);
-                } else {
-                    console.log(chalk.yellow('No previous snapshot found'));
-                    return null;
-                }
-            }).then(function(newImageDiff) {
-                if (newImageDiff) {
-                    console.log(chalk.green('New imageDiff document saved...'));
-                    return utilities.saveToAWS(newImageDiff.diffImgURL).then(function(){
-                        return utilities.saveToAWS(newImageDiff.diffImgThumbnail);
-                    }).then(function() {
-                        utilities.removeImg(newImageDiff.diffImgURL);
-                        return utilities.removeImg(newImageDiff.diffImgThumbnail);
-                    });
-                }
-                
-                return null;
-            }).then(function(output) {
-                if (output) {
-                    console.log(chalk.green('Diff Screenshot saved to AWS...'));
-                }
-
-                console.log(chalk.cyan('Finished testConfig job - ' + config._id));
-                return deferred.resolve(output);
-            }).then(null, function(err) {
-                deferred.reject(err);
-            });
-        });
+        .use(processImages);
 
     return deferred.promise;
 };
+
+schema.statics.processImages = function() {
+    console.log(chalk.cyan('Starting testConfig job - ' + config._id));
+
+    utilities.saveToAWS(snapshotPath).then(function(output) {
+        console.log(chalk.green('Screenshot saved to AWS...'));
+        return imageCapture.saveImageCapture(config, snapshotPath);
+    }).then(function(imageCaptures) {
+        console.log(chalk.green('New imageCapture document saved...'));
+        return imageDiff.createDiff(config, imageCaptures, date);
+    }).then(function(output) {
+        if (output) {
+            console.log(chalk.green('Diff Screenshot created...'));
+            return imageDiff.saveImageDiff(output);
+        } else {
+            console.log(chalk.yellow('No previous snapshot found'));
+            return null;
+        }
+    }).then(function(newImageDiff) {
+        if (newImageDiff) {
+            console.log(chalk.green('New imageDiff document saved...'));
+            return utilities.saveToAWS(newImageDiff.diffImgURL).then(function(){
+                return utilities.saveToAWS(newImageDiff.diffImgThumbnail);
+            }).then(function() {
+                utilities.removeImg(newImageDiff.diffImgURL);
+                return utilities.removeImg(newImageDiff.diffImgThumbnail);
+            });
+        }
+        
+        return null;
+    }).then(function(output) {
+        if (output) {
+            console.log(chalk.green('Diff Screenshot saved to AWS...'));
+        }
+
+        console.log(chalk.cyan('Finished testConfig job - ' + config._id));
+        return deferred.resolve(output);
+    }).then(null, function(err) {
+        deferred.reject(err);
+    });
+}
 
 schema.virtual('viewportWidth').get(function () {
     return parseInt(this.viewport.split('x')[0]);

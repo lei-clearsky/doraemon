@@ -29,6 +29,7 @@ var TestConfig = mongoose.model('TestConfig');
 var Team = mongoose.model('Team');
 var ImageDiff = mongoose.model('ImageDiff');
 var ImageCapture = mongoose.model('ImageCapture');
+var TestCase = mongoose.model('TestCase');
 
 var seedUsers = function () {
 
@@ -49,7 +50,7 @@ var seedUsers = function () {
 
 var wipeDB = function () {
 
-    var models = [User, Team, TestConfig, ImageDiff, ImageCapture];
+    var models = [User, Team, TestConfig, ImageDiff, ImageCapture, TestCase];
 
     models.forEach(function (model) {
         model.find({}).remove(function () {});

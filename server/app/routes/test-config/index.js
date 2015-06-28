@@ -18,8 +18,6 @@ AWS.config.region = AWSkeys.region;
 var router = require('express').Router();
 var mongoose = require('mongoose');
 var	testConfig = mongoose.model('TestConfig');
-var	imageCapture = mongoose.model('ImageCapture');
-var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
 router.get('/', function (req, res, next) {
@@ -59,11 +57,11 @@ var intervalJob = new CronJob({
 
 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
 		// searches TestConfig model and retrives URL objects
-		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
+		testConfig.findAllScheduledTests(hour, weekday).then(function(configs) {
 			var promises = [];
 
 			configs.forEach(function(config) {
-				promises.push(testConfig.runTestConfig(nightmare, config, date));
+				promises.push(config.runTestConfig(nightmare, date));
 			});
 
 			nightmare.run();
@@ -79,18 +77,3 @@ var intervalJob = new CronJob({
 });
 
 // intervalJob.start();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
