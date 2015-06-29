@@ -143,9 +143,9 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
 
     $scope.submitBulk = function() { 
         var object = {
-            testName: $scope.configBulkTest.name,
+            testName: $scope.configBulkTest.name.split(' ').join('_'),
             startURL: 'http://www.' + $scope.configBulkTest.startURL, 
-            maxDepth: $scope.configBulkTest.depth,
+            maxDepth: $scope.config[0].depth[0],
             blacklist: $scope.configBulkTest.blacklist,
             whitelist: $scope.configBulkTest.whitelist,
             threshold: $scope.configBulkTest.threshold,
@@ -154,9 +154,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             hourFrequency: $scope.config[0].hourFrequency,
             userID: currentUser._id
         };
-
-
-        // Config.createBulk(object);
+        Config.createBulk(object);
 
         $scope.showSuccessAlert = true;
         $scope.submitAttempted = false;

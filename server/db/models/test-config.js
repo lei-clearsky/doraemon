@@ -4,6 +4,7 @@ var imageCapture = mongoose.model('ImageCapture');
 var imageDiff = mongoose.model('ImageDiff');
 var utilities = require('../utilities');
 var path = require('path');
+var roboto = require('roboto');
 
 var Q = require('q');
 var chalk = require('chalk');
@@ -26,7 +27,8 @@ var schema = new mongoose.Schema({
         type: String
     },
     threshold: {
-        type: Number
+        type: Number,
+        default: 10
     },
     viewport: {
         type: String,
@@ -149,6 +151,48 @@ schema.statics.findAllScheduledTests = function(hour, day) {
                 hourFrequency: hour
             }).exec();
 };
+
+schema.statics.crawlURL = function(config) {
+    console.log('function...')
+     var crawlObj = {
+         startUrls: [config.startURL],
+         maxDepth: config.maxDepth,
+         constrainToRootDomains: true
+     };
+
+     if (config.blacklist) {
+         crawlObj.blacklist = [config.blacklist];
+     };
+     if (config.whitelist) {
+         crawlObj.whitelist = [config.whitelist];
+     };
+
+     var crawler = new roboto.Crawler(crawlObj);
+
+     crawler.parseField('url', function(response, $){
+     return response.url;
+     });
+
+     crawler.on('item', function(item) {
+        config.viewport.forEach(function(viewport) {
+            mongoose.model('TestConfig')
+                .create({
+                    name: config.testName,
+                    URL: item.url,
+                    rootURL: config.startURL,
+                    threshold: config.threshold,
+                    viewport: viewport,
+                    dayFrequency: config.dayFrequency,
+                    hourFrequency: config.hourFrequency,
+                    userID: config.userID
+                });
+        });      
+    });
+
+     crawler.crawl();    
+}; 
+
+
 
 schema.statics.runTestConfig = function(nightmare, config, date) {
     var deferred = Q.defer();

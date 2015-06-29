@@ -7,9 +7,6 @@ process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 
-var roboto = require('roboto');
-
-
 var CronJob = require('cron').CronJob;
 var Q = require('q');
 var chalk = require('chalk');
@@ -25,21 +22,6 @@ var	imageCapture = mongoose.model('ImageCapture');
 var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
-
-// router.get('/', function (req, res, next) {
-// 	testConfig.findById(req.params.id, function (err, testConfigDoc) {
-//     	if (err) return next(err);
-//     	res.json(testConfigDoc);
-//     });
-// });
-
-// router.get('/:id', function (req, res, next) {
-// 	console.log(req.params)
-//     testConfig.findById(req.params.id, function (err, testConfigDoc) {
-//     	if (err) return next(err);
-//     	res.json(testConfigDoc);
-//     });
-// });
 
 router.get('/byURLs/:id', function (req, res, next) {
 
@@ -76,53 +58,11 @@ router.post('/', function (req, res, next) {
 	});
 });
 
-router.post('/bulk', function (req, res, next) {
-	getURLs(req.body)
+
+router.post('/bulkcreate', function (req, res, next) {
+	console.log('route hit..')
+	testConfig.crawlURL(req.body)
 });
-
-
-
-
-var getURLs = function(obj) {
-	
-	var crawlObj = {
-		startUrls: [obj.startURL],
-		maxDepth: 1,
-		constrainToRootDomains: true,
-		statsDumpInverval: 50
-	};
-
-	if (obj.blacklist) {
-		crawlObj.blacklist = [obj.blacklist];
-	};
-	if (obj.whitelist) {
-		crawlObj.whitelist = [obj.whitelist];
-	};
-
-	var crawler = new roboto.Crawler(crawlObj);
-
-	crawler.parseField('url', function(response, $){
-	return response.url;
-	});
-
-	crawler.on('item', function(item) {
-        obj.viewport.forEach(function(viewport) {
-            testConfig.create({
-                name: obj.testName,
-                URL: item.url,
-                rootURL: obj.startURL,
-                threshold: obj.threshold,
-                viewport: viewport,
-                dayFrequency: obj.dayFrequency,
-                hourFrequency: obj.hourFrequency,
-                userID: obj.userID
-            });
-		});      
-    });
-
-	crawler.crawl();	
-}; 
-
 
 
 

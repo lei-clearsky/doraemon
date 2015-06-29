@@ -4,7 +4,7 @@ app.factory('Config', function ($http) {
 
     return {
         createBulk: function (config) {
-            return $http.post('/api/test-config/bulk', config).then(function (response) {
+            return $http.post('/api/test-config/bulkcreate', config).then(function (response) {
                 return response.data;
             });
         },
@@ -44,7 +44,7 @@ app.factory('Config', function ($http) {
             });
             return testsToday;
         },
-        getConfigTests
+        
     }
         // ,
         // get unique tests
