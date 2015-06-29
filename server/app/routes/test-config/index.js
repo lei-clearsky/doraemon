@@ -23,22 +23,36 @@ var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
 
-router.get('/byURLs/:id', function (req, res, next) {
-
+router.get('/getTests/:id', function (req, res, next) {
 	testConfig.getTestNamesForUser(req.params.id)
 		.then(function(testNames) {
-			var promises = []			
-
-			testNames.map(function(el){
-				promises.push(testConfig.getURLsForTest(req.params.id, el)
-					.then(function(urls){
-						return {testName: el, URLs: urls}
+			var promises = [];			
+			testNames.map(function(name){
+				promises.push(testConfig.getURLsForTest(req.params.id, name)
+					.then(function(urls){						
+						return {testName: name, URLs: urls}
 					})
 				);
 			});
-
-		return Q.all(promises);
-
+			return Q.all(promises);
+	 	}).then(function(tests){
+	 		var promises = [];
+	 		tests.map(function(test){
+	 			var promiseURLs = [];
+	 			test.URLs.forEach(function(url){	 			
+	 				promiseURLs.push(testConfig.getViewportsForURL(req.params.id, test.testName, url)
+	 					.then(function(vp) {
+	 						return { url: url, vp: vp }
+	 					})
+ 					)
+	 			})
+	 			promises.push(Q.all(promiseURLs)
+	 				.then(function(URLs){
+						return {testName: test.testName, URLs: URLs}
+ 					 })
+ 				)
+	 		})	 
+			return Q.all(promises);	 
 	 	}).then(function(temp){
 	 		res.json(temp);
 	 	}).then(null, function(error) {
@@ -47,20 +61,15 @@ router.get('/byURLs/:id', function (req, res, next) {
 });
 
 
-
-
 router.post('/', function (req, res, next) {
 	testConfig.create(req.body, function (err, testConfigDoc) {
-		if (err) return next(err);
-	
+		if (err) return next(err);	
 		res.json(testConfigDoc);
-
 	});
 });
 
 
 router.post('/bulkcreate', function (req, res, next) {
-	console.log('route hit..')
 	testConfig.crawlURL(req.body)
 });
 

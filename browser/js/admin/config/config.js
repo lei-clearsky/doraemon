@@ -171,6 +171,19 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         .catch(function (err) {
             return err;
         });
+
+
+    Dashboard.getTests(currentUser._id)
+        .then(function (tests) {
+            console.log('tests', tests)
+            $scope.tests = tests
+        })
+        .catch(function (err) {
+            return err;
+        });
+
+
+
 });
 
 

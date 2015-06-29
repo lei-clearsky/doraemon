@@ -103,6 +103,13 @@ app.factory('Dashboard', function ($http) {
     }
 
     return {
+        getTests: function (userID) {
+            return $http.get('api/test-config/getTests/' + userID)
+                .then(function (response) {
+                    return response.data;
+                });
+        },
+
         getOne: function (id) {
             return $http.get('/api/screenshots/' + id)
                         .then(function (response) {

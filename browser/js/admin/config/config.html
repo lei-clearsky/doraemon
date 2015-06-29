@@ -205,17 +205,19 @@
 
     <tab heading="Config Tests">
         <ul class="admin-config-listing">
-            <li class="admin-config-listing-item group" ng-repeat="test in testsByUserID">
+            <li class="admin-config-listing-item group" ng-repeat="test in tests">
                 <div class="admin-config-info">
                     <div class="admin-config-heading">
-                        {{ test.name }}
+                        {{ test.testName }}
                     </div>
-                    <!-- <p>
-                        {{ test.URL }}
-                    </p> -->
-                    <!-- <p>
-                        Viewport: {{ test.viewport }}, Hour Frequency: {{ test.hourFrequency }}, Day Frequency: {{ test.dayFrequency }}
-                    </p> -->
+                    <ul>
+                        <li ng-repeat="url in test.URLs">
+                            <p>
+                                {{ url.url }} <br>
+                                viewport is: {{ url.vp }}
+                            <p>    
+                        </li>
+                    </ul>
                 </div>
                 <div class="admin-config-action">
                     Update, Delete 

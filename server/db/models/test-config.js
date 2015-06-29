@@ -65,7 +65,6 @@ schema.statics.getViewportsForURL = function(userID, testName, URL) {
         userID: userID,
         URL: URL 
     };
-
     return mongoose.model('TestConfig')
         .find(query)
         .distinct('viewport', function(err, results) {
@@ -79,8 +78,7 @@ schema.statics.getURLsForTest = function(userID, testName) {
     var query = {
         name: testName,
         userID: userID
-    }
-
+    };
     return mongoose.model('TestConfig')
         .find(query)
         .distinct('URL', function(err, results) {
@@ -93,7 +91,6 @@ schema.statics.getTestNamesForUser = function(userID) {
     var query = {
         userID: userID
     };
-
     return mongoose.model('TestConfig')
         .find(query)
         .distinct('name', function(err, results) {
@@ -153,7 +150,6 @@ schema.statics.findAllScheduledTests = function(hour, day) {
 };
 
 schema.statics.crawlURL = function(config) {
-    console.log('function...')
      var crawlObj = {
          startUrls: [config.startURL],
          maxDepth: config.maxDepth,
@@ -170,7 +166,7 @@ schema.statics.crawlURL = function(config) {
      var crawler = new roboto.Crawler(crawlObj);
 
      crawler.parseField('url', function(response, $){
-     return response.url;
+        return response.url;
      });
 
      crawler.on('item', function(item) {
