@@ -224,8 +224,8 @@
                                 <span class="url">URL: {{ url.url }}</span><br>
                                 <span class="threshold">Threshold: {{url.threshold}}%</span><br>
                                 <span class="viewport">Viewports: {{url.vp[0]}}</span><br>
-                                <span class="f-day">Day: {{url.dayFrequency[0]}}</span><br>
-                                <span class="f-time">Time: {{url.hourFrequency[0]}}</span><br>
+                                <span class="f-day">Day: {{url.dayFrequency | convertDay }}</span><br>
+                                <span class="f-time">Time: {{url.hourFrequency | convertTime}}</span><br>
                                 <span class="btn-edit">+{{}}</span><br>
                                 <span class="btn-delete">+{{}}</span><br>
                                 <span class="btn-disable">+{{}}</span><br>
