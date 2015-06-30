@@ -57,10 +57,8 @@ router.get('/searchDiffsByTest', function (req, res, next) {
 			})
 			.exec()
 			.then(function(diffs) {
-				console.log('found diffs!!');
 				res.json(diffs);
 			}, function(err) {
-				console.log('err finding diffs');
 				console.log(err);
 				res.json(err);
 
@@ -90,9 +88,14 @@ router.get('/:userId', function (req, res, next) {
 
 router.get('/diff/:id', function (req, res, next) {
 	ImageDiff.findById(req.params.id)
+			.populate('compareFromID')
+			.populate('compareToID')
 			.exec()
 			.then(function(diff) {
 				res.json(diff);
+			})
+			.then(null, function(err) {
+				return next(err);
 			});
 });
 

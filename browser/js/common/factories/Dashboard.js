@@ -110,7 +110,7 @@ app.factory('Dashboard', function ($http) {
     var getTotalAlerts = function (allDiffsByUser) {
         var alertNum = 0;
         allDiffsByUser.forEach(function (diff) {
-            if (diff.diffPercent*100 > 0) 
+            if (diff.diffPercent*100 > diff.threshold) 
                 alertNum++;
         });
         return alertNum;
@@ -124,8 +124,8 @@ app.factory('Dashboard', function ($http) {
             if (dates.indexOf(formattedDate) < 0) {
                 var d = new Date(diffImg.captureTime);
                 var day = dayNames[ d.getDay() ];
-                dates.push(formattedDate);
-                days.push(day);
+                dates.splice(0, 0, formattedDate);
+                days.splice(0, 0, day);
             }
         });
         return {
@@ -204,7 +204,7 @@ app.factory('Dashboard', function ($http) {
             }
             diffPercentArr.push(diff.diffPercent);
             if (diff.diffPercent*100 > 0) 
-                percObjArr.push({index:diff.diffPercent});
+                percObjArr.push({diffPercent:diff.diffPercent});
         });
         return {
             alerts: alertsOneTest.length,

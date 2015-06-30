@@ -1,0 +1,20 @@
+<div class="modal-body">
+    <div class="row">
+    <div class="col-md-7">
+        <div class="thumbnail" >
+            <img src="{{diffInfo.compareToID.imgURL | awsImg}}" alt="">
+        </div>
+    </div>
+
+    <div class="col-md-5">
+      <!-- info -->
+      <h4>Website URL: {{ diffInfo.compareToID.websiteUrl }}</h4>
+      <h4>Viewport: {{ diffInfo.compareToID.viewport }}</h4>
+      <h4>Capture Time: {{ diffInfo.compareToID.captureTime | date:"MM/dd/yyyy @ h:mma" }}</h4>
+
+    </div>
+</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+</div>
