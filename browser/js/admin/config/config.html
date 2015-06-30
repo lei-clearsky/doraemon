@@ -204,27 +204,42 @@
 
 
     <tab heading="Config Tests">
-        <ul class="admin-config-listing">
-            <li class="admin-config-listing-item group" ng-repeat="test in tests">
-                <div class="admin-config-info">
+        <accordion class="admin-config-listing">
+            <accordion-group class="admin-config-listing-item group" ng-repeat="test in tests">
+                
+                <accordion-heading>
                     <div class="admin-config-heading">
                         {{ test.testName }}
                     </div>
-                    <ul>
-                        <li ng-repeat="url in test.URLs">
-                            <p>
-                                {{ url.url }} <br>
-                                viewport is: {{ url.vp }}
-                            <p>    
-                        </li>
-                    </ul>
-                </div>
-                <div class="admin-config-action">
+                    <div class="details">
+                        <p>
+                            Root URL: {{ test.URLs[0].rootURL }} <br>
+                            Number of URLs {{ test.URLs.length }}
+                        <p>
+                    </div>
+                </accordion-heading>
+
+                        <ul>
+                            <li ng-repeat="url in test.URLs">
+                                <span class="url">{{ url.url }}</span>
+                                <span class="threshold">10%{{}}</span>
+                                <span class="viewport">1024x768, 300x300, 1024x768, 300x300, 1024x768, 300x300{{}}</span>
+                                <span class="f-day">Monday, Monday, Monday, Monday, Monday, Monday, Monday{{}}</span>
+                                <span class="f-time">10 PM, 10 PM, 10 PM, 10 PM{{}}</span>
+                                <span class="btn-edit">+{{}}</span>
+                                <span class="btn-delete">+{{}}</span>
+                                <span class="btn-disable">+{{}}</span>
+                                <span class="btn-enable">+{{}}</span>
+                            </li>
+                        </ul>
+                    </div>               
+
+                <!-- <div class="admin-config-action">
                     Update, Delete 
-                </div>
+                </div> -->
                 
-            </li>
-        </ul>
+            </accordion-group>
+        </accordion>
     </tab>
 </tabset>
 

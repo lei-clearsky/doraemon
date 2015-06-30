@@ -39,10 +39,12 @@ router.get('/getTests/:id', function (req, res, next) {
 	 		var promises = [];
 	 		tests.map(function(test){
 	 			var promiseURLs = [];
-	 			test.URLs.forEach(function(url){	 			
+	 			test.URLs.forEach(function(url){
+	 				var rootURL = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
 	 				promiseURLs.push(testConfig.getViewportsForURL(req.params.id, test.testName, url)
 	 					.then(function(vp) {
-	 						return { url: url, vp: vp }
+
+	 						return { url: url, vp: vp, rootURL: rootURL[0] }
 	 					})
  					)
 	 			})
