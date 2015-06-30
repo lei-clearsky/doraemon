@@ -89,11 +89,21 @@
 				<div class="col-md-12">
 					<div class="row row-horizon">
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
-					    	<div style="height: 200px; overflow: hidden;">
+					    <div class="thumbnail">
+					    	<div style="height: 180px; overflow: hidden;">
 					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
+					    <div class="caption thumbnail-caption">
+						    <p>{{ diffImg.websiteUrl }}</p>
+							<p>{{ diffImg.diffPercent }}</p>
+							<p>{{ diffImg.viewport }}</p>
+							<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
+						<a href="#" class="btn btn-primary btn-sm" role="button" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+						   View
+						</a> 
+						</p>
+						</div>
 				  	</div>
 					</div>
 				</div>
@@ -106,11 +116,19 @@
 				<div class="col-md-12">
 					<div class="row row-horizon">
 					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
-					    	<div style="height: 200px; overflow: hidden;">
+					    <div class="thumbnail">
+					    	<div style="height: 180px; overflow: hidden;">
 					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 					  		</div>
 					    </div>
+					    <div class="caption thumbnail-caption">
+						    <p>{{ diffImg.websiteUrl }}</p>
+							<p>{{ diffImg.diffPercent }}</p>
+							<p>{{ diffImg.viewport }}</p>
+							<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
+						<a href="#" class="btn btn-primary btn-sm" role="button" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+						   View
+						</a> 
 				  	</div>
 				  	</div>
 			  	</div>
