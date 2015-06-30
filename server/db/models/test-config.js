@@ -100,6 +100,29 @@ schema.statics.getTestNamesForUser = function(userID) {
 };
 
 
+schema.statics.getTestNameRootURL = function(userID, testName) {
+    var query = {
+        userID: userID,
+        name: testName
+    };
+    return mongoose.model('TestConfig')
+        .findOne(query)
+        .select({name: 1, rootURL: 1})
+        .exec();
+};
+
+schema.statics.getSharedConfigs = function(userID, testName, URL) {
+    var query = {
+        name: testName,
+        userID: userID,
+        URL: URL 
+    };
+    return mongoose.model('TestConfig')
+        .findOne(query)
+        .select({threshold: 1, dayFrequency: 1, hourFrequency: 1, enabled: 1, _id: -1})
+        .exec();
+};
+
 schema.methods.getDiffsByDate = function(date, name) {
     var query = {
         captureTime: date,

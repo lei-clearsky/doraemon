@@ -23,6 +23,24 @@ var imageDiff = mongoose.model('ImageDiff');
 module.exports = router;
 
 
+router.get('/test/:id', function(req,res,next){
+	testConfig.getTestNamesForUser(req.params.id)
+		.then(function(testNames) {
+			var promises = [];			
+			testNames.map(function(name){
+				promises.push(testConfig.getTestNameRootURL(req.params.id, name)
+					.then(function(urls){		
+						return {testName: urls.name, rootURL: urls.rootURL}
+					})
+				);
+			});
+			return Q.all(promises);
+		}).then(function(obj){
+			res.json(obj)
+		})
+})
+
+
 router.get('/getTests/:id', function (req, res, next) {
 	testConfig.getTestNamesForUser(req.params.id)
 		.then(function(testNames) {
@@ -35,22 +53,33 @@ router.get('/getTests/:id', function (req, res, next) {
 				);
 			});
 			return Q.all(promises);
-	 	}).then(function(tests){
-	 		var promises = [];
-	 		tests.map(function(test){
-	 			var promiseURLs = [];
-	 			test.URLs.forEach(function(url){
-	 				var rootURL = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		}).then(function(testNames) {
+			var promises = [];			
+			testNames.map(function(test){
+				promises.push(testConfig.getTestNameRootURL(req.params.id, test.testName)
+					.then(function(config){	
+						return {testName: config.name, rootURL: config.rootURL, URLs: test.URLs}
+					})
+				);
+			});
+			return Q.all(promises);
+	 	}).then(function(tests){	 		
+	 		var promises = [];	 		
+	 		tests.map(function(test){	 			
+	 			var promiseURLs = [];	 			
+	 			test.URLs.forEach(function(url){	 					 				
 	 				promiseURLs.push(testConfig.getViewportsForURL(req.params.id, test.testName, url)
 	 					.then(function(vp) {
-
-	 						return { url: url, vp: vp, rootURL: rootURL[0] }
+	 						return testConfig.getSharedConfigs(req.params.id, test.testName, url)
+	 							.then(function(shared){
+	 								return { url: url, vp: vp, enabled: shared.enabled, hourFrequency: shared.hourFrequency, dayFrequency: shared.dayFrequency, threshold: shared.threshold}
+	 							}) 
 	 					})
  					)
 	 			})
 	 			promises.push(Q.all(promiseURLs)
 	 				.then(function(URLs){
-						return {testName: test.testName, URLs: URLs}
+						return {testName: test.testName, rootURL: test.rootURL, URLs: URLs}
  					 })
  				)
 	 		})	 

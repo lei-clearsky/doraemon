@@ -221,14 +221,14 @@
 
                         <ul>
                             <li ng-repeat="url in test.URLs">
-                                <span class="url">{{ url.url }}</span>
-                                <span class="threshold">10%{{}}</span>
-                                <span class="viewport">1024x768, 300x300, 1024x768, 300x300, 1024x768, 300x300{{}}</span>
-                                <span class="f-day">Monday, Monday, Monday, Monday, Monday, Monday, Monday{{}}</span>
-                                <span class="f-time">10 PM, 10 PM, 10 PM, 10 PM{{}}</span>
-                                <span class="btn-edit">+{{}}</span>
-                                <span class="btn-delete">+{{}}</span>
-                                <span class="btn-disable">+{{}}</span>
+                                <span class="url">URL: {{ url.url }}</span><br>
+                                <span class="threshold">Threshold: {{url.threshold}}%</span><br>
+                                <span class="viewport">Viewports: {{url.vp[0]}}</span><br>
+                                <span class="f-day">Day: {{url.dayFrequency[0]}}</span><br>
+                                <span class="f-time">Time: {{url.hourFrequency[0]}}</span><br>
+                                <span class="btn-edit">+{{}}</span><br>
+                                <span class="btn-delete">+{{}}</span><br>
+                                <span class="btn-disable">+{{}}</span><br>
                                 <span class="btn-enable">+{{}}</span>
                             </li>
                         </ul>
