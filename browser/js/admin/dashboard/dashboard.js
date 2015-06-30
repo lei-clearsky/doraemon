@@ -55,7 +55,9 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     // display dashboard stats
     $scope.dashboard = {
         alertNum: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).alertsToday,
+        alertNumTotal: Dashboard.getTotalAlerts($scope.allDiffsByUser),
         testsNum: Dashboard.getTestsToday($scope.allDiffsByUser, MathUtils),
+        testsNumTotal: allDiffsByUser.length,
         diffPercent: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).diffPercentToday,
         alertNumOneTest: Dashboard.getStatsToday($scope.diffImages.byDate, MathUtils).alertsToday,
         testsNumOneTest: Dashboard.getTestsToday($scope.allDiffsByUser, MathUtils),
@@ -64,17 +66,17 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     // update dashboard by selecting test name
     $scope.updateDashboard = function () {
         Dashboard.searchDiffsByTest($scope.searchParams)
-            .then(function (diffs) {
-                $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
-                $scope.diffImages.byDate = Dashboard.displayByDate(diffs, MathUtils);
-                $scope.diffImages.byViewport = Dashboard.displayByViewport(diffs);
-                $scope.dashboard.alertNumOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).alerts;
-                $scope.dashboard.testsNumOneTest = diffs.length;
-                $scope.dashboard.diffPercentOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).diffPerc;
-                $scope.diffsTest = Dashboard.getStatsOneTest(diffs, MathUtils).percObjArr;
-            })
-            .catch(console.log);
-        };
+        .then(function (diffs) {
+            $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
+            $scope.diffImages.byDate = Dashboard.displayByDate(diffs, MathUtils);
+            $scope.diffImages.byViewport = Dashboard.displayByViewport(diffs);
+            $scope.dashboard.alertNumOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).alerts;
+            $scope.dashboard.testsNumOneTest = diffs.length;
+            $scope.dashboard.diffPercentOneTest = Dashboard.getStatsOneTest(diffs, MathUtils).diffPerc;
+            $scope.diffsTest = Dashboard.getStatsOneTest(diffs, MathUtils).percObjArr;
+        })
+        .catch(console.log);
+    };
     // diff image modal
     $scope.openDiffModal = Modal.openModal;
 
