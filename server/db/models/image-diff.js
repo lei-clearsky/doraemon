@@ -5,6 +5,7 @@ var Q = require('q');
 var gm = require('gm');
 var path = require('path');
 var fs = require('fs');
+// var User = mongoose.model('User');
 
 var schema = new mongoose.Schema({
     captureTime: { 
@@ -117,6 +118,18 @@ schema.statics.saveImageDiff = function(output) {
 
     return this.create(diffImage);
 };
+
+
+// schema.statics.emailAlert = function() {
+
+    
+
+//     User.find({_id: output.config.userID}).then(function(user) {
+
+//     })
+    
+// }
+
 
 
 

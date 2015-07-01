@@ -5,6 +5,7 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}}); 
 AWS.config.region = 'us-standard'; 
 var Q = require('q');
+var roboto = require('roboto');
 
 var utilities = {
 	createImageDir: function(userID, configName, viewport, imgType, hour, day, time, configID) {
