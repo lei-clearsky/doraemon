@@ -235,19 +235,27 @@ $material-form-transition-speed: 0.3s;
 
 .admin-config-listing {
 	margin: 0 20px;
+	position: relative;
+
 	.admin-config-listing-item {
 		list-style-type: none;
 		background: transparent;
 		border-bottom:1px solid #333;
 		margin-bottom: 10px;
+		display: block;
+		float: left;
+		width: 33%;
+		box-sizing: border-box;
+		padding: 20px;
+		border: 1px solid #eee;
+
 		.admin-config-info {
-			width: 70%;
 			padding:10px 0;	
 			display: inline-block;
 			float:left;
 			.admin-config-heading {
 				font-size: 26px;
-				font-weight: 300;	
+				font-weight: 300;
 			}
 			p {
 
@@ -260,7 +268,22 @@ $material-form-transition-speed: 0.3s;
 	}
 }
 
-
+.test {
+	display: block;
+	float: left;
+	width: 50%;
+	box-sizing: border-box;
+	padding: 20px;
+	border: 1px solid #eee;
+}
+#test-detail {
+	position: absolute;
+	width: 100%;
+	height: auto;
+	padding: 50px;
+	box-sizing: border-box;
+	left: 0;
+}
 
 
 

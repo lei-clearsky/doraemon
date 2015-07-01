@@ -260,6 +260,7 @@ app.factory('Dashboard', function ($http) {
     };
 
     return {
+
         // get one diff
         // getOne: getOne,
         // search diffs by search params
@@ -278,6 +279,85 @@ app.factory('Dashboard', function ($http) {
         allScreenshotsForUser: allScreenshotsForUser,
         // get diffs by url
         getDiffsByUrl: getDiffsByUrl,
+
+        // getTests: function (userID) {
+        //     return $http.get('api/test-config/getTests/' + userID)
+        //         .then(function (response) {
+        //             return response.data;
+        //         });
+        // },
+
+        // getOne: function (id) {
+        //     return $http.get('/api/screenshots/' + id)
+        //                 .then(function (response) {
+        //                     return response.data;
+        //                 });
+        // },
+        // getTestsByUserID: function (userID) {
+        //     return $http.get('/api/screenshots/' + userID)
+        //                 .then(function (response) {
+        //                     return response.data;
+        //                 });
+        // },
+        // getUniqueTests: function (allTestsByUser) {
+        //     var tests = [];
+        //     allTestsByUser.forEach(function (test, index) {
+        //         if (tests.indexOf(test.name) === -1) {
+        //             tests.push(test.name);
+        //         }
+        //     });
+        //     return tests;
+        // },
+        // searchDiffs: function (params) {
+        //     return $http({
+        //         url: '/api/screenshots/searchDiffs',
+        //         method: 'GET',
+        //         params: params
+        //     }).then(function(res) {
+        //         return res.data;
+        //     });
+        // },
+        // searchDiffsByTest: function (params) {
+        //     return $http({
+        //         url: '/api/screenshots/searchDiffsByTest',
+        //         method: 'GET',
+        //         params: params
+        //     }).then(function(res) {
+        //         return res.data;
+        //     });
+        // },
+        // searchTestsByName: function (params) {
+        //     return $http({
+        //         url: '/api/screenshots/searchTestByName',
+        //         method: 'GET',
+        //         params: params
+        //     }).then(function(res) {
+        //         return res.data;
+        //     });
+        // },
+        // allDiffsByUser: function (userID) {
+        //     return $http.get('/api/screenshots/allDiffs/' + userID)
+        //                 .then(function (response) {
+        //                     return response.data;
+        //                 });
+        // },
+        // allScreenshotsForUser: function (userID) {
+        //     return $http.get('/api/screenshots/allScreenshots/' + userID)
+        //                 .then(function (response) {
+        //                     return response.data;
+        //                 });
+        // },
+        // getDiffsByUrl: function (params) {
+        //     return $http({
+        //         url: '/api/screenshots/diffsByUrl',
+        //         method: 'GET',
+        //         params: params
+        //     })
+        //     .then(function (response) {
+        //         return response.data;
+        //     });
+        // },
+
         // get tests ran today
         getTestsToday: getTestsToday,
         // get today's alerts and diff percent
