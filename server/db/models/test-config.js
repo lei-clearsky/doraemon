@@ -36,10 +36,16 @@ var schema = new mongoose.Schema({
     hourFrequency: [{
         type: Number
     }],
+    inTestCase: {
+        type: Boolean,
+        default: false
+    },
+    steps: {
+        type: Array
+    },
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User',
-        required: true
+        ref: 'User'
     },
     teamID: {
         type: mongoose.Schema.Types.ObjectId, 
@@ -96,7 +102,7 @@ schema.statics.findAllScheduledTests = function(hour, day) {
             }).exec();
 };
 
-schema.method.runTestConfig = function(nightmare, date) {
+schema.methods.runTestConfig = function(nightmare, date) {
     var deferred = Q.defer();
     var snapshotPath = utilities.createImageDir(this.userID, this.name, this.viewport, 'snapshots', date.getHours(), date.getDay(), date.getTime(), this._id);
 
@@ -106,20 +112,20 @@ schema.method.runTestConfig = function(nightmare, date) {
         .goto(this.URL)   
         .wait() 
         .screenshot(snapshotPath)
-        .use(processImages);
+        .use(processImages());
 
     return deferred.promise;
 };
 
 schema.statics.processImages = function() {
-    console.log(chalk.cyan('Starting testConfig job - ' + config._id));
+    console.log(chalk.cyan('Starting testConfig job - ' + this._id));
 
     utilities.saveToAWS(snapshotPath).then(function(output) {
         console.log(chalk.green('Screenshot saved to AWS...'));
-        return imageCapture.saveImageCapture(config, snapshotPath);
+        return imageCapture.saveImageCapture(this, snapshotPath);
     }).then(function(imageCaptures) {
         console.log(chalk.green('New imageCapture document saved...'));
-        return imageDiff.createDiff(config, imageCaptures, date);
+        return imageDiff.createDiff(this, imageCaptures, date);
     }).then(function(output) {
         if (output) {
             console.log(chalk.green('Diff Screenshot created...'));
@@ -145,12 +151,12 @@ schema.statics.processImages = function() {
             console.log(chalk.green('Diff Screenshot saved to AWS...'));
         }
 
-        console.log(chalk.cyan('Finished testConfig job - ' + config._id));
+        console.log(chalk.cyan('Finished testConfig job - ' + this._id));
         return deferred.resolve(output);
     }).then(null, function(err) {
         deferred.reject(err);
     });
-}
+};
 
 schema.virtual('viewportWidth').get(function () {
     return parseInt(this.viewport.split('x')[0]);
