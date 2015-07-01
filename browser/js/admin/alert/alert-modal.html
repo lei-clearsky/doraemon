@@ -4,19 +4,16 @@
 <!-- {{ diffInfo | json }} -->
 <div class="modal-body">
     <div class="row">
-    <div class="col-md-7">
-        <div class="thumbnail" >
-            <img src="{{diffInfo.diffImgThumbnail | awsImg}}" alt="">
-        </div>
-    </div>
-
-    <div class="col-md-5">
+    <div class="col-md-12">
       <!-- info -->
-      <h4>Website URL: {{ diffInfo.websiteUrl }}</h4>
-      <h4>Diff Percent: {{ diffInfo.diffPercent }}</h4>
-      <h4>Viewport: {{ diffInfo.viewport }}</h4>
-      <h4>Capture Time: {{ diffInfo.captureTime | date:"MM/dd/yyyy @ h:mma" }}</h4>
+      <h4>{{ diffInfo.websiteUrl }} | {{ diffInfo.diffPercent }} | {{ diffInfo.viewport }} | {{ diffInfo.captureTime | date:"MM/dd/yyyy @ h:mma" }}</h4>
 
+    </div>
+    <div class="col-md-12">
+        <div class="thumbnail" >
+          <!-- diffImgThumbnail -->
+          <img src="{{diffInfo.diffImgURL | awsImg}}" alt="">
+        </div>
     </div>
 </div>
 </div>
