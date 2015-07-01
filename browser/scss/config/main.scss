@@ -233,33 +233,6 @@ $material-form-transition-speed: 0.3s;
 	font-weight: 400;
 }
 
-.btn-primary {
-	background-color: #66cc00;
-	border-color: none;
-	&:hover,
-	&:focus {
-		background: #61af13 !important;
-		border-color: #8f963d !important;
-	}
-}
-.btn-success {
-	&:hover,
-	&:focus {
-		background: #00bc47 !important;
-		border-color: #27aa43 !important;
-	}
-}
-
-.btn {
-  display: inline-block;
-  padding: 15px 20px;
-  margin-bottom: 20px;
-  font-size: 18px;
-  font-weight: 300;
-  border: none;
-  border-radius: 0;
-}
-
 .admin-config-listing {
 	margin: 0 20px;
 	position: relative;

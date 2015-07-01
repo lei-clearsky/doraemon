@@ -23,7 +23,7 @@ app.config(function ($stateProvider) {
 
 });
 
-app.controller('AlertCtrl', function ($scope, MathUtils, Modal, Dashboard, allDiffsByUser, $modal, currentUser, $rootScope) {
+app.controller('AlertCtrl', function ($scope, MathUtils, Modal, Dashboard, allDiffsByUser, $rootScope) {
     $rootScope.stateClass = 'alerts';
     $scope.alertsByDate = Dashboard.displayByDate(allDiffsByUser, MathUtils);
     $scope.allDiffsByUser = allDiffsByUser;
@@ -33,7 +33,6 @@ app.controller('AlertCtrl', function ($scope, MathUtils, Modal, Dashboard, allDi
 app.controller('AlertModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {
     
     $scope.diffInfo = viewDiff;
-    // $scope.imgCaptureInfo = viewImgCapture;
   
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');

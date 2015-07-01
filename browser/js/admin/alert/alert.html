@@ -22,11 +22,11 @@
 						Diff:
 						<img ng-src="{{  diff.diffImgThumbnail | awsImg }}">
 					</div>
-					<div class="alert-img-container" ng-click="openAlertModal(diff.compareFromID._id, 'lg', true, 'js/admin/alert/alert-modal.html', 'AlertModalCtrl')">
+					<div class="alert-img-container" ng-click="openAlertModal(diff._id, 'lg', true, 'js/admin/alert/alert-modal-compareFrom.html', 'AlertModalCtrl')">
 						Compare From:
 						<img ng-src="{{  diff.compareFromID.imgURL | awsImg }}">
 					</div>
-					<div class="alert-img-container" ng-click="openAlertModal(diffImg.compareToID_id, 'lg', true, 'js/admin/alert/alert-modal.html', 'AlertModalCtrl')">
+					<div class="alert-img-container" ng-click="openAlertModal(diff._id, 'lg', true, 'js/admin/alert/alert-modal-compareTo.html', 'AlertModalCtrl')">
 						Compare To:
 						<img ng-src="{{  diff.compareToID.imgURL | awsImg }}">
 					</div>			
