@@ -3,11 +3,13 @@
 app.factory('Config', function ($http) {
 
     return {
+
         createBulk: function (config) {
             return $http.post('/api/test-config/bulkcreate', config).then(function (response) {
                 return response.data;
             });
         },
+
         create: function (config) {
             return $http.post('/api/test-config', config).then(function (response) {
                 return response.data;

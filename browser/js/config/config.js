@@ -17,18 +17,6 @@ app.config(function ($stateProvider) {
 
 });
 
-// app.factory('Config', function ($http) {
-
-//     return {
-//         create: function (config) {
-//             return $http.post('/api/test-config', config).then(function (response) {
-//                 return response.data;
-//             });
-//         }
-//     };
-
-// });
-
 app.value('viewportOptions', [
     {label: 'Samsung Galaxy S5', value: '360x640'},
     {label: 'Apple iPhone 6', value: '375x667'},
