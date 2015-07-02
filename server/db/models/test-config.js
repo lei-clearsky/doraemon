@@ -4,6 +4,7 @@ var imageCapture = mongoose.model('ImageCapture');
 var imageDiff = mongoose.model('ImageDiff');
 var utilities = require('../utilities');
 var path = require('path');
+var roboto = require('roboto');
 
 var Q = require('q');
 var chalk = require('chalk');
@@ -11,11 +12,13 @@ var chalk = require('chalk');
 var schema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        index: true,
+        require: true
     },
     URL: {
         type: String,
-        required: true
+        index: true,
+        require: true
     },
     devURL: {
         type: String
@@ -24,11 +27,13 @@ var schema = new mongoose.Schema({
         type: String
     },
     threshold: {
-        type: Number
+        type: Number,
+        default: 10
     },
     viewport: {
         type: String,
-        required: true
+        index: true,
+        require: true
     },
     dayFrequency: [{
         type: Number
@@ -36,13 +41,6 @@ var schema = new mongoose.Schema({
     hourFrequency: [{
         type: Number
     }],
-    inTestCase: {
-        type: Boolean,
-        default: false
-    },
-    steps: {
-        type: Array
-    },
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
@@ -50,8 +48,78 @@ var schema = new mongoose.Schema({
     teamID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Team'
+    },
+    enabled: {
+        type: Boolean,
+        default: false
     }
 });
+
+schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true });
+
+
+schema.statics.getViewportsForURL = function(userID, testName, URL) {
+    var query = {
+        name: testName,
+        userID: userID,
+        URL: URL 
+    };
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('viewport', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
+
+schema.statics.getURLsForTest = function(userID, testName) {
+    var query = {
+        name: testName,
+        userID: userID
+    };
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('URL', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
+schema.statics.getTestNamesForUser = function(userID) {
+    var query = {
+        userID: userID
+    };
+    return mongoose.model('TestConfig')
+        .find(query)
+        .distinct('name', function(err, results) {
+            return results;
+        })
+        .exec();
+};
+
+schema.statics.getTestNameRootURL = function(userID, testName) {
+    var query = {
+        userID: userID,
+        name: testName
+    };
+    return mongoose.model('TestConfig')
+        .findOne(query)
+        .select({name: 1, rootURL: 1})
+        .exec();
+};
+
+schema.statics.getSharedConfigs = function(userID, testName, URL) {
+    var query = {
+        name: testName,
+        userID: userID,
+        URL: URL 
+    };
+    return mongoose.model('TestConfig')
+        .findOne(query)
+        .select({threshold: 1, dayFrequency: 1, hourFrequency: 1, enabled: 1, _id: -1})
+        .exec();
+};
 
 schema.methods.getDiffsByDate = function(date, name) {
     var query = {
@@ -102,7 +170,48 @@ schema.statics.findAllScheduledTests = function(hour, day) {
             }).exec();
 };
 
-schema.methods.runTestConfig = function(nightmare, date) {
+schema.statics.crawlURL = function(config) {
+     var crawlObj = {
+         startUrls: [config.startURL],
+         maxDepth: config.maxDepth,
+         constrainToRootDomains: true
+     };
+
+     if (config.blacklist) {
+         crawlObj.blacklist = [config.blacklist];
+     };
+     if (config.whitelist) {
+         crawlObj.whitelist = [config.whitelist];
+     };
+
+     var crawler = new roboto.Crawler(crawlObj);
+
+     crawler.parseField('url', function(response, $){
+        return response.url;
+     });
+
+     crawler.on('item', function(item) {
+        config.viewport.forEach(function(viewport) {
+            mongoose.model('TestConfig')
+                .create({
+                    name: config.testName,
+                    URL: item.url,
+                    rootURL: config.startURL,
+                    threshold: config.threshold,
+                    viewport: viewport,
+                    dayFrequency: config.dayFrequency,
+                    hourFrequency: config.hourFrequency,
+                    userID: config.userID
+                });
+        });      
+    });
+
+     crawler.crawl();    
+}; 
+
+
+
+schema.statics.runTestConfig = function(nightmare, date) {
     var deferred = Q.defer();
     var snapshotPath = utilities.createImageDir(this.userID, this.name, this.viewport, 'snapshots', date.getHours(), date.getDay(), date.getTime(), this._id);
 
@@ -112,7 +221,7 @@ schema.methods.runTestConfig = function(nightmare, date) {
         .goto(this.URL)   
         .wait() 
         .screenshot(snapshotPath)
-        .use(processImages());
+        .use(processImages);
 
     return deferred.promise;
 };
@@ -157,6 +266,7 @@ schema.statics.processImages = function() {
         deferred.reject(err);
     });
 };
+
 
 schema.virtual('viewportWidth').get(function () {
     return parseInt(this.viewport.split('x')[0]);

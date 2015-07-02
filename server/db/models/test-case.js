@@ -26,10 +26,6 @@ var schema = new mongoose.Schema({
     hourFrequency: [{
         type: Number
     }],
-    testConfigs: [{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'TestConfig'
-    }],
     steps: [{
         stepCode: Number,
         eventText: String,
@@ -49,7 +45,7 @@ var schema = new mongoose.Schema({
     }
 });
 
-schema.methods.runTestCase = function(nightmare, testCase, date) {
+schema.methods.runTestCase = function(nightmare, date) {
 
 };
 

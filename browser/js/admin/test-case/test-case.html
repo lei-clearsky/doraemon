@@ -76,7 +76,7 @@
                     <!-- 3rd col start -->
                     <div class="col-md-4" style='height: 350px; overflow: auto;'>
                         <label class="label-block">Steps</label>
-                        <div class="panel panel-default" ng-repeat='step in config.steps track by $index' style='box-shadow: none; margin-bottom: 10px;'>
+                        <div class="panel panel-default" ng-repeat='step in config.steps track by $index' style='box-shadow: none; margin-bottom: 10px; border-radius: 0px;'>
                             <div class="panel-body">
                                 #{{$index + 1}} - 
                                 <span ng-if='step.stepCode === 1'> Start URL: {{step.value}}</span>

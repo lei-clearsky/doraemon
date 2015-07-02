@@ -1,15 +1,37 @@
-.diff-bars {
+.diff-bars-wrap {
 	position: relative;
+}
+
+.diff-bars {
 	z-index: 6000;
 	overflow-x: scroll;
-	overflow-y: hidden;
 	white-space: nowrap;
+	position: relative;
 }
 .ls-bar {
 	width: 30px;
 	background: #eee;
 	display: inline-block;
 	margin: 0 5px;
+	position: relative;
+		.ls-bar-info {
+			position: absolute;
+			display: none;
+			color: #fff;
+			padding: 15px 10px;
+			background: #525252;
+			top: -145px;
+			left: -85px;
+			width: 200px;
+			height: 140px;
+			z-index: 100000;
+			.info-line {
+				word-wrap: break-word;
+			}
+		}
+		&:hover .ls-bar-info {
+			display: block;
+		}
 }
 @media screen and (min-width: 768px) {
   .same-height {
