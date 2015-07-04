@@ -1,6 +1,6 @@
 'use strict';
 var mongoose = require('mongoose');
-var testConfig = mongoose.model('TestConfig');
+var TestConfig = mongoose.model('TestConfig');
 var utilities = require('../utilities');
 var Q = require('q');
 
@@ -35,6 +35,9 @@ var schema = new mongoose.Schema({
     formCompleted: {
         type: Boolean
     },
+    testConfigIDs: {
+        type: Array
+    }, 
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User'
@@ -45,13 +48,9 @@ var schema = new mongoose.Schema({
     }
 });
 
-schema.methods.runTestCase = function(nightmare, date) {
-
-};
-
 schema.methods.getTestConfigs = function() {
-    return testConfig.find({
-        '_id': { $in: this.testConfigs }
+    return TestConfig.find({
+        '_id': { $in: this.testConfigIDs }
     }).exec();
 };
 

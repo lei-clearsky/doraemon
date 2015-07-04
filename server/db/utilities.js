@@ -8,14 +8,19 @@ var Q = require('q');
 var roboto = require('roboto');
 
 var utilities = {
-	createImageDir: function(userID, configName, viewport, imgType, hour, day, time, configID) {
-	    // tmp/userID/configName/viewport/imgType/hour_weekday_date.now() + .jpg
-	    
+	createImageDir: function(userID, configName, viewport, imgType, hour, day, time, configID, testStepIndex) {
+	    // regular testConfig - tmp/userID/configName/viewport/imgType/hour_weekday_date.now + .jpg
+	    // testConfig in TestCase - tmp/userID/configName/viewport/imgType/testStepIndex_#/hour_weekday_date.now + .jpg
+
 	    //testing purposes
 	    time = Date.now();
 	    
-	    var path = './tmp/' + userID + '/' + configName + '/' + viewport + '/' + imgType;
+	    var path = './tmp/' + userID + '/' + configName.split(' ').join('_') + '/' + viewport + '/' + imgType;
 	    
+	    if (testStepIndex !== undefined) {
+	    	path += '/testStepIndex_' + testStepIndex;
+	    } 
+
 
 	    mkdirp(path, function (err) {
 	        if (err) {
@@ -24,7 +29,6 @@ var utilities = {
 	    });
 
 	    path += '/' + configID + '_' + hour + '_' + day + '_' + time + '.jpg';
-
 	    return path;
 	},
 	saveToAWS: function(snapshotPath) {
@@ -60,19 +64,22 @@ var utilities = {
 	    return deferred.promise; 
 	},
 	removeImg: function(filepath) {
+		var deferred = Q.defer();
+
 		if (filepath) {
-			fs.unlinkSync(filepath, function (err) {
+			fs.unlink(filepath, function (err) {
 	        	if (err) {
-	        		return console.log(err);
+	        		deferred.reject(err);
 	        	} else {
-	        		return console.log('successfully removed file')
+	        		deferred.resolve(filepath);
+
 	        	}
 	        });
 		} else {
-			console.log('file path does not exist');
+			deferred.reject('file path does not exist');
 		}
 
-		return filepath;
+		return deferred.promise; 
 	}
 };
 

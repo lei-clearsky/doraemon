@@ -115,7 +115,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             element.viewports.forEach(function(viewport) {
                 console.log('foreach: ', viewport);
                 Config.create({
-                    name: $scope.configTest.name.split(' ').join('_'),
+                    name: $scope.configTest.name,
                     URL: 'http://' + $scope.configTest.rootURL + element.path,
                     devURL: 'http://' + $scope.configTest.devURL,
                     rootURL: 'http://' + $scope.configTest.rootURL,
@@ -143,7 +143,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
 
     $scope.submitBulk = function() { 
         var object = {
-            testName: $scope.configBulkTest.name.split(' ').join('_'),
+            testName: $scope.configBulkTest.name,
             startURL: 'http://www.' + $scope.configBulkTest.startURL, 
             maxDepth: $scope.config[0].depth[0],
             blacklist: $scope.configBulkTest.blacklist,
