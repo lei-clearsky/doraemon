@@ -8,7 +8,7 @@
 			<div class="row">
     			<div class="col-md-12 stats-all">
     				<div class="stats-label">TODAY</div>  				
-	    			<div class="row group">	
+	    			<div class="row group stats-row">	
 
 	    				<div circle-chart circle-title="Alerts for Today" stats-num="dashboard.alertNum" circle-max="alertNumTotal" circle-current="dashboard.alertNum"></div>
 
@@ -39,7 +39,7 @@
 							</optgroup>
 						</select>
     				</div>
-    				<div class="row">
+    				<div class="row stats-row">
     					<div stats-test title="Alerts" stats="dashboard.alertNumOneTest"></div>
 
     					<div stats-test title="Tests" stats="dashboard.testsNumOneTest"></div>
@@ -88,23 +88,18 @@
 				<h3>{{ diff.urlName }}</h3>
 				<div class="col-md-12">
 					<div class="row row-horizon">
-					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail">
-					    	<div style="height: 180px; overflow: hidden;">
-					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
-					  		</div>
-					    </div>
-					    <div class="caption thumbnail-caption">
-						    <p>{{ diffImg.websiteUrl }}</p>
-							<p>{{ diffImg.diffPercent }}</p>
-							<p>{{ diffImg.viewport }}</p>
-							<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
-						<a href="#" class="btn btn-primary btn-sm" role="button" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
-						   View
-						</a> 
-						</p>
-						</div>
-				  	</div>
+						<div class="col-sm-4 col-md-3" ng-repeat="diffImg in diff.images" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+							<div class="thumbnail-holder">
+						    <div class="thumbnail">
+						      	<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
+						  		<div class="thumbnail-caption">
+									<p>{{ diffImg.diffPercent }}</p>
+									<p>{{ diffImg.viewport }}</p>
+									<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
+								</div>
+						    </div>
+						    </div>
+					  	</div>
 					</div>
 				</div>
 			</div>
@@ -115,21 +110,17 @@
 				<h3>{{ diff.viewport }}</h3>
 				<div class="col-md-12">
 					<div class="row row-horizon">
-					<div class="col-sm-4 col-md-2" ng-repeat="diffImg in diff.images">
-					    <div class="thumbnail">
-					    	<div style="height: 180px; overflow: hidden;">
-					      		<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
+					<div class="col-sm-4 col-md-3" ng-repeat="diffImg in diff.images" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+						<div class="thumbnail-holder">
+						    <div class="thumbnail">
+						      	<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
+						    </div>
+						    <div class="thumbnail-caption">
+							    <p>{{ diffImg.websiteUrl }}</p>
+								<p>{{ diffImg.diffPercent }}</p>
+								<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p> 
 					  		</div>
-					    </div>
-					    <div class="caption thumbnail-caption">
-						    <p>{{ diffImg.websiteUrl }}</p>
-							<p>{{ diffImg.diffPercent }}</p>
-							<p>{{ diffImg.viewport }}</p>
-							<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
-						<a href="#" class="btn btn-primary btn-sm" role="button" ng-click="openDiffModal(diffImg._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
-						   View
-						</a> 
-				  	</div>
+				  		</div>
 				  	</div>
 			  	</div>
 			</div>

@@ -108,8 +108,8 @@ $green: #38A139;
 		position: relative;
 		top: -40px;
 		z-index: 9988;
-		width: 300px;
-		left: calc(100% - 300px);
+		width: 400px;
+		left: calc(100% - 400px);
 		& > li > a {
 			background: #fff;
 			padding: 10px 20px;
@@ -170,13 +170,16 @@ $green: #38A139;
 				-webkit-transform: translateY(-50%);
 			}
 		}
-
+		.stats-row {
+			margin-top: 20px;
+		}
 		.stats-label {
 			position: absolute;
 			text-align: center;
-			padding: 3px;
+			padding: 15px 10px;
+			font-size:20px;
+			font-weight: 400;
 			z-index: 1200;
-			xtop: -13px;
 			left: 50%;
 			transform: translateX(-50%);
 			width: 250px;
