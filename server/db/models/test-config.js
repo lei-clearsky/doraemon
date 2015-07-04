@@ -190,11 +190,17 @@ schema.statics.crawlURL = function(config) {
          constrainToRootDomains: true
      };
 
+     function parseList(array) {
+        return array.split(',').map(function(str) {
+            return str.trim();
+        });
+     };
+
      if (config.blacklist) {
-         crawlObj.blacklist = [config.blacklist];
+        crawlObj.blacklist = parseList(config.blacklist);
      };
      if (config.whitelist) {
-         crawlObj.whitelist = [config.whitelist];
+        crawlObj.whitelist = parseList(config.whitelist);
      };
 
      var crawler = new roboto.Crawler(crawlObj);
@@ -219,7 +225,8 @@ schema.statics.crawlURL = function(config) {
         });      
     });
 
-     crawler.crawl();    
+    crawler.crawl();    
+    return Q(); 
 }; 
 
 schema.methods.runTestConfig = function(nightmare, date) {

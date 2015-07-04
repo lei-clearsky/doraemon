@@ -10,7 +10,7 @@ var chalk = require('chalk');
 var obj = {
     run: function() {
         new CronJob({
-            cronTime: '0 */3 * * * *',  // this is the timer, set to every minuite for testing purposes
+            cronTime: '0 */2 * * * *',  // this is the timer, set to every minuite for testing purposes
             onTick: function() {
                 // retrieving information about the date to be used later
                 

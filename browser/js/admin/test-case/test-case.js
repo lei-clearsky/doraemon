@@ -98,7 +98,7 @@ app.controller('TestCaseCtrl', function ($scope, TestCaseFactory, currentUser, v
         $scope.config.steps = testCase.steps;
     }).then(null, function(err) {
         console.log(err);
-        $state.go('admin.dashboard');
+        redirect();
     });
 
     $scope.toggleCheckbox = function(option, optionsArray) {
@@ -151,7 +151,7 @@ app.controller('TestCaseCtrl', function ($scope, TestCaseFactory, currentUser, v
             return TestCaseFactory.deleteTestCase($stateParams.testCaseID);
         }).then(function() {
             $scope.showSuccessAlert = true;
-            window.setTimeout(redirect, 3000);
+            window.setTimeout(redirect, 2000);
         }).then(null, function(err) {
             // creating test case failed; what to do?
             console.log(err);

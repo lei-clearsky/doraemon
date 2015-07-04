@@ -50,27 +50,38 @@ app.value('maxDepthOptions', [
     {label: 'Three', value: 3}
 ]);
 
-app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, maxDepthOptions, Dashboard, $rootScope) {
+app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOptions, dayFrequencyOptions, hourFrequencyOptions, maxDepthOptions, Dashboard, $rootScope, $q, $state) {
     $rootScope.stateClass = 'config';
     $scope.submitAttempted = false;
-    $scope.configTest = {};
-    $scope.configBulkTest = {};
+    $scope.submitAttemptedBulk = false;
+
+    $scope.configTest = {
+        name: '',
+        rootURL: ''
+    };
+
+    $scope.configBulkTest = {
+        name: '',
+        startURL: '',
+        viewports: [],
+        dayFrequency: [],
+        hourFrequency: []
+    };
+
     $scope.config = [{
-            path: '',
-            threshold: null,
-            viewports: [],
-            dayFrequency: [],
-            hourFrequency: [],
-            depth: []
-        }];
+        path: '',
+        threshold: null,
+        viewports: [],
+        dayFrequency: [],
+        hourFrequency: []
+    }];
+
     $scope.viewportOptions = viewportOptions;
     $scope.dayFrequencyOptions = dayFrequencyOptions;
     $scope.hourFrequencyOptions = hourFrequencyOptions;
     $scope.maxDepthOptions = maxDepthOptions;
     
     $scope.showSuccessAlert = false;
-    $scope.showErrorAlert = false;
-    $scope.errorMessage = "Please fill all options";
     $scope.testsByUserID = [];
 
     $scope.addNewUrl = function() {
@@ -91,30 +102,52 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             optionsArray.push(option);
     };
 
+    $scope.removePath = function(index) {
+        if ($scope.config.length > 1) {
+            $scope.config.splice(index, 1);
+        }
+    };
+
     // Still cannot find a better way to validate config form
     $scope.isValid = function() {
         $scope.submitAttempted = true;
 
-        // if ($scope.testName === '') return false;
+        if ($scope.configTest.name.length === 0) return false;
+        if ($scope.configTest.rootURL.length === 0) return false;
 
-        // for (var i = 0; i < $scope.config.length; i++) {
-        //     if (($scope.config[i].URL === '') || 
-        //         ($scope.config[i].viewports.length === 0) ||
-        //         ($scope.config[i].dayFrequency.length === 0) ||
-        //         ($scope.config[i].hourFrequency.length === 0) ||
-        //         ($scope.config[i].path === '') ||
-        //         ($scope.config[i].threshold <= 0)) {
-        //         return false;
-        //     }
-        // };
+        for (var i = 0; i < $scope.config.length; i++) {
+            if (($scope.config[i].viewports.length === 0) ||
+                ($scope.config[i].dayFrequency.length === 0) ||
+                ($scope.config[i].hourFrequency.length === 0)) {
+                return false;
+            }
+        };
+        return true;
+    };
+
+    $scope.isValidBulk = function() {
+        $scope.submitAttemptedBulk = true;
+
+        if (($scope.configBulkTest.name.length === 0) ||
+            ($scope.configBulkTest.startURL.length === 0) ||
+            ($scope.configBulkTest.viewports.length === 0) ||
+            ($scope.configBulkTest.dayFrequency.length === 0) ||
+            ($scope.configBulkTest.hourFrequency.length === 0)) {
+            return false;
+        };
+
         return true;
     };
 
     $scope.submit = function() {
+        if (!$scope.isValid())
+            return;  
+
+        var promises = [];
+
         $scope.config.forEach(function(element) {
             element.viewports.forEach(function(viewport) {
-                console.log('foreach: ', viewport);
-                Config.create({
+                promises.push(Config.create({
                     name: $scope.configTest.name,
                     URL: 'http://' + $scope.configTest.rootURL + element.path,
                     devURL: 'http://' + $scope.configTest.devURL,
@@ -124,42 +157,72 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
                     dayFrequency: element.dayFrequency,
                     hourFrequency: element.hourFrequency,
                     userID: currentUser._id
-                });
+                }));
             });                
         });
 
-        $scope.configTest = {};
-        $scope.config = [{
-            path: '',
-            threshold: null,
-            viewports: [],
-            dayFrequency: [],
-            hourFrequency: []
-        }];
-        $scope.showSuccessAlert = true;
-        $scope.submitAttempted = false;
+        $q.all(promises).then(function() {
+            $scope.showSuccessAlert = true;
+            $scope.submitAttempted = false;
+            $scope.configTest = {
+                name: '',
+                rootURL: ''
+            };
+            $scope.config = [{
+                path: '',
+                threshold: null,
+                viewports: [],
+                dayFrequency: [],
+                hourFrequency: []
+            }];
 
+            window.setTimeout(redirect, 2000);
+        }).then(null, function(err) {
+            console.log(err);
+        });
     };
 
     $scope.submitBulk = function() { 
+        if (!$scope.isValidBulk())
+            return; 
+
         var object = {
             testName: $scope.configBulkTest.name,
             startURL: 'http://www.' + $scope.configBulkTest.startURL, 
-            maxDepth: $scope.config[0].depth[0],
+            maxDepth: $scope.configBulkTest.depth,
             blacklist: $scope.configBulkTest.blacklist,
             whitelist: $scope.configBulkTest.whitelist,
             threshold: $scope.configBulkTest.threshold,
-            viewport: $scope.config[0].viewports,
-            dayFrequency: $scope.config[0].dayFrequency,
-            hourFrequency: $scope.config[0].hourFrequency,
+            viewport: $scope.configBulkTest.viewports,
+            dayFrequency: $scope.configBulkTest.dayFrequency,
+            hourFrequency: $scope.configBulkTest.hourFrequency,
             userID: currentUser._id
         };
-        Config.createBulk(object);
 
-        $scope.showSuccessAlert = true;
-        $scope.submitAttempted = false;
+        Config.createBulk(object).then(function() {
+            $scope.showSuccessAlert = true;
+            $scope.submitAttemptedBulk = false;
+            $scope.configBulkTest = {
+                name: '',
+                startURL: '',
+                viewports: [],
+                dayFrequency: [],
+                hourFrequency: [],
+                depth: null,
+                blacklist: '',
+                whitelist: '',
+                threshold: ''
+            };
+
+            window.setTimeout(redirect, 2000);
+        }).then(null, function(err) {
+            console.log(err);
+        });
     };
 
+    function redirect() {
+        $state.go('admin.dashboard');
+    };
 
     Dashboard.getTestsByUserID(currentUser._id)
         .then(function (tests) {
@@ -181,31 +244,8 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             return err;
         });
 
-
         $scope.oneAtATime = true;
 
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

@@ -92,5 +92,9 @@ router.post('/', function (req, res, next) {
 });
 
 router.post('/bulkcreate', function (req, res, next) {
-	testConfig.crawlURL(req.body)
+	testConfig.crawlURL(req.body).then(function(data) {
+		res.json(data);
+	}).then(null, function(err) {
+		next(err);
+	}); 
 });
