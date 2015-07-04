@@ -51,6 +51,7 @@
                                     <input ng-click="toggleCheckbox(viewport.value, config.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
                                 </label>
                             </div>
+                            </br>
                             <span style="color:red" ng-show="submitAttempted && config.viewports.length === 0">Please choose a viewport!</span>
                         </div>
                         <div>
@@ -60,6 +61,7 @@
                                     <input ng-click="toggleCheckbox(day.value, config.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
                                 </label>
                             </div>
+                            </br>
                             <span style="color:red" ng-show="submitAttempted && config.dayFrequency.length === 0">Please choose a day to run test!</span>
                         </div>
                         <div>
@@ -69,6 +71,7 @@
                                     <input ng-click="toggleCheckbox(hour.value, config.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
                                 </label>
                             </div>
+                            </br>
                             <span style="color:red" ng-show="submitAttempted && config.hourFrequency.length === 0">Please choose the time of day to run test!</span>
                         </div>
                     </div>
@@ -92,10 +95,7 @@
                 <!-- row -->
                 <div class="row">
                     <button type="button" class="btn btn-success btn-large" ng-click="submit()">Save</button>
-                    <div class="alert alert-success" role="alert" ng-show="showSuccessAlert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
-                        <strong>Sucecss!</strong> Your test case has been submitted. Redirecting....
-                    </div>
+                    <success-alert ng-show="showSuccessAlert"></success-alert>
                 </div>
                 <!-- row end -->
             </form>

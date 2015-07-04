@@ -153,7 +153,6 @@ app.controller('TestCaseCtrl', function ($scope, TestCaseFactory, currentUser, v
             $scope.showSuccessAlert = true;
             window.setTimeout(redirect, 2000);
         }).then(null, function(err) {
-            // creating test case failed; what to do?
             console.log(err);
         });
     };

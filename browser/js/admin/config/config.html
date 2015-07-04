@@ -2,9 +2,6 @@
     <h1>Configuration</h1>
 </div>
 
-<!-- {{ configTest | json  }}
-{{ config | json }} -->
-
 <tabset>
     <tab heading="Create Test">
         <div class="col-md-11 col-center">
@@ -60,6 +57,7 @@
                                 <input ng-click="toggleCheckbox(viewport.value, url.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttempted && url.viewports.length === 0">Please choose a viewport!</span>
                     </div>
                     <div class="col-md-3">
@@ -69,6 +67,7 @@
                                 <input ng-click="toggleCheckbox(day.value, url.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttempted && url.dayFrequency.length === 0">Please choose a day to run test!</span>
                     </div>
                     <div class="col-md-2">
@@ -78,19 +77,17 @@
                                 <input ng-click="toggleCheckbox(hour.value, url.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttempted && url.hourFrequency.length === 0">Please choose the time of day to run test!</span>
-                        <button type="button" class="btn btn-warning btn-sm" ng-click="removePath($index)">Remove Path</button>
+                        <button type="button" class="btn btn-warning btn-sm" ng-click="removePath($index)" ng-disabled='config.length <= 1'>Remove Path</button>
                     </div>
                 </div>
                 <!-- row end -->
-                <button type="button" class="btn btn-primary btn-large" ng-click="addNewUrl()">Add another path</button>
+                <button type="button" class="btn btn-primary btn-large" ng-click="addPath()">Add another path</button>
 
                 <button type="button" class="btn btn-success btn-large" ng-click="submit()">Save</button>
 
-                <div class="alert alert-success" role="alert" ng-show="showSuccessAlert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
-                    <strong>Sucecss!</strong> Your test has been submitted
-                </div>
+                <success-alert ng-show="showSuccessAlert"></success-alert>
             </form>
         </section>
 
@@ -165,6 +162,7 @@
                                 <input ng-click="toggleCheckbox(viewport.value, configBulkTest.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttemptedBulk && configBulkTest.viewports.length === 0">Please choose a viewport!</span>
                     </div>
                     <div class="col-md-3">
@@ -174,6 +172,7 @@
                                 <input ng-click="toggleCheckbox(day.value, configBulkTest.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttemptedBulk && configBulkTest.dayFrequency.length === 0">Please choose a day to run test!</span>
                     </div>
                     <div class="col-md-3">
@@ -183,17 +182,15 @@
                                 <input ng-click="toggleCheckbox(hour.value, configBulkTest.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
                             </label>
                         </div>
+                        </br>
                         <span style="color:red" ng-show="submitAttemptedBulk && configBulkTest.hourFrequency.length === 0">Please choose the time of day to run test!</span>
                     </div>
                 </div>
                 <!-- row end -->
 
                 <button type="button" class="btn btn-success btn-large" ng-click="submitBulk()">Save</button>
-
-                <div class="alert alert-success" role="alert" ng-show="showSuccessAlert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="showSuccessAlert = false"><span aria-hidden="true">&times;</span></button>
-                    <strong>Sucecss!</strong> Your test has been submitted
-                </div>
+                
+                <success-alert ng-show="showSuccessAlert"></success-alert>
             </form>
         </section>
         </div>

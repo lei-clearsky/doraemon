@@ -84,7 +84,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.showSuccessAlert = false;
     $scope.testsByUserID = [];
 
-    $scope.addNewUrl = function() {
+    $scope.addPath = function() {
         $scope.config.push({
             path: '',
             threshold: null,
@@ -92,6 +92,12 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             dayFrequency: [],
             hourFrequency: []
         });
+    };
+
+    $scope.removePath = function(index) {
+        if ($scope.config.length > 1) {
+            $scope.config.splice(index, 1);
+        }
     };
 
     $scope.toggleCheckbox = function(option, optionsArray) {
@@ -102,11 +108,6 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             optionsArray.push(option);
     };
 
-    $scope.removePath = function(index) {
-        if ($scope.config.length > 1) {
-            $scope.config.splice(index, 1);
-        }
-    };
 
     // Still cannot find a better way to validate config form
     $scope.isValid = function() {
