@@ -240,14 +240,11 @@ $material-form-transition-speed: 0.3s;
 	.admin-config-listing-item {
 		list-style-type: none;
 		background: transparent;
-		border-bottom:1px solid #333;
-		margin-bottom: 10px;
+		margin: 0 0 10px 10px;
 		display: block;
 		float: left;
-		width: 33%;
+		width: 24%;
 		box-sizing: border-box;
-		padding: 20px;
-		border: 1px solid #eee;
 
 		.admin-config-info {
 			padding:10px 0;	
@@ -266,6 +263,46 @@ $material-form-transition-speed: 0.3s;
 			display: inline-block;
 		}
 	}
+}
+.panel-default {
+	border-color: transparent;
+	> .panel-heading {
+		background-color: #38A139;
+		color:#fff;
+		border-color: #38A139;
+	}
+}
+.panel-heading {
+	border-bottom: 0;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.panel-group .panel {
+	border-radius: 0;
+}
+
+.panel-body {
+	background-color: #fff;
+	ul {
+		list-style-type: none;
+		-webkit-padding-start: 0;
+	}
+}
+.panel-title {
+	> a {
+		text-decoration: none;
+	}
+}
+
+.panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
+	border-top: none;
+}
+.panel-default > .panel-heading + .panel-collapse > .panel-body {
+	border: 1px solid #38A139;
+}
+.panel-group .panel + .panel {
+	margin-top: 0;
 }
 
 .test {
