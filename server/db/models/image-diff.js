@@ -70,15 +70,6 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
         if (err) {
             return deferred.reject(err);
         }
-        // console.log('The images are equal: %s', isEqual);
-        // console.log('Actual equality: %d', equality);
-        // console.log('Raw output was: %j', raw);    
-        
-        gm(diffPath)
-            .resize(300)
-            .write(diffThumbnailPath, function(err) {
-                if(err) console.log(err);
-            });
 
         var output = {
             percent: equality,
@@ -96,6 +87,7 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
 
     return deferred.promise; 
 };
+
 
 schema.statics.saveImageDiff = function(output) {
     if (output === null)
@@ -118,18 +110,6 @@ schema.statics.saveImageDiff = function(output) {
 
     return this.create(diffImage);
 };
-
-
-// schema.statics.emailAlert = function() {
-
-    
-
-//     User.find({_id: output.config.userID}).then(function(user) {
-
-//     })
-    
-// }
-
 
 
 

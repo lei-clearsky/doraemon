@@ -34,13 +34,7 @@ schema.statics.searchForLastSaved = function(url, userID, viewport) {
                 websiteURL: url,
                 userID: userID,
                 viewport: viewport
-            }).sort({captureTime: 'desc'}).exec(function(err, docs) {
-                if (err) {
-                    return err;
-                }
-
-                return docs;
-            });
+            }).sort({captureTime: 'desc'}).exec();
 };
 
 schema.statics.saveImageCapture = function(config, snapshotPath) {

@@ -44,6 +44,7 @@ var schema = new mongoose.Schema({
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
+        index: true,
         require: true
     },
     teamID: {
@@ -56,7 +57,7 @@ var schema = new mongoose.Schema({
     }
 });
 
-schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
+// schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
 
 
 schema.statics.getViewportsForURL = function(userID, testName, URL) {
@@ -230,8 +231,24 @@ schema.statics.runTestConfig = function(nightmare, config, date) {
                 console.log(chalk.green('Screenshot saved to AWS...'));
                 return imageCapture.saveImageCapture(config, snapshotPath);
             }).then(function(imageCaptures) {
-                console.log(chalk.green('New imageCapture document saved...'));
+                console.log(chalk.green('Creating Diff Screenshot...'));
                 return imageDiff.createDiff(config, imageCaptures, date);
+            }).then(function(output) {
+                if (output) {
+                    console.log(chalk.green('Darkening Diff Screenshot...'));
+                    return utilities.darkenImg(output)
+                } else {
+                    console.log(chalk.yellow('No previous snapshot found'));
+                    return null;
+                }
+            }).then(function(output) {
+                 if (output) {
+                    console.log(chalk.green('Creating Diff Screenshot Thumbnail...'));
+                    return utilities.createThumbnail(output);
+                } else {
+                    console.log(chalk.yellow('No previous snapshot found'));
+                    return null;
+                }               
             }).then(function(output) {
                 if (output) {
                     console.log(chalk.green('Diff Screenshot created...'));
@@ -249,14 +266,12 @@ schema.statics.runTestConfig = function(nightmare, config, date) {
                         utilities.removeImg(newImageDiff.diffImgURL);
                         return utilities.removeImg(newImageDiff.diffImgThumbnail);
                     });
-                }
-                
+                }                
                 return null;
             }).then(function(output) {
                 if (output) {
                     console.log(chalk.green('Diff Screenshot saved to AWS...'));
                 }
-
                 console.log(chalk.cyan('Finished testConfig job - ' + config._id));
                 return deferred.resolve(output);
             }).then(null, function(err) {

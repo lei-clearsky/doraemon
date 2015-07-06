@@ -6,6 +6,8 @@ var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
 AWS.config.region = 'us-standard'; 
 var Q = require('q');
 var roboto = require('roboto');
+var Jimp = require('jimp');
+var gm = require('gm');
 
 var utilities = {
 	createImageDir: function(userID, configName, viewport, imgType, hour, day, time, configID) {
@@ -73,6 +75,31 @@ var utilities = {
 		}
 
 		return filepath;
+	},
+	darkenImg: function(output) {
+        var deferred = Q.defer();
+
+		var darkenImg = new Jimp(output.file, function(err, image) {
+			if (err) return deferred.reject(err);	
+			this.brightness(-0.5)
+				.write(output.file);
+			
+			return deferred.resolve(output);
+		});
+
+		return deferred.promise;
+	},
+	createThumbnail: function(output) {
+		var deferred = Q.defer();
+
+        gm(output.file)
+            .resize(300)
+            .write(output.thumbnail, function(err) {
+                if(err) deferred.reject(err);
+                return deferred.resolve(output);
+            });
+
+        return deferred.promise;    
 	}
 };
 
