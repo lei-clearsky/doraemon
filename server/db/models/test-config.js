@@ -245,15 +245,34 @@ schema.methods.runTestConfig = function(nightmare, date) {
     };
 
     // use nightmare to take a screenshot
-    nightmare
-        .viewport(that.viewportWidth, that.viewportHeight)
-        .goto(that.URL)   
-        .wait() 
-        .screenshot(snapshotPath)
-        .use(passStuff);
-
+    if(this.inTestCase) {
+        eval(that.parseSteps());
+    } else {
+        nightmare
+            .viewport(that.viewportWidth, that.viewportHeight)
+            .goto(that.URL)   
+            .wait() 
+            .screenshot(snapshotPath)
+            .use(passStuff);
+    };
 
     return deferred.promise;
+};
+
+schema.methods.parseSteps = function() {
+    var result = 'nightmare.viewport(that.viewportWidth, that.viewportHeight).goto(that.URL).wait()';
+
+    for (var i = 0; i < this.steps.length; i++) {
+        if (this.steps[i].stepCode === 3) {
+            result += '.click("' + this.steps[i].path.join(' > ') + '").wait()';
+        } else if (this.steps[i].stepCode === 4) {
+            result += '.type("' + this.steps[i].path.join(' > ') + '", "' + this.steps[i].value + '").wait()';
+        }
+
+    };
+
+    result += '.screenshot(snapshotPath).use(passStuff);';
+    return result;
 };
 
 schema.methods.processImages = function(snapshotPath, date, deferred) {

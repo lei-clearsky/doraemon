@@ -31,6 +31,8 @@ var ImageDiff = mongoose.model('ImageDiff');
 var ImageCapture = mongoose.model('ImageCapture');
 var TestCase = mongoose.model('TestCase');
 
+var keepUsers = process.argv[2] === '-keepUsers' ? true : false;
+
 var seedUsers = function () {
 
     var users = [
@@ -49,8 +51,10 @@ var seedUsers = function () {
 };
 
 var wipeDB = function () {
-
-    var models = [User, Team, TestConfig, ImageDiff, ImageCapture, TestCase];
+    var models = [Team, TestConfig, ImageDiff, ImageCapture, TestCase];
+    
+    if (!keepUsers) 
+        models.push(User);
 
     models.forEach(function (model) {
         model.find({}).remove(function () {});
@@ -60,15 +64,17 @@ var wipeDB = function () {
 };
 
 var seed = function () {
-
-    seedUsers().then(function (users) {
-        console.log(chalk.magenta('Seeded Users!'));
+    if (!keepUsers) {
+        seedUsers().then(function (users) {
+            console.log(chalk.magenta('Seeded Users!'));
+            process.kill(0);
+        }).catch(function (err) {
+            console.error(err);
+            process.kill(1);
+        });
+    } else {
         process.kill(0);
-    }).catch(function (err) {
-        console.error(err);
-        process.kill(1);
-    });
-
+    }
 };
 
 mongoose.connection.once('open', function () {
