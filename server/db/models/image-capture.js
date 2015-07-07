@@ -29,11 +29,12 @@ var schema = new mongoose.Schema({
     }
 });
 
-schema.statics.searchForLastSaved = function(url, userID, viewport) {
+schema.statics.searchForLastSaved = function(url, userID, viewport, testConfigID) {
     return this.findOne({ 
                 websiteURL: url,
                 userID: userID,
-                viewport: viewport
+                viewport: viewport,
+                testConfigID: testConfigID
             }).sort({captureTime: 'desc'}).exec(function(err, docs) {
                 if (err) {
                     return err;
@@ -47,7 +48,7 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
     var lastImageCapture, newImageCapture;
     // searches for last screenshot taken
     return this
-        .searchForLastSaved(config.URL, config.userID, config.viewport) 
+        .searchForLastSaved(config.URL, config.userID, config.viewport, config._id) 
         .then(function(lastImg) {
 
             // creating temporary object to be stored in database

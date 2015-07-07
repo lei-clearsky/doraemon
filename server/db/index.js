@@ -16,6 +16,7 @@ require('./models/team');
 require('./models/image-capture');
 require('./models/image-diff');
 require('./models/test-config');
+require('./models/test-case');
 
 var startDbPromise = new Q(function (resolve, reject) {
     db.on('open', resolve);

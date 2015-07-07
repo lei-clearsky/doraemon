@@ -1,0 +1,106 @@
+<div class="admin-sub-header">
+    <h1>Test Case Configuration</h1>
+</div>
+<tabset>
+    <tab heading="Create Test Case">
+        <div class="col-md-11 col-center">
+        <section id="config">
+            <form name="adminTestCaseForm" novalidate>
+                <!-- col -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div>
+                            <div class="form-group">            
+                                <input type="text" name="formTestName" ng-model="config.name" required>
+                                <span style="color:red" ng-show="submitAttempted && config.name.length === 0">Please name your UI test!</span>
+                                <label for="formTestName">Name of UI Test</label><i class="bar"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">            
+                                <input type="text" name="formTestProURL" ng-model="config.URL" disabled>
+
+                                <!-- <label for="formTestProURL">http://www.</label><i class="bar"></i> -->
+                                <p class="input-helper">Production site. (e.g. yahoo.com)</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">            
+                                <input type="text" name="formTestRootDevURL" ng-model="configTest.devURL" disabled>
+                                <span style="color:red" ng-show="submitAttempted && configTest.devURL.length === 0">Please name your UI test dev URL!</span>
+                                <label for="formTestRootDevURL">http://</label><i class="bar"></i>
+                                <p class="input-helper">Development site. (e.g. dev.yahoo.com)</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <input type="text" name="threshold" ng-model="config.threshold" required>
+                                <span style="color:red" ng-show="submitAttempted && !config.threshold">Please enter threshold!</span>
+                                <label for="threshold">Threshold %</label><i class="bar"></i>
+                                <p class="input-helper">Any diff above this will get alerted.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- col end -->
+                    <!-- 2nd col start -->
+                    <div class="col-md-4">
+                        <div>
+                            <label class="label-block">Viewports to test</label>
+                            <div class="checkbox checkbox-inline" ng-repeat="viewport in viewportOptions">
+                                <label>
+                                    <input ng-click="toggleCheckbox(viewport.value, config.viewports)" type="checkbox"><span>{{viewport.value}}</span><i class="helper"></i> <!--{{viewport.label}}--> 
+                                </label>
+                            </div>
+                            </br>
+                            <span style="color:red" ng-show="submitAttempted && config.viewports.length === 0">Please choose a viewport!</span>
+                        </div>
+                        <div>
+                            <label class="label-block">Days to run tests</label>
+                            <div class="checkbox checkbox-inline" ng-repeat="day in dayFrequencyOptions">
+                                <label class="checkbox-inline">
+                                    <input ng-click="toggleCheckbox(day.value, config.dayFrequency)" type="checkbox"><span>{{day.label}}</span><i class="helper"></i> 
+                                </label>
+                            </div>
+                            </br>
+                            <span style="color:red" ng-show="submitAttempted && config.dayFrequency.length === 0">Please choose a day to run test!</span>
+                        </div>
+                        <div>
+                            <label class="label-block">Times to run tests</label>
+                            <div class="checkbox checkbox-inline" ng-repeat="hour in hourFrequencyOptions">
+                                <label class="checkbox-inline" >
+                                    <input ng-click="toggleCheckbox(hour.value, config.hourFrequency)" type="checkbox"><span>{{hour.label}}</span><i class="helper"></i>
+                                </label>
+                            </div>
+                            </br>
+                            <span style="color:red" ng-show="submitAttempted && config.hourFrequency.length === 0">Please choose the time of day to run test!</span>
+                        </div>
+                    </div>
+                    <!-- 2nd col end -->
+                    <!-- 3rd col start -->
+                    <div class="col-md-4" style='height: 350px; overflow: auto;'>
+                        <label class="label-block">Steps</label>
+                        <div class="panel panel-default" ng-repeat='step in config.steps track by $index' style='box-shadow: none; margin-bottom: 10px; border-radius: 0px;'>
+                            <div class="panel-body">
+                                #{{$index + 1}} - 
+                                <span ng-if='step.stepCode === 1'> Start URL: {{step.value}}</span>
+                                <span ng-if='step.stepCode === 2'> Take Snapshot</span>
+                                <span ng-if='step.stepCode === 3'> Click on: {{step.path.join(' > ')}}</span>
+                                <span ng-if='step.stepCode === 4'> Enter text of: '{{step.value}}' at {{step.path.join(' > ')}}</span> 
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 3rd col end -->
+                </div>
+                <!-- row end -->
+                <!-- row -->
+                <div class="row">
+                    <button type="button" class="btn btn-success btn-large" ng-click="submit()">Save</button>
+                    <success-alert ng-show="showSuccessAlert"></success-alert>
+                </div>
+                <!-- row end -->
+            </form>
+        </section>
+
+        </div>
+    </tab>
+</tabset>
