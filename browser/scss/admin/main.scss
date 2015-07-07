@@ -6,7 +6,10 @@
 	z-index: 6000;
 	overflow-x: scroll;
 	white-space: nowrap;
-	position: relative;
+	position: absolute;
+	bottom:0;
+	min-height: 100%;
+	width:100%;
 }
 .ls-bar {
 	width: 30px;
@@ -188,6 +191,13 @@ $green: #38A139;
 	.stats-all {
 		background: #fff;
 		color: $green;
+		min-height:320px;
+		.ls-bar {
+			top: 240px;
+		}
+		.diff-bars {
+			xtop:210px;
+		}
 		.group-one {
 			display: inline-block;
 			float:left;
@@ -233,6 +243,13 @@ $green: #38A139;
 	.stats-test {
 		background: $green;
 		color: $white;
+		min-height: 220px;
+		.ls-bar {
+			top: 140px;
+		}
+		.diff-bars {
+			xtop:170px;
+		}
 		.overview-item-heading {
 			font-size: 14px;
 		}

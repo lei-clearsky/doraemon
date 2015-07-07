@@ -1,7 +1,7 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffsTest | json }} -->
-	<!-- {{dashboard | json}} -->
+	<!-- {{diffImages.byDate | json}} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
@@ -9,23 +9,17 @@
     			<div class="col-md-12 stats-all">
     				<div class="stats-label">TODAY</div>  				
 	    			<div class="row group stats-row">	
-
 	    				<div circle-chart circle-title="Alerts for Today" stats-num="dashboard.alertNum" circle-max="alertNumTotal" circle-current="dashboard.alertNum"></div>
-
 	    				<div circle-chart circle-title="Tests run today" stats-num="dashboard.testsNum" circle-max="testsNumTotal" circle-current="dashboard.testsNum"></div>
-
 	    				<div circle-chart circle-title="Highest(%)" stats-num="dashboard.diffPercent.highestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.highestPerc"></div>
-
 	    				<div circle-chart circle-title="Average(%)" stats-num="dashboard.diffPercent.averagePerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.averagePerc"></div>
-
 	    				<div circle-chart circle-title="Lowest(%)" stats-num="dashboard.diffPercent.lowestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.lowestPerc"></div>
-
 	    			</div>
-	    			<div class="diff-bars-wrap">
-		    			<div class="diff-bars">
-			    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsToday"></div>
-		    			</div>
-		    		</div>
+	    			<!-- <div class="diff-bars-wrap"> -->
+	    			<div class="diff-bars">
+		    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsToday"></div>
+	    			</div>
+		    		<!-- </div> -->
     			</div>
 
     			<div class="col-md-12 stats-test">
@@ -41,20 +35,16 @@
     				</div>
     				<div class="row stats-row">
     					<div stats-test title="Alerts" stats="dashboard.alertNumOneTest"></div>
-
     					<div stats-test title="Tests" stats="dashboard.testsNumOneTest"></div>
-
     					<div stats-test title="Highest(%)" stats="dashboard.diffPercentOneTest.highestPerc | percentage:2"></div>
-
     					<div stats-test title="Average(%)" stats="dashboard.diffPercentOneTest.averagePerc | percentage:2"></div>
-
     					<div stats-test title="Lowest(%)" stats="dashboard.diffPercentOneTest.lowestPerc | percentage:2"></div>
 	    			</div>
-	    			<div class="diff-bars-wrap">
-		    			<div class="diff-bars">
-			    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsTest"></div>
-		    			</div>
-		    		</div>
+	    			<!-- <div class="diff-bars-wrap"> -->
+	    			<div class="diff-bars">
+		    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsTest"></div>
+	    			</div>
+		    		<!-- </div> -->
 
     			</div>
        		</div>

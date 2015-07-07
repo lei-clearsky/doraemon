@@ -169,7 +169,7 @@ app.factory('Dashboard', function ($http) {
                 var diffCaptureTime = MathUtils.formatDate(diff.captureTime);
                 if (diffCaptureTime === date) {
                     byDateObj[index].date = date;
-                   
+                    byDateObj[index].testsRun.push(diff);
                     if (diff.diffPercent*100 > diff.threshold) {
                         byDateObj[index].alerts.push(diff);
                     }
