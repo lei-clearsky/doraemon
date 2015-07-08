@@ -247,6 +247,8 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
 
         $scope.oneAtATime = true;
 
+    $scope.isOpen = false;
+
 });
 
 

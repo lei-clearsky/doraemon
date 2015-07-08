@@ -201,8 +201,10 @@
 
     <tab heading="Config Tests">
         <accordion class="admin-config-listing">
-            <accordion-group class="admin-config-listing-item group" ng-repeat="test in tests">
-                
+            <accordion-group 
+                class="admin-config-listing-item group" 
+                ng-repeat="test in tests"
+                >
                 <accordion-heading>
                     <div class="admin-config-heading">
                         {{ test.testName }}
@@ -214,8 +216,7 @@
                         <p>
                     </div>
                 </accordion-heading>
-
-                        <ul>
+                        <ul class="height1">
                             <li ng-repeat="url in test.URLs">
                                 <span class="url">URL: {{ url.url }}</span><br>
                                 <span class="threshold">Threshold: {{url.threshold}}%</span><br>
@@ -228,7 +229,6 @@
                                 <span class="btn-enable">+{{}}</span>
                             </li>
                         </ul>
-                    </div>               
 
                 <!-- <div class="admin-config-action">
                     Update, Delete 
