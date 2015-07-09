@@ -3,14 +3,7 @@ var AWSkeys = require('./AWSkeys');
 process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
 process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
 
-// var Promise = require("bluebird");
-var Nightmare = require('nightmare');
-var nightmare = new Nightmare();
-
-var CronJob = require('cron').CronJob;
 var Q = require('q');
-var chalk = require('chalk');
-
 var AWS = require('aws-sdk'); 
 var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
 AWS.config.region = AWSkeys.region; 
@@ -18,10 +11,10 @@ AWS.config.region = AWSkeys.region;
 var router = require('express').Router();
 var mongoose = require('mongoose');
 var	testConfig = mongoose.model('TestConfig');
-var	imageCapture = mongoose.model('ImageCapture');
-var imageDiff = mongoose.model('ImageDiff');
+var cronJob = require('../cronJob');
 module.exports = router;
 
+// cronJob.run();
 
 router.get('/test/:id', function(req,res,next){
 	testConfig.getTestNamesForUser(req.params.id)
@@ -91,7 +84,6 @@ router.get('/getTests/:id', function (req, res, next) {
 		});
 });
 
-
 router.post('/', function (req, res, next) {
 	testConfig.create(req.body, function (err, testConfigDoc) {
 		if (err) return next(err);	
@@ -99,63 +91,70 @@ router.post('/', function (req, res, next) {
 	});
 });
 
-
 router.post('/bulkcreate', function (req, res, next) {
-	testConfig.crawlURL(req.body)
-});
+// <<<<<<< HEAD
+// 	testConfig.crawlURL(req.body)
+// });
 
 
 
-var intervalJob = new CronJob({
-  	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
-  	onTick: function() {
-		// retrieving information about the date to be used later
+// var intervalJob = new CronJob({
+//   	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+//   	onTick: function() {
+// 		// retrieving information about the date to be used later
 		
-		// currently using Weekday: 6, Hour: 10 as params for testing purposes
-		// var date = new Date();
-		var date = new Date('June 13, 2015 10:00:00');
+// 		// currently using Weekday: 6, Hour: 10 as params for testing purposes
+// 		// var date = new Date();
+// 		var date = new Date('June 13, 2015 10:00:00');
 		
-		var hour = date.getHours();
-		var weekday = date.getDay();
+// 		var hour = date.getHours();
+// 		var weekday = date.getDay();
 
-		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
-		// searches TestConfig model and retrives URL objects
-		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
-			var promises = [];
+// 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+// 		// searches TestConfig model and retrives URL objects
+// 		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
+// 			var promises = [];
 
-			configs.forEach(function(config) {
-				promises.push(testConfig.runTestConfig(nightmare, config, date));
-			});
+// 			configs.forEach(function(config) {
+// 				promises.push(testConfig.runTestConfig(nightmare, config, date));
+// 			});
 
-			nightmare.run();
+// 			nightmare.run();
 
-			return Q.all(promises);
-		}).then(function() {
-			console.log(chalk.magenta('Finished with all jobs for Weekday: ' + weekday + ', Hour: ' + hour));
-		}).then(null, function(error) {
-		   	console.log(error);
-		});
-  	},
-  	start: false
+// 			return Q.all(promises);
+// 		}).then(function() {
+// 			console.log(chalk.magenta('Finished with all jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+// 		}).then(null, function(error) {
+// 		   	console.log(error);
+// 		});
+//   	},
+//   	start: false
+// });
+
+// intervalJob.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =======
+	testConfig.crawlURL(req.body).then(function(data) {
+		res.json(data);
+	}).then(null, function(err) {
+		next(err);
+	}); 
 });
-
-intervalJob.start();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

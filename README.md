@@ -1,9 +1,7 @@
-<p align="center"><img src="https://jlau-bucket-1.s3.amazonaws.com/uploads/topic/image/42/fullstack.png" /></p>
-
-<h3 align="center">Fullstack [Academy] Generator</h3>
+<h3 align="center">Visual UI Test Automation</h3>
 
 ---
 
-#### Check the [wiki](https://github.com/FullstackAcademy/fsg/wiki/Getting-Started) to learn how to use this generator.
+An automatic visual UI testing and monitoring service built with Bootstrap, Sass, NightmareJS, gm, node-cron, MongoDB, ExpressJS, AngularJS and NodeJS
 
-![Badge of Honor](https://img.shields.io/badge/Built%20at-Fullstack-green.svg?style=flat-square)
+#### [Demo](https://boiling-island-8716.herokuapp.com/)

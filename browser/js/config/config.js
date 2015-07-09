@@ -103,7 +103,7 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         $scope.config.forEach(function(element) {
             element.viewports.forEach(function(viewport) {
                 Config.create({
-                    name: $scope.testName.split(' ').join('_'),
+                    name: $scope.testName,
                     URL: element.URL,
                     viewport: viewport,
                     dayFrequency: element.dayFrequency,
