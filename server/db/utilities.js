@@ -94,19 +94,19 @@ var utilities = {
 		});
 
 		return deferred.promise;
-	},
-	createThumbnail: function(output) {
-		var deferred = Q.defer();
-
-        gm(output.file)
-            .resize(300)
-            .write(output.thumbnail, function(err) {
-                if(err) deferred.reject(err);
-                return deferred.resolve(output);
-            });
-
-        return deferred.promise;    
 	}
+	// createThumbnail: function(output) {
+	// 	var deferred = Q.defer();
+
+ //        gm(output.file)
+ //            .resize(300)
+ //            .write(output.thumbnail, function(err) {
+ //                if(err) deferred.reject(err);
+ //                return deferred.resolve(output);
+ //            });
+
+ //        return deferred.promise;    
+	// }
 };
 
 module.exports = utilities;

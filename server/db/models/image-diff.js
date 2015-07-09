@@ -106,18 +106,18 @@ schema.statics.useGMCompare = function(imageCaptures, diffPath) {
             deferred.reject(err);
         }
 
-        var output = {
-            percent: equality,
-            file: options.file,
-            thumbnail: diffThumbnailPath,
-            config: config,
-            newImg: imageCaptures.newImageCapture._id,
-            lastImg: imageCaptures.lastImageCapture._id
-        };
+        // var output = {
+        //     percent: equality,
+        //     file: options.file,
+        //     // thumbnail: diffThumbnailPath,
+        //     // config: config,
+        //     newImg: imageCaptures.newImageCapture._id,
+        //     lastImg: imageCaptures.lastImageCapture._id
+        // };
         
-        utilities.removeImg(imageCaptures.lastImageCapture.imgURL)
+        // utilities.removeImg(imageCaptures.lastImageCapture.imgURL)
 
-        return deferred.resolve(output);
+        // return deferred.resolve(output);
 
          
         var imageData = {

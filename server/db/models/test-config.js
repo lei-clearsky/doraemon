@@ -44,13 +44,12 @@ var schema = new mongoose.Schema({
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
-<<<<<<< HEAD
-        index: true,
-        require: true
-=======
+// <<<<<<< HEAD
+//         index: true,
+//         require: true
+// =======
         require: true,
         index: true
->>>>>>> 00b2d9879f8e9e0bb385450dcb55fd99bf35c6ff
     },
     teamID: {
         type: mongoose.Schema.Types.ObjectId, 
@@ -74,12 +73,11 @@ var schema = new mongoose.Schema({
     }
 });
 
-<<<<<<< HEAD
-// schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
+// <<<<<<< HEAD
+// // schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
 
-=======
+// =======
 schema.index({userID: 1, name: 1, URL: 1, viewport: 1, testStepIndex: 1 }, { unique: true });
->>>>>>> 00b2d9879f8e9e0bb385450dcb55fd99bf35c6ff
 
 schema.statics.getViewportsForURL = function(userID, testName, URL) {
     var query = {
