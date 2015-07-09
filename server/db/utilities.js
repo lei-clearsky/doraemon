@@ -76,15 +76,15 @@ var utilities = {
 
 		return filepath;
 	},
-	darkenImg: function(output) {
+	darkenImg: function(imgPath) {
         var deferred = Q.defer();
 
-		var darkenImg = new Jimp(output.file, function(err, image) {
+		var darkenImg = new Jimp(imgPath, function(err, image) {
 			if (err) return deferred.reject(err);	
 			this.brightness(-0.5)
-				.write(output.file);
+				.write(imgPath);
 			
-			return deferred.resolve(output);
+			return deferred.resolve(imgPath);
 		});
 
 		return deferred.promise;

@@ -66,7 +66,7 @@ schema.statics.createDiff = function(config, imageCaptures, date) {
     if (imageCaptures.lastImageCapture === null) {
         return deferred.resolve(null);
     }
-    gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
+    gm.compare(imageCaptures.lastImageCapture.darkenImgURL, imageCaptures.newImageCapture.darkenImgURL, options, function (err, isEqual, equality, raw) {    
         if (err) {
             return deferred.reject(err);
         }

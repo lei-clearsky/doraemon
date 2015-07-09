@@ -233,14 +233,14 @@ schema.statics.runTestConfig = function(nightmare, config, date) {
             }).then(function(imageCaptures) {
                 console.log(chalk.green('Creating Diff Screenshot...'));
                 return imageDiff.createDiff(config, imageCaptures, date);
-            }).then(function(output) {
-                if (output) {
-                    console.log(chalk.green('Darkening Diff Screenshot...'));
-                    return utilities.darkenImg(output)
-                } else {
-                    console.log(chalk.yellow('No previous snapshot found'));
-                    return null;
-                }
+            // }).then(function(output) {
+            //     if (output) {
+            //         console.log(chalk.green('Darkening Diff Screenshot...'));
+            //         return utilities.darkenImg(output)
+            //     } else {
+            //         console.log(chalk.yellow('No previous snapshot found'));
+            //         return null;
+            //     }
             }).then(function(output) {
                  if (output) {
                     console.log(chalk.green('Creating Diff Screenshot Thumbnail...'));
