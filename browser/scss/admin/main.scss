@@ -5,11 +5,24 @@
 .diff-bars {
 	z-index: 6000;
 	overflow-x: scroll;
+	overflow-y:hidden;
 	white-space: nowrap;
 	position: absolute;
 	bottom:0;
-	min-height: 100%;
+	min-height: 180px;
 	width:100%;
+}
+.diff-bars::-webkit-scrollbar {
+  z-index: 6001;
+  height: 10px;
+  overflow: visible;
+}
+.diff-bars::-webkit-scrollbar-thumb {
+  background-color: #38A139;
+  min-width: 30px;
+}
+.diff-bars::-webkit-scrollbar-thumb:hover {
+  background-color: #5b5b5b;
 }
 .ls-bar {
 	width: 30px;
@@ -19,21 +32,41 @@
 	position: relative;
 		.ls-bar-info {
 			position: absolute;
-			display: none;
-			color: #fff;
-			padding: 15px 10px;
+			xdisplay: none;
+			border:1px solid #525252;
+			color: #333;
+			font-size:12px;
+			padding: 5px;
 			background: #525252;
-			top: -145px;
+			top: -105px;
 			left: -85px;
 			width: 200px;
-			height: 140px;
+			visibility:hidden;
+			xopacity: 0;
+			height: 0;
 			z-index: 100000;
+			transition: all 0.1s
 			.info-line {
 				word-wrap: break-word;
 			}
+			&:after {
+				content:"";
+				position: absolute;
+				top: 100%;
+				left:50%;
+				transform: translateX(-50%);
+				border-width: 6px 6px 6px 6px;
+				border-style: solid;
+				z-index: 100001;
+				border-color: #525252 transparent transparent transparent;
+			}
 		}
 		&:hover .ls-bar-info {
-			display: block;
+			xdisplay: block;
+			visibility:visible;
+			color:#fff;
+			xopacity: 1;
+			height: 100px;
 		}
 }
 @media screen and (min-width: 768px) {
@@ -179,9 +212,9 @@ $green: #38A139;
 		.stats-label {
 			position: absolute;
 			text-align: center;
-			padding: 15px 10px;
+			padding: 10px 10px 0 10px;
 			font-size:20px;
-			font-weight: 400;
+			font-weight: 300;
 			z-index: 1200;
 			left: 50%;
 			transform: translateX(-50%);
@@ -193,7 +226,7 @@ $green: #38A139;
 		color: $green;
 		min-height:320px;
 		.ls-bar {
-			top: 240px;
+			top: 90px;
 		}
 		.diff-bars {
 			xtop:210px;
@@ -245,7 +278,7 @@ $green: #38A139;
 		color: $white;
 		min-height: 220px;
 		.ls-bar {
-			top: 140px;
+			top: 90px;
 		}
 		.diff-bars {
 			xtop:170px;
@@ -261,6 +294,17 @@ $green: #38A139;
 		}
 		.stats-label {
 			background: $green;
+		    &:before {
+		    	content:"";
+			    position:absolute;
+			    right: 10px;
+			    top:20px;
+			    border-width: 10px 10px 10px 10px;
+			    border-style: solid;
+			    border-color: #fff transparent  transparent  transparent;
+			    z-index:3;
+			    pointer-events:none;
+		    }
 		}
 	}
 }

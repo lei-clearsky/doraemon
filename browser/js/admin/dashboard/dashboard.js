@@ -37,10 +37,11 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     $scope.diffsForUser = null;
     $scope.diffsForUserByTest = null;
     $scope.testsByDate = null;
+    $scope.initialSelect = true;
     // search params for test name
     $scope.searchParams = {
         user: currentUser._id,
-        testName: 'DramaFever1'    
+        testName: 'Select a Test'   
     };
     // display diff images by test name
     $scope.diffImages = {
@@ -65,6 +66,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     };
     // update dashboard by selecting test name
     $scope.updateDashboard = function () {
+        $scope.initialSelect = false;
         Dashboard.searchDiffsByTest($scope.searchParams)
         .then(function (diffs) {
             $scope.diffImages.byUrl = Dashboard.displayByURL(diffs);
@@ -79,17 +81,6 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     };
     // diff image modal
     $scope.openDiffModal = Modal.openModal;
-
-    // test chart.js
-    // $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-    // $scope.series = ['Series A', 'Series B'];
-    // $scope.data = [
-    // [65, 59, 80, 81, 56, 55, 40],
-    // [28, 48, 40, 19, 86, 27, 90]
-    // ];
-    // $scope.onClick = function (points, evt) {
-    //     console.log(points, evt);
-    // };
 });
 
 app.controller('DiffModalCtrl', function ($http, $scope, $modalInstance, viewDiff) {

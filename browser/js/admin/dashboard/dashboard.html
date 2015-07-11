@@ -23,14 +23,10 @@
     			</div>
 
     			<div class="col-md-12 stats-test">
-
     				<div class="stats-label">
     					<select ng-model="searchParams.testName" ng-change="updateDashboard()">
-    						<optgroup>
-								<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
-								<!-- <option value="DramaFever1">DramaFever1</option>
-								<option value="DramaFever2">DramaFever2</option> -->
-							</optgroup>
+    						<option value="Select a Test" ng-selected="searchParams.testName == 'Select a Test'" ng-show="initialSelect">Select a Test</option>
+							<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
 						</select>
     				</div>
     				<div class="row stats-row">
