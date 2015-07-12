@@ -34,6 +34,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
     $scope.allDiffsByUser = allDiffsByUser;
     $scope.uniqueTestsByUser = Dashboard.getUniqueTests(allTestsByUser);
     $scope.toggleCheckbox = Utils.toggleCheckbox;
+    $scope.today = MathUtils.formatDate(new Date());
     $scope.diffsForUser = null;
     $scope.diffsForUserByTest = null;
     $scope.testsByDate = null;
@@ -49,7 +50,7 @@ app.controller('DashboardCtrl', function ($scope, MathUtils, Utils, Dashboard, M
         byDate: Dashboard.displayByDate($scope.allDiffsByUser, MathUtils),
         byViewport: Dashboard.displayByViewport($scope.allDiffsByUser)
     };
-    if ($scope.diffImages.byDate[0] !== undefined) {
+    if ($scope.diffImages.byDate[0] !== undefined && $scope.diffImages.byDate[0].date == $scope.today) {
         $scope.diffsToday = $scope.diffImages.byDate[0].percObjArr;
         $scope.diffsTest = $scope.diffImages.byDate[0].percObjArr;
     }

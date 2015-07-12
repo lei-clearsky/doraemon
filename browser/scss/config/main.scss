@@ -330,6 +330,10 @@ $material-form-transition-speed: 0.3s;
 	ul {
 		list-style-type: none;
 		-webkit-padding-start: 0;
+		li {
+			display: inline-block;
+			margin-right: 15px;
+		}
 	}
 }
 .panel-title {

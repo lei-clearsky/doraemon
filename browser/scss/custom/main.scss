@@ -165,10 +165,12 @@
 }
 
 .tab-content {
+	h2, h3, h4 {
+		font-weight: 300;
+	}
 	h3 {
 		margin-left: 30px;
 		color: #333;
-		font-weight: 300;
 		padding: 10px 0;
 	}
 }
