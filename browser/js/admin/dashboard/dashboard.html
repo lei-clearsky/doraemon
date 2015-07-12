@@ -1,36 +1,30 @@
 	<!-- {{ searchParams | json }} -->
 	<!-- {{ diffsForUser | json }} -->
 	<!-- {{ diffsTest | json }} -->
-	<!-- {{diffImages.byDate | json}} -->
+	<!-- {{ diffImages.byDate | json }} -->
 
 	<div>
     	<div class="dashboard-overview container-fluid">
 			<div class="row">
     			<div class="col-md-12 stats-all">
-    				<div class="stats-label">TODAY</div>  				
+    				<div class="stats-label">TODAY</div>  			
 	    			<div class="row group stats-row">	
-	    				<div circle-chart circle-title="Alerts for Today" stats-num="dashboard.alertNum" circle-max="alertNumTotal" circle-current="dashboard.alertNum"></div>
-	    				<div circle-chart circle-title="Tests run today" stats-num="dashboard.testsNum" circle-max="testsNumTotal" circle-current="dashboard.testsNum"></div>
+	    				<div circle-chart circle-title="Alerts for Today" stats-num="dashboard.alertNum" circle-max="dashboard.alertNumTotal" circle-current="dashboard.alertNum"></div>
+	    				<div circle-chart circle-title="Tests run today" stats-num="dashboard.testsNum" circle-max="dashboard.testsNumTotal" circle-current="dashboard.testsNum"></div>
 	    				<div circle-chart circle-title="Highest(%)" stats-num="dashboard.diffPercent.highestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.highestPerc"></div>
 	    				<div circle-chart circle-title="Average(%)" stats-num="dashboard.diffPercent.averagePerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.averagePerc"></div>
 	    				<div circle-chart circle-title="Lowest(%)" stats-num="dashboard.diffPercent.lowestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.lowestPerc"></div>
 	    			</div>
-	    			<!-- <div class="diff-bars-wrap"> -->
 	    			<div class="diff-bars">
 		    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsToday"></div>
 	    			</div>
-		    		<!-- </div> -->
     			</div>
 
     			<div class="col-md-12 stats-test">
-
     				<div class="stats-label">
     					<select ng-model="searchParams.testName" ng-change="updateDashboard()">
-    						<optgroup>
-								<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
-								<!-- <option value="DramaFever1">DramaFever1</option>
-								<option value="DramaFever2">DramaFever2</option> -->
-							</optgroup>
+    						<option value="Select a Test" ng-selected="searchParams.testName == 'Select a Test'" ng-show="initialSelect">Select a Test</option>
+							<option value="{{ test }}" ng-repeat="test in uniqueTestsByUser">{{ test }}</option> 
 						</select>
     				</div>
     				<div class="row stats-row">
@@ -40,12 +34,9 @@
     					<div stats-test title="Average(%)" stats="dashboard.diffPercentOneTest.averagePerc | percentage:2"></div>
     					<div stats-test title="Lowest(%)" stats="dashboard.diffPercentOneTest.lowestPerc | percentage:2"></div>
 	    			</div>
-	    			<!-- <div class="diff-bars-wrap"> -->
 	    			<div class="diff-bars">
 		    			<div ls-bar height="diff.diffPercent" diff="diff.diffObj" ng-repeat="diff in diffsTest"></div>
 	    			</div>
-		    		<!-- </div> -->
-
     			</div>
        		</div>
     	</div>
@@ -53,6 +44,10 @@
 
 	<tabset>
 		<tab heading="By Date">
+			<div class="text-center" ng-show="!diffImages.byDate.toString()">
+				<h2><i class="fa fa-bell-o"></i> There are no Diff Images can be found</h2>
+				<h4>Run tests today to check any potential CSS errors</h3>
+			</div>
 			<ul class="cbp_tmtimeline">
 			<li ng-repeat="test in diffImages.byDate">
 				<time class="cbp_tmtime" datetime="2013-04-10 18:30"><span>{{test.date}}</span> <span>{{ test.day }}</span></time>
@@ -74,6 +69,10 @@
 		</ul>
 		</tab>
 		<tab heading="By Url">
+			<div class="text-center" ng-show="!diffImages.byUrl.toString()">
+				<h2><i class="fa fa-bell-o"></i> There are no Diff Images can be found</h2>
+				<h4>Run tests today to check any potential CSS errors</h3>
+			</div>
 			<div class="row" ng-repeat="diff in diffImages.byUrl">
 				<h3>{{ diff.urlName }}</h3>
 				<div class="col-md-12">
@@ -96,6 +95,10 @@
 		</tab>
 
 		<tab heading="By Viewport">
+			<div class="text-center" ng-show="!diffImages.byViewport.toString()">
+				<h2><i class="fa fa-bell-o"></i> There are no Diff Images can be found</h2>
+				<h4>Run tests today to check any potential CSS errors</h3>
+			</div>
 		  	<div class="row" ng-repeat="diff in diffImages.byViewport">
 				<h3>{{ diff.viewport }}</h3>
 				<div class="col-md-12">
@@ -116,21 +119,6 @@
 			</div>
 		</tab>
 	</tabset>
-
-	<!-- <div class="row">
-		<div class="col-md-6">
-			<canvas id="line" class="chart chart-line" data="data"
-			  labels="labels" legend="true" series="series"
-			  click="onClick">
-			</canvas>
-		</div>
-		<div class="col-md-6">
-			<canvas id="line" class="chart chart-line" data="data"
-			  labels="labels" legend="true" series="series"
-			  click="onClick">
-			</canvas>
-		</div>
-	</div> -->
 
 
 

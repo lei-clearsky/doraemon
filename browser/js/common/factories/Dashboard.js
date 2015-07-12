@@ -84,6 +84,7 @@ app.factory('Dashboard', function ($http) {
         var testsToday = 0;
         var today = new Date();
         var formattedToday = MathUtils.formatDate(today);
+        // var formattedToday = '2015-07-08';
         allDiffsByUser.forEach(function(diffImg, index){
             var formattedDate = MathUtils.formatDate(diffImg.captureTime);
             if (formattedDate === formattedToday) {
@@ -96,7 +97,7 @@ app.factory('Dashboard', function ($http) {
     var getStatsToday = function (testsByDate, MathUtils) {
         var today = new Date();
         var formattedToday = MathUtils.formatDate(today);
-        // var formattedToday = '2015-06-20';
+        // var formattedToday = '2015-07-08';
         if (testsByDate[0] !== undefined && testsByDate[0].date === formattedToday) {
             return {
                 alertsToday: testsByDate[0].alerts.length,
@@ -207,20 +208,24 @@ app.factory('Dashboard', function ($http) {
         var diffPercentArr = [];
         var percObjArr = [];
         diffsOneTest.forEach(function(diff, index) {
+            console.log('diff: ', diff);
             if (diff.diffPercent*100 > diff.threshold) {
                 alertsOneTest.push(diff);
             }
             diffPercentArr.push(diff.diffPercent);
             if (diff.diffPercent*100 > 0) 
-                percObjArr.push({diffPercent:diff.diffPercent});
+                percObjArr.push({
+                    diffPercent:diff.diffPercent,
+                    diffObj: diff
+                    });
         });
         return {
             alerts: alertsOneTest.length,
             percObjArr: percObjArr,
             diffPerc: {
-                averagePerc: MathUtils.calcAveragePerc(diffPercentArr),
-                highestPerc: MathUtils.getHighestPerc(diffPercentArr),
-                lowestPerc: MathUtils.getLowestPerc(diffPercentArr)
+                averagePerc: diffPercentArr.length > 0 ? MathUtils.calcAveragePerc(diffPercentArr) : 0,
+                highestPerc: diffPercentArr.length > 0 ? MathUtils.getHighestPerc(diffPercentArr) : 0,
+                lowestPerc: diffPercentArr.length > 0 ? MathUtils.getLowestPerc(diffPercentArr) : 0
             }
         }
     };
