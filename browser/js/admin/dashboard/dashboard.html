@@ -9,8 +9,8 @@
     			<div class="col-md-12 stats-all">
     				<div class="stats-label">TODAY</div>  			
 	    			<div class="row group stats-row">	
-	    				<div circle-chart circle-title="Alerts for Today" stats-num="dashboard.alertNum" circle-max="dashboard.alertNumTotal" circle-current="dashboard.alertNum"></div>
-	    				<div circle-chart circle-title="Tests run today" stats-num="dashboard.testsNum" circle-max="dashboard.testsNumTotal" circle-current="dashboard.testsNum"></div>
+	    				<div circle-chart circle-title="Alerts" stats-num="dashboard.alertNum" circle-max="dashboard.alertNumTotal" circle-current="dashboard.alertNum"></div>
+	    				<div circle-chart circle-title="Tests" stats-num="dashboard.testsNum" circle-max="dashboard.testsNumTotal" circle-current="dashboard.testsNum"></div>
 	    				<div circle-chart circle-title="Highest(%)" stats-num="dashboard.diffPercent.highestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.highestPerc"></div>
 	    				<div circle-chart circle-title="Average(%)" stats-num="dashboard.diffPercent.averagePerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.averagePerc"></div>
 	    				<div circle-chart circle-title="Lowest(%)" stats-num="dashboard.diffPercent.lowestPerc | percentage:2" circle-max="1" circle-current="dashboard.diffPercent.lowestPerc"></div>
@@ -82,7 +82,7 @@
 						    <div class="thumbnail">
 						      	<img src="{{ diffImg.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 						  		<div class="thumbnail-caption">
-									<p>{{ diffImg.diffPercent }}</p>
+									<p>{{ diffImg.diffPercent | percentage:2 }}</p>
 									<p>{{ diffImg.viewport }}</p>
 									<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p>
 								</div>
@@ -110,7 +110,7 @@
 						    </div>
 						    <div class="thumbnail-caption">
 							    <p>{{ diffImg.websiteUrl }}</p>
-								<p>{{ diffImg.diffPercent }}</p>
+								<p>{{ diffImg.diffPercent | percentage:2 }}</p>
 								<p>{{ diffImg.captureTime | date:"MM/dd/yyyy @ h:mma" }}</p> 
 					  		</div>
 				  		</div>
