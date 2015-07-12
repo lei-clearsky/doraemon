@@ -21,11 +21,11 @@
   overflow: visible;
 }
 .diff-bars::-webkit-scrollbar-thumb {
-  background-color: #38A139;
+  background-color: #333;
   min-width: 30px;
 }
 .diff-bars::-webkit-scrollbar-thumb:hover {
-  background-color: #5b5b5b;
+  background-color: #808080;
 }
 .ls-bar {
 	width: 30px;
