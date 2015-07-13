@@ -14,7 +14,7 @@ var	testConfig = mongoose.model('TestConfig');
 var cronJob = require('../cronJob');
 module.exports = router;
 
-// cronJob.run();
+cronJob.run();
 
 router.get('/test/:id', function(req,res,next){
 	testConfig.getTestNamesForUser(req.params.id)
@@ -92,6 +92,66 @@ router.post('/', function (req, res, next) {
 });
 
 router.post('/bulkcreate', function (req, res, next) {
+// <<<<<<< HEAD
+// 	testConfig.crawlURL(req.body)
+// });
+
+
+
+// var intervalJob = new CronJob({
+//   	cronTime: '0 * * * * *',  // this is the timer, set to every minuite for testing purposes
+//   	onTick: function() {
+// 		// retrieving information about the date to be used later
+		
+// 		// currently using Weekday: 6, Hour: 10 as params for testing purposes
+// 		// var date = new Date();
+// 		var date = new Date('June 13, 2015 10:00:00');
+		
+// 		var hour = date.getHours();
+// 		var weekday = date.getDay();
+
+// 		console.log(chalk.magenta('Starting test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+// 		// searches TestConfig model and retrives URL objects
+// 		testConfig.findAllScheduledTests(10, 6).then(function(configs) {
+// 			var promises = [];
+
+// 			configs.forEach(function(config) {
+// 				promises.push(testConfig.runTestConfig(nightmare, config, date));
+// 			});
+
+// 			nightmare.run();
+
+// 			return Q.all(promises);
+// 		}).then(function() {
+// 			console.log(chalk.magenta('Finished with all jobs for Weekday: ' + weekday + ', Hour: ' + hour));
+// 		}).then(null, function(error) {
+// 		   	console.log(error);
+// 		});
+//   	},
+//   	start: false
+// });
+
+// intervalJob.start();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =======
 	testConfig.crawlURL(req.body).then(function(data) {
 		res.json(data);
 	}).then(null, function(err) {

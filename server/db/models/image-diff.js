@@ -95,10 +95,30 @@ schema.statics.useGMCompare = function(imageCaptures, diffPath) {
         file: diffPath // required
     };
 
-    gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
+
+    if (imageCaptures.lastImageCapture === null) {
+        return deferred.resolve(null);
+    }
+    gm.compare(imageCaptures.lastImageCapture.darkenImgURL, imageCaptures.newImageCapture.darkenImgURL, options, function (err, isEqual, equality, raw) {    
+
+    // gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
         if (err) {
             deferred.reject(err);
         }
+
+        // var output = {
+        //     percent: equality,
+        //     file: options.file,
+        //     // thumbnail: diffThumbnailPath,
+        //     // config: config,
+        //     newImg: imageCaptures.newImageCapture._id,
+        //     lastImg: imageCaptures.lastImageCapture._id
+        // };
+        
+        // utilities.removeImg(imageCaptures.lastImageCapture.imgURL)
+
+        // return deferred.resolve(output);
+
          
         var imageData = {
             isEqual: isEqual,
@@ -127,6 +147,7 @@ schema.statics.createThumbnail = function(diffPath, diffThumbnailPath) {
     return deferred.promise; 
 };
 
+
 schema.statics.saveImageDiff = function(output) {
     if (output === null)
         return;
@@ -148,18 +169,6 @@ schema.statics.saveImageDiff = function(output) {
 
     return this.create(diffImage);
 };
-
-
-// schema.statics.emailAlert = function() {
-
-    
-
-//     User.find({_id: output.config.userID}).then(function(user) {
-
-//     })
-    
-// }
-
 
 
 
