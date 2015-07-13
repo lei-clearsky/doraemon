@@ -1,11 +1,39 @@
 <section id="about">
-    <p>
-        This website--the very one at which you currently gaze--was created by a basic scaffolding
-        concocted at Fullstack Academy. Here are some of the people who make it all very real:
-    </p>
-    <carousel interval="2000">
-        <slide ng-repeat="image in images">
-            <img height="300" ng-src="{{ image }}" />
-        </slide>
-    </carousel>
+
+    <h3 align="center">Private Pixels - A Visual UI Test Automation Service</h3>
+    <br>
+    <br>
+
+    <span>An automatic visual UI testing and monitoring service built on the MEAN stack.</span>
+    <br>
+
+    <span>Our stack basically consists of:</span>
+    <ul>
+    	<li>Nightmare.js which is a headless browser using the Webkit render engine. Used to create snapshots of webpages.</li>
+    	<li>GraphicsMagick is an image manipulation tool able to run in node.js. Used to create a diff image of two snapshots.</li>
+    	<li>AWS is used to store our images.</li>
+    	<li>CronJob is used to schedule tasks at set intervals.</li>
+    	<li>Roboto is a web crawler used to find web pages on a site.</li> 
+    	<li>Angular, Bootstrap & Sass is used in the front end to create our dynamic UI.</li>
+    	<li>FSG was used as a basic MEAN stack scaffolding generator.</li>
+    </ul>
+
+	<span>
+    	At set intervals, we use nightmare.js to take a snapshot of a webpage at a given URL. With this current snapshot, we will then grab the previous snapshot taken at that webpage, then use GraphicsMagick to create a diff image of the two snapshots. That diff image is then posted in our dashboard and an alert is set if a substantial difference is calculated. Check out our repo <a href="https://github.com/lei-clearsky/doraemon">here</a>
+	</span>
+	<br>
+	<br>
+    <span>A Chrome Extension was also developed to test single page applications and web pages with dynamic UI features. Check out the Chrome Extension repo <a href="https://github.com/vatteh/doraemon_recorder">here</a></span>
+
+    <br>
+    <br>
+    <span>Team members include:</span>
+	
+	<div>
+		<div class='col-md-3 ' ng-repeat='info in contactInfo' style="text-align:center;">
+			<span style='font-size: 200%;'>{{info.name}}</span><br>
+			<a href="{{info.linkedIn}}"><i class="fa fa-linkedin" style="font-size: 300%; margin: 10px;"></i></a>
+			<a href="{{info.github}}"><i class="fa fa-github" style="font-size: 300%; margin: 10px;"></i></a>
+		</div>
+	</div>        
 </section>

@@ -1,5 +1,5 @@
 'use strict';
-app.directive('statsTest', function (RandomGreetings) {
+app.directive('statsTest', function () {
 
     return {
         restrict: 'A',

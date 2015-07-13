@@ -1,5 +1,5 @@
 'use strict';
-app.directive('circleChart', function (RandomGreetings) {
+app.directive('circleChart', function () {
 
     return {
         restrict: 'A',

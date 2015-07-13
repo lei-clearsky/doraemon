@@ -5,7 +5,7 @@
 
 	<div ng-repeat="diff in allDiffsByUser">
 		<h3>{{ diff.urlName }}</h3>
-			<div class="col-sm-4 col-md-1 col-no-padding" ng-click="openDiffModal(diff._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
+			<div class="col-xs-4 col-sm-2 col-md-1 col-no-padding" ng-click="openDiffModal(diff._id, 'lg', true, 'js/admin/dashboard/diff-modal.html', 'DiffModalCtrl')">
 		    	<div style="height: 150px; overflow: hidden;">
 		      		<img src="{{ diff.diffImgThumbnail | awsImg }}" alt="..." style="width: 100%;">
 		  		</div>
