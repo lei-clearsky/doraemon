@@ -1,18 +1,23 @@
 #home {
 	height: calc(100vh - 71px);
   position: relative;
-  h1, h2 {
+  h1, h2, h3 {
   	font-family: 'Raleway Dots', cursive;
     margin: 10px 0;
     text-align: center;
     color: #000;
   }
+
   h1 {
-    font-size: 40px;
-  }
-  h2 {
     font-size: 60px;
   }
+  h2 {
+    font-size: 40px;
+  }
+  h3 {
+    font-size: 30px;
+  }
+
   .see {
     width: 323px;
     height: 425px;

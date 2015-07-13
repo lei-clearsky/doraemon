@@ -1,5 +1,5 @@
 'use strict';
-app.directive('lsBar', function (RandomGreetings) {
+app.directive('lsBar', function () {
 
     return {
         restrict: 'A',
