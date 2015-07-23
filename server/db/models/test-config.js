@@ -13,12 +13,12 @@ var schema = new mongoose.Schema({
     name: {
         type: String,
         index: true,
-        require: true
+        required: true
     },
     URL: {
         type: String,
         index: true,
-        require: true
+        required: true
     },
     devURL: {
         type: String
@@ -33,7 +33,7 @@ var schema = new mongoose.Schema({
     viewport: {
         type: String,
         index: true,
-        require: true
+        required: true
     },
     dayFrequency: [{
         type: Number
@@ -44,11 +44,7 @@ var schema = new mongoose.Schema({
     userID: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
-// <<<<<<< HEAD
-//         index: true,
-//         require: true
-// =======
-        require: true,
+        required: true,
         index: true
     },
     teamID: {
@@ -73,10 +69,6 @@ var schema = new mongoose.Schema({
     }
 });
 
-// <<<<<<< HEAD
-// // schema.index({ userID: 1, name: 1, URL: 1, viewport: 1 }, { unique: true })
-
-// =======
 schema.index({userID: 1, name: 1, URL: 1, viewport: 1, testStepIndex: 1 }, { unique: true });
 
 schema.statics.getViewportsForURL = function(userID, testName, URL) {
@@ -253,57 +245,6 @@ schema.methods.runTestConfig = function(nightmare, date) {
     };
 
     // use nightmare to take a screenshot
-
-    // nightmare
-    //     .viewport(config.viewportWidth, config.viewportHeight)
-    //     .goto(config.URL)   
-    //     .wait() 
-    //     .screenshot(snapshotPath)
-    //     .use(function() {
-    //         console.log(chalk.cyan('Starting testConfig job - ' + config._id));
-
-    //         utilities.saveToAWS(snapshotPath).then(function(output) {
-    //             console.log(chalk.green('Screenshot saved to AWS...'));
-    //             return imageCapture.saveImageCapture(config, snapshotPath);
-    //         }).then(function(imageCaptures) {
-    //             console.log(chalk.green('Creating Diff Screenshot...'));
-    //             return imageDiff.createDiff(config, imageCaptures, date);
-    //         }).then(function(output) {
-    //              if (output) {
-    //                 console.log(chalk.green('Creating Diff Screenshot Thumbnail...'));
-    //                 return utilities.createThumbnail(output);
-    //             } else {
-    //                 console.log(chalk.yellow('No previous snapshot found'));
-    //                 return null;
-    //             }               
-    //         }).then(function(output) {
-    //             if (output) {
-    //                 console.log(chalk.green('Diff Screenshot created...'));
-    //                 return imageDiff.saveImageDiff(output);
-    //             } else {
-    //                 console.log(chalk.yellow('No previous snapshot found'));
-    //                 return null;
-    //             }
-    //         }).then(function(newImageDiff) {
-    //             if (newImageDiff) {
-    //                 console.log(chalk.green('New imageDiff document saved...'));
-    //                 return utilities.saveToAWS(newImageDiff.diffImgURL).then(function(){
-    //                     return utilities.saveToAWS(newImageDiff.diffImgThumbnail);
-    //                 }).then(function() {
-    //                     utilities.removeImg(newImageDiff.diffImgURL);
-    //                     return utilities.removeImg(newImageDiff.diffImgThumbnail);
-    //                 });
-    //             }                
-    //             return null;
-    //         }).then(function(output) {
-    //             if (output) {
-    //                 console.log(chalk.green('Diff Screenshot saved to AWS...'));
-    //             }
-    //             console.log(chalk.cyan('Finished testConfig job - ' + config._id));
-    //             return deferred.resolve(output);
-    //         }).then(null, function(err) {
-    //             deferred.reject(err);
-
     if(this.inTestCase) {
         eval(that.parseSteps());
     } else {
