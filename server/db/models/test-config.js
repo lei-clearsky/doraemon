@@ -140,7 +140,7 @@ schema.methods.getDiffsByDate = function(date, name) {
         userID: this.userID
     };
 
-    if (name !== null) query.testName = name;
+    if (name !== undefined) query.testName = name;
     
     return mongoose.model('ImageDiff')
             .find(query)

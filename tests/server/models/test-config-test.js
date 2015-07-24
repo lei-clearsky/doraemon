@@ -13,12 +13,36 @@ require('../../../server/db/models/test-config');
 
 var User = mongoose.model('User');
 var TestConfig = mongoose.model('TestConfig');
+var ImageDiff = mongoose.model('ImageDiff');
 
 describe('TestConfig model', function () {
+    var user1, user2, user3;
+
     beforeEach('Establish DB connection', function (done) {
-        if (mongoose.connection.db) 
+        if (!mongoose.connection.db) 
+            mongoose.connect(dbURI);
+
+        var obj1 = {
+            email: 'test@fsa.com',
+            password: 'test'
+        };
+
+        var obj2 = {
+            email: 'test2@fsa.com',
+            password: 'test2'
+        };
+
+        var obj3 = {
+            email: 'test3@fsa.com',
+            password: 'test3'
+        };
+
+        return User.create([obj1, obj2, obj3]).then(function(users) {
+            user1 = users[0];
+            user2 = users[1];
+            user3 = users[2];
             return done();
-        mongoose.connect(dbURI, done);
+        });
     });
 
     afterEach('Clear test database', function (done) {
@@ -33,26 +57,16 @@ describe('TestConfig model', function () {
 
         it('should return a new testConfig document', function () {
 
-            var userID;
-            var obj = {
-                email: 'test@fsa.com',
-                password: 'test'
+            var obj1 = {
+                name: 'Test 1',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id
             };
 
-            return User.create(obj).then(function(user) {
-                userID = user._id;
-                var obj1 = {
-                    name: 'Test 1',
-                    URL: 'https://www.google.com/',
-                    viewport: '1024x768',
-                    dayFrequency: [0],
-                    hourFrequency: [0],
-                    userID: user._id,
-                    teamID: null
-                };
-
-                return TestConfig.create(obj1);
-            }).then(function(data) {
+            return TestConfig.create(obj1).then(function(data) {
                 expect(data).to.have.deep.property('name','Test 1');
                 expect(data).to.have.deep.property('URL','https://www.google.com/');
                 expect(data).to.have.deep.property('viewport','1024x768');
@@ -60,8 +74,7 @@ describe('TestConfig model', function () {
                 expect(data.hourFrequency).to.have.members([0]);
                 expect(data.viewportWidth).to.be.equal(1024);
                 expect(data.viewportHeight).to.be.equal(768);
-                expect(data).to.have.deep.property('userID',userID);
-                expect(data).to.have.deep.property('teamID',null);
+                expect(data).to.have.deep.property('userID',user1._id);
                 expect(data).to.have.deep.property('enabled',false);
                 expect(data).to.have.deep.property('testStepIndex',-1);
                 expect(data).to.have.deep.property('threshold',10);
@@ -70,48 +83,38 @@ describe('TestConfig model', function () {
 
         it('should return multiple new testConfig documents', function () {
             
-            var obj = {
-                email: 'test@fsa.com',
-                password: 'test'
+            var obj1 = {
+                name: 'Test 1',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id
             };
 
-            return User.create(obj).then(function(user) {
-                var obj1 = {
-                    name: 'Test 1',
-                    URL: 'https://www.google.com/',
-                    viewport: '1024x768',
-                    dayFrequency: [0],
-                    hourFrequency: [0],
-                    userID: user._id,
-                    teamID: null
-                };
+            var obj2 = {
+                name: 'Test 2',
+                URL: 'https://www.yahoo.com/',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user1._id
+            };
 
-                var obj2 = {
-                    name: 'Test 2',
-                    URL: 'https://www.yahoo.com/',
-                    viewport: '1024x768',
-                    dayFrequency: [1],
-                    hourFrequency: [1],
-                    userID: user._id,
-                    teamID: null
-                };
+            var obj3 = {
+                name: 'Test 3',
+                URL: 'https://www.bing.com/',
+                viewport: '1024x768',
+                dayFrequency: [2],
+                hourFrequency: [2],
+                userID: user1._id
+            };
 
-                var obj3 = {
-                    name: 'Test 3',
-                    URL: 'https://www.bing.com/',
-                    viewport: '1024x768',
-                    dayFrequency: [2],
-                    hourFrequency: [2],
-                    userID: user._id,
-                    teamID: null
-                };
-
-                return TestConfig.create([obj1, obj2, obj3]);
-            }).then(function() {
-                return TestConfig.find({}).exec().then(function(data) {
-                    expect(data).to.have.length(3);
-                });
-            }); 
+            return TestConfig.create([obj1, obj2, obj3]).then(function() {
+                return TestConfig.find({}).exec();
+            }).then(function(data) {
+                expect(data).to.have.length(3);
+            });; 
         });
 
         it('should NOT return a new testConfig document (no userID, viewport, URL, or name)', function () {
@@ -149,26 +152,16 @@ describe('TestConfig model', function () {
 
             it('should return a testConfig document', function () {
 
-                var userID;
                 var obj = {
-                    email: 'test@fsa.com',
-                    password: 'test'
+                    name: 'Test Google',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [0,4],
+                    hourFrequency: [0,5],
+                    userID: user1._id
                 };
 
-                return User.create(obj).then(function(user) {
-                    userID = user._id;
-                    var obj = {
-                        name: 'Test Google',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0,4],
-                        hourFrequency: [0,5],
-                        userID: user._id,
-                        teamID: null
-                    };
-
-                    return TestConfig.create(obj);
-                }).then(function(data) {
+                return TestConfig.create(obj).then(function(data) {
                     return TestConfig.findAllScheduledTests(0,0);
                 }).then(function(data) {
                     expect(data).to.have.length(1);
@@ -179,74 +172,59 @@ describe('TestConfig model', function () {
                     expect(data[0].hourFrequency).to.include.members([5]);
                     expect(data[0].viewportWidth).to.be.equal(1024);
                     expect(data[0].viewportHeight).to.be.equal(768);
-                    expect(data[0].userID.toString()).to.be.equal(userID.toString());
-
-                    // expect(data[0]).to.have.deep.property('userID', userID); // this fails but I have no idea why
-                    expect(data[0]).to.have.deep.property('teamID', null);
+                    expect(data[0].userID.toString()).to.be.equal(user1._id.toString());
+                    // expect(data[0]).to.have.deep.property('userID', user1._id); // this fails but I have no idea why
                 }); 
             });
 
             it('findAllScheduledTests should return multiple testConfig documents', function () {
 
-                var obj = {
-                    email: 'test@fsa.com',
-                    password: 'test'
+                var obj1 = {
+                    name: 'Test Google 1',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [0],
+                    hourFrequency: [0],
+                    userID: user1._id
                 };
 
-                return User.create(obj).then(function(user) {
+                var obj2 = {
+                    name: 'Test Google 2',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [1],
+                    hourFrequency: [0],
+                    userID: user1._id
+                };
 
-                    var obj1 = {
-                        name: 'Test Google 1',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [0],
-                        userID: user._id,
-                        teamID: null
-                    };
+                var obj3 = {
+                    name: 'Test Google 3',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [0,2,4],
+                    hourFrequency: [0,10,16],
+                    userID: user1._id
+                };
 
-                    var obj2 = {
-                        name: 'Test Google 2',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [0],
-                        userID: user._id,
-                        teamID: null
-                    };
+                var obj4 = {
+                    name: 'Test Google 4',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [0],
+                    hourFrequency: [1],
+                    userID: user1._id
+                };
 
-                    var obj3 = {
-                        name: 'Test Google 3',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0,2,4],
-                        hourFrequency: [0,10,16],
-                        userID: user._id,
-                        teamID: null
-                    };
+                var obj5 = {
+                    name: 'Test Google 5',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [1],
+                    hourFrequency: [1],
+                    userID: user1._id
+                };
 
-                    var obj4 = {
-                        name: 'Test Google 4',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [1],
-                        userID: user._id,
-                        teamID: null
-                    };
-
-                    var obj5 = {
-                        name: 'Test Google 5',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [1],
-                        userID: user._id,
-                        teamID: null
-                    };
-
-                    return TestConfig.create([obj1, obj2, obj3, obj4, obj5]);
-                }).then(function(data) {
+                return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
                     return TestConfig.findAllScheduledTests(0,0);
                 }).then(function(data) {
                     expect(data).to.have.length(2);
@@ -256,170 +234,402 @@ describe('TestConfig model', function () {
                     expect(data[1].hourFrequency).to.include.members([0]);
                 }); 
             });
+        });
+    });
 
-            it('getSharedConfigs should return a testConfig document', function () {
-                var userID1, userID2;
-                var obj1 = {
-                    email: 'test@fsa.com',
-                    password: 'test'
-                };
+    describe('Other TestConfig method tests', function() {
+        
+        it('getViewportsForURL should return testConfig documents', function () {
 
-                var obj2 = {
-                    email: 'test2@fsa.com',
-                    password: 'test2'
-                };
+            var obj1 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                threshold: 20
+            };
 
-                return User.create([obj1,obj2]).then(function(users) {
-                    userID1 = users[0]._id;
-                    userID2 = users[1]._id;
+            var obj2 = {
+                name: 'Test Yahoo',
+                URL: 'https://www.yahoo.com/',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [0],
+                userID: user1._id
+            };
 
-                    var obj1 = {
-                        name: 'Test Google',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [0],
-                        userID: userID1,
-                        teamID: null,
-                        threshold: 20
-                    };
+            var obj3 = {
+                name: 'Test Amazon',
+                URL: 'https://www.amazon.com/',
+                viewport: '1024x768',
+                dayFrequency: [0,2,4],
+                hourFrequency: [0,10,16],
+                userID: user2._id
+            };
 
-                    var obj2 = {
-                        name: 'Test Yahoo',
-                        URL: 'https://www.yahoo.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [0],
-                        userID: userID1,
-                        teamID: null
-                    };
+            var obj4 = {
+                name: 'Test Facebook',
+                URL: 'https://www.facebook.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [1],
+                userID: user2._id
+            };
 
-                    var obj3 = {
-                        name: 'Test Amazon',
-                        URL: 'https://www.amazon.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0,2,4],
-                        hourFrequency: [0,10,16],
-                        userID: userID2,
-                        teamID: null
-                    };
+            var obj5 = {
+                name: 'Test Twitter',
+                URL: 'https://www.twitter.com/',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user2._id,
+                enabled: false
+            };
 
-                    var obj4 = {
-                        name: 'Test Facebook',
-                        URL: 'https://www.facebook.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [1],
-                        userID: userID2,
-                        teamID: null
-                    };
-
-                    var obj5 = {
-                        name: 'Test Twitter',
-                        URL: 'https://www.twitter.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [1],
-                        userID: userID2,
-                        teamID: null,
-                        enabled: false
-                    };
-
-                    return TestConfig.create([obj1, obj2, obj3, obj4, obj5]);
-                }).then(function(data) {
-                    return TestConfig.getSharedConfigs(userID1, 'Test Google', 'https://www.google.com/');
-                }).then(function(data) {
-                    expect(data).to.have.deep.property('enabled', false);
-                    expect(data.hourFrequency).to.include.members([0]);
-                    expect(data.dayFrequency).to.include.members([0]);
-                    expect(data).to.have.deep.property('threshold', 20);
-
-                    return TestConfig.getSharedConfigs(userID2, 'Test Google', 'https://www.google.com/');
-                }).then(function(data) {
-                    expect(data).to.be.null;
-                });
+            return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
+                return TestConfig.getViewportsForURL(user1._id, 'Test Google', 'https://www.google.com/');
+            }).then(function(data) {
+                expect(data).to.have.length(1);
+                expect(data).to.include.members(['1024x768']);
+                return TestConfig.getViewportsForURL(user2._id, 'Test Google', 'https://www.google.com/');
+            }).then(function(data) {
+                expect(data).to.have.length(0);
             });
+        });
 
-            it('getViewportsForURL should return a testConfig documents', function () {
-                var userID1, userID2;
-                var obj1 = {
-                    email: 'test@fsa.com',
-                    password: 'test'
-                };
+        it('getURLsForTest should return urls', function () {
 
-                var obj2 = {
-                    email: 'test2@fsa.com',
-                    password: 'test2'
-                };
+            var obj1 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                threshold: 20
+            };
 
-                return User.create([obj1,obj2]).then(function(users) {
-                    userID1 = users[0]._id;
-                    userID2 = users[1]._id;
+            var obj2 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '640x420',
+                dayFrequency: [1],
+                hourFrequency: [0],
+                userID: user1._id
+            };
 
-                    var obj1 = {
-                        name: 'Test Google',
-                        URL: 'https://www.google.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [0],
-                        userID: userID1,
-                        teamID: null,
-                        threshold: 20
-                    };
+            var obj3 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/mail',
+                viewport: '640x420',
+                dayFrequency: [0,2,4],
+                hourFrequency: [0,10,16],
+                userID: user1._id
+            };
 
-                    var obj2 = {
-                        name: 'Test Yahoo',
-                        URL: 'https://www.yahoo.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [0],
-                        userID: userID1,
-                        teamID: null
-                    };
+            var obj4 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [1],
+                userID: user2._id
+            };
 
-                    var obj3 = {
-                        name: 'Test Amazon',
-                        URL: 'https://www.amazon.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0,2,4],
-                        hourFrequency: [0,10,16],
-                        userID: userID2,
-                        teamID: null
-                    };
+            var obj5 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/maps',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user2._id,
+                enabled: false
+            };
 
-                    var obj4 = {
-                        name: 'Test Facebook',
-                        URL: 'https://www.facebook.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [0],
-                        hourFrequency: [1],
-                        userID: userID2,
-                        teamID: null
-                    };
+            return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
+                return TestConfig.getURLsForTest(user1._id, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.have.length(2);
+                expect(data).to.include.members([ 'https://www.google.com/', 'https://www.google.com/mail' ]);
+                return TestConfig.getURLsForTest(user2._id, 'Test Yahoo');
+            }).then(function(data) {
+                expect(data).to.have.length(0);
+                return TestConfig.getURLsForTest(user1._id, 'Test Yahoo');
+            }).then(function(data) {
+                expect(data).to.have.length(0);
+            });;
+        });
 
-                    var obj5 = {
-                        name: 'Test Twitter',
-                        URL: 'https://www.twitter.com/',
-                        viewport: '1024x768',
-                        dayFrequency: [1],
-                        hourFrequency: [1],
-                        userID: userID2,
-                        teamID: null,
-                        enabled: false
-                    };
+        it('getTestNamesForUser should return test names', function () {
 
-                    return TestConfig.create([obj1, obj2, obj3, obj4, obj5]);
-                }).then(function(data) {
-                    return TestConfig.getViewportsForURL(userID1, 'Test Google', 'https://www.google.com/');
-                }).then(function(data) {
-                    expect(data).to.have.length(1);
-                    expect(data).to.include.members(['1024x768']);
-                    return TestConfig.getViewportsForURL(userID2, 'Test Google', 'https://www.google.com/');
-                }).then(function(data) {
-                    expect(data).to.have.length(0);
-                });
+            var obj1 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                threshold: 20
+            };
+
+            var obj2 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/mail',
+                viewport: '640x420',
+                dayFrequency: [1],
+                hourFrequency: [0],
+                userID: user1._id
+            };
+
+            var obj3 = {
+                name: 'Test Yahoo',
+                URL: 'https://www.yahoo.com/mail',
+                viewport: '640x420',
+                dayFrequency: [0,2,4],
+                hourFrequency: [0,10,16],
+                userID: user1._id
+            };
+
+            var obj4 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [1],
+                userID: user2._id
+            };
+
+            var obj5 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '640x420',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user2._id,
+                enabled: false
+            };
+
+            return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
+                return TestConfig.getTestNamesForUser(user1._id);
+            }).then(function(data) {
+                expect(data).to.have.length(2);
+                expect(data).to.include.members(['Test Google', 'Test Yahoo']);
+                return TestConfig.getTestNamesForUser(user2._id);
+            }).then(function(data) {
+                expect(data).to.have.length(1);
+                expect(data).to.include.members(['Test Google']);
+                return TestConfig.getTestNamesForUser(user3._id);
+            }).then(function(data) {
+                expect(data).to.have.length(0);
             });
+        });
 
+        it('getTestNameRootURL should return an object', function () {
+
+            var obj1 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                rootURL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                threshold: 20
+            };
+
+            var obj2 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/mail',
+                rootURL: 'https://www.google.com/',
+                viewport: '640x420',
+                dayFrequency: [1],
+                hourFrequency: [0],
+                userID: user1._id
+            };
+
+            var obj3 = {
+                name: 'Test Yahoo',
+                URL: 'https://www.yahoo.com/mail',
+                rootURL: 'https://www.yahoo.com/',
+                viewport: '640x420',
+                dayFrequency: [0,2,4],
+                hourFrequency: [0,10,16],
+                userID: user1._id
+            };
+
+            var obj4 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                rootURL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [1],
+                userID: user2._id
+            };
+
+            var obj5 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/docs',
+                rootURL: 'https://www.google.com/',
+                viewport: '640x420',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user2._id,
+                enabled: false
+            };
+
+            return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
+                return TestConfig.getTestNameRootURL(user1._id, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.have.deep.property('name', 'Test Google');
+                expect(data).to.have.deep.property('rootURL', 'https://www.google.com/');
+                expect(data).to.have.deep.property('_id', data._id);
+                return TestConfig.getTestNameRootURL(user2._id, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.have.deep.property('name', 'Test Google');
+                expect(data).to.have.deep.property('rootURL', 'https://www.google.com/');
+                expect(data).to.have.deep.property('_id', data._id);
+                return TestConfig.getTestNameRootURL(user3._id, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.be.null;
+            });
+        });
+
+        it('getSharedConfigs should return a testConfig document', function () {
+
+            var obj1 = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                threshold: 20
+            };
+
+            var obj2 = {
+                name: 'Test Yahoo',
+                URL: 'https://www.yahoo.com/',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [0],
+                userID: user1._id
+            };
+
+            var obj3 = {
+                name: 'Test Amazon',
+                URL: 'https://www.amazon.com/',
+                viewport: '1024x768',
+                dayFrequency: [0,2,4],
+                hourFrequency: [0,10,16],
+                userID: user2._id
+            };
+
+            var obj4 = {
+                name: 'Test Facebook',
+                URL: 'https://www.facebook.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [1],
+                userID: user2._id
+            };
+
+            var obj5 = {
+                name: 'Test Twitter',
+                URL: 'https://www.twitter.com/',
+                viewport: '1024x768',
+                dayFrequency: [1],
+                hourFrequency: [1],
+                userID: user2._id,
+                enabled: false
+            };
+
+            return TestConfig.create([obj1, obj2, obj3, obj4, obj5]).then(function(data) {
+                return TestConfig.getSharedConfigs(user1._id, 'Test Google', 'https://www.google.com/');
+            }).then(function(data) {
+                expect(data).to.have.deep.property('enabled', false);
+                expect(data.hourFrequency).to.include.members([0]);
+                expect(data.dayFrequency).to.include.members([0]);
+                expect(data).to.have.deep.property('threshold', 20);
+
+                return TestConfig.getSharedConfigs(user2._id, 'Test Google', 'https://www.google.com/');
+            }).then(function(data) {
+                expect(data).to.be.null;
+            });
+        });
+
+        it('getDiffsByDate should return ImageDiffs documents', function () {
+            var date1 = new Date('June 13, 2015 10:00:00');
+            var date2 = new Date('June 14, 2015 10:00:00');
+            var date3 = new Date('June 15, 2015 10:00:00');
+            var testConfig;
+
+            var obj1 = {
+                captureTime: date1,
+                testName: 'Test Google',
+                userID: user1._id
+            };
+
+            var obj2 = {
+                captureTime: date1,
+                testName: 'Test Google',
+                userID: user1._id
+            };
+
+            var obj3 = {
+                captureTime: date1,
+                testName: 'Test Google 2',
+                userID: user1._id
+            };
+
+            var obj4 = {
+                captureTime: date2,
+                testName: 'Test Google',
+                userID: user2._id
+            };
+
+            var obj5 = {
+                captureTime: date2,
+                testName: 'Test Google',
+                userID: user2._id
+            };
+
+            return ImageDiff.create([obj1, obj2, obj3, obj4, obj5]).then(function() {
+                var obj1 = {
+                    name: 'Test Google',
+                    URL: 'https://www.google.com/',
+                    viewport: '1024x768',
+                    dayFrequency: [0],
+                    hourFrequency: [0],
+                    userID: user1._id,
+                    threshold: 20
+                };
+
+                return TestConfig.create(obj1);
+            }).then(function(data) {
+                testConfig = data;
+                return testConfig.getDiffsByDate(date1, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.have.length(2);
+                expect(data[0].userID.toString()).to.be.equal(user1._id.toString());
+                expect(data[0]).to.have.deep.property('testName', 'Test Google');
+                expect(data[1].userID.toString()).to.be.equal(user1._id.toString());
+                expect(data[1]).to.have.deep.property('testName', 'Test Google');
+                return testConfig.getDiffsByDate(date1);
+            }).then(function(data) {
+                expect(data).to.have.length(3);
+                expect(data[0].userID.toString()).to.be.equal(user1._id.toString());
+                expect(data[0]).to.have.deep.property('testName', 'Test Google');
+                expect(data[1].userID.toString()).to.be.equal(user1._id.toString());
+                expect(data[1]).to.have.deep.property('testName', 'Test Google');
+                expect(data[2].userID.toString()).to.be.equal(user1._id.toString());
+                expect(data[2]).to.have.deep.property('testName', 'Test Google 2');
+                return testConfig.getDiffsByDate(date2, 'Test Google');
+            }).then(function(data) {
+                expect(data).to.have.length(0);
+            });
         });
     });
 });
