@@ -200,6 +200,7 @@ describe('ImageCapture model', function () {
 
                     return ImageCapture.saveImageCapture(newTestConfig, snapshotPath);
                 }).then(function(imageCaptures) {
+                    // console.log(imageCaptures);
                     expect(imageCaptures).to.be.a('object');
                     expect(imageCaptures.lastImageCapture).to.be.equal(null);
                     expect(imageCaptures.newImageCapture).to.be.a('object');

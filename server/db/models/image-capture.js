@@ -36,9 +36,6 @@ schema.statics.searchForLastSaved = function(url, userID, viewport, testConfigID
     return this.findOne({ 
                 websiteURL: url,
                 userID: userID,
-            //     viewport: viewport
-            // }).sort({captureTime: 'desc'}).exec();
-
                 viewport: viewport,
                 testConfigID: testConfigID
             }).sort({captureTime: 'desc'}).exec(function(err, docs) {
@@ -51,16 +48,19 @@ schema.statics.searchForLastSaved = function(url, userID, viewport, testConfigID
 };
 
 schema.statics.saveImageCapture = function(config, snapshotPath) {
-    var lastImageCapture, newImageCapture;
+    var lastImageCapture;
     // searches for last screenshot taken
     return this
         .searchForLastSaved(config.URL, config.userID, config.viewport, config._id) 
         .then(function(lastImg) {
             lastImageCapture = lastImg;
+            if (lastImg) {
+                return utilities.darkenImg(snapshotPath);
+            } else {
+                return null;
+            }
 
-            return utilities.darkenImg(snapshotPath)
-        })
-        .then(function(darkenSnapshotPath) {
+        }).then(function(darkenSnapshotPath) {
             // creating temporary object to be stored in database
             var newImage = {
                 websiteURL: config.URL,
@@ -72,8 +72,6 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
                 testName: config.name
             };
 
-            // lastImageCapture = lastImg;
-            // creates new image in database
             return mongoose.model('ImageCapture').create(newImage);
         }).then(function(newImg) {
             return { newImageCapture: newImg, lastImageCapture: lastImageCapture };
@@ -83,12 +81,3 @@ schema.statics.saveImageCapture = function(config, snapshotPath) {
 };
 
 mongoose.model('ImageCapture', schema);
-
-
-
-
-
-
-
-
-

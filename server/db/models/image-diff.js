@@ -5,7 +5,6 @@ var Q = require('q');
 var gm = require('gm');
 var path = require('path');
 var fs = require('fs');
-// var User = mongoose.model('User');
 
 var schema = new mongoose.Schema({
     captureTime: { 
@@ -101,24 +100,9 @@ schema.statics.useGMCompare = function(imageCaptures, diffPath) {
     }
     gm.compare(imageCaptures.lastImageCapture.darkenImgURL, imageCaptures.newImageCapture.darkenImgURL, options, function (err, isEqual, equality, raw) {    
 
-    // gm.compare(imageCaptures.lastImageCapture.imgURL, imageCaptures.newImageCapture.imgURL, options, function (err, isEqual, equality, raw) {    
         if (err) {
             deferred.reject(err);
         }
-
-        // var output = {
-        //     percent: equality,
-        //     file: options.file,
-        //     // thumbnail: diffThumbnailPath,
-        //     // config: config,
-        //     newImg: imageCaptures.newImageCapture._id,
-        //     lastImg: imageCaptures.lastImageCapture._id
-        // };
-        
-        // utilities.removeImg(imageCaptures.lastImageCapture.imgURL)
-
-        // return deferred.resolve(output);
-
          
         var imageData = {
             isEqual: isEqual,

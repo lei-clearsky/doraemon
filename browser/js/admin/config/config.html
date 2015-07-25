@@ -24,14 +24,14 @@
                             <p class="input-helper">Production site. (e.g. yahoo.com)</p>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <div class="form-group">            
                             <input type="text" name="formTestRootDevURL" ng-model="configTest.devURL" disabled>
                             <span style="color:red" ng-show="submitAttempted && configTest.devURL.length === 0">Please name your UI test dev URL!</span>
                             <label for="formTestRootDevURL">http://</label><i class="bar"></i>
                             <p class="input-helper">Development site. (e.g. localhost:3000)</p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- row end -->
                 <!-- row start -->
@@ -191,13 +191,13 @@
                 <button type="button" class="btn btn-success btn-large" ng-click="submitBulk()">Save</button>
                 
                 <success-alert ng-show="showSuccessAlert"></success-alert>
+                <progress-alert ng-show="showProgressAlert"></progress-alert>
+
             </form>
         </section>
         </div>
     </tab>
 <!-- End of Buld Create Test -->
-
-
 
     <tab heading="Config Tests">
         <accordion class="admin-config-listing">

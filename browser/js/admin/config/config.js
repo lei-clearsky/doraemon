@@ -82,7 +82,9 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
     $scope.maxDepthOptions = maxDepthOptions;
     
     $scope.showSuccessAlert = false;
+    $scope.showProgressAlert = false;
     $scope.testsByUserID = [];
+    $scope.testsCreated = 0;
 
     $scope.addPath = function() {
         $scope.config.push({
@@ -162,7 +164,8 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             });                
         });
 
-        $q.all(promises).then(function() {
+        $q.all(promises).then(function(data) {
+            $scope.testsCreated = data.length;
             $scope.showSuccessAlert = true;
             $scope.submitAttempted = false;
             $scope.configTest = {
@@ -200,8 +203,12 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
             userID: currentUser._id
         };
 
-        Config.createBulk(object).then(function() {
+        $scope.showProgressAlert = true;
+
+        Config.createBulk(object).then(function(data) {
             $scope.showSuccessAlert = true;
+            $scope.showProgressAlert = false;
+            $scope.testsCreated = data;
             $scope.submitAttemptedBulk = false;
             $scope.configBulkTest = {
                 name: '',
