@@ -5,6 +5,7 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 var mongoose = require('mongoose');
+var Nightmare = require('nightmare');
 
 require('../../../server/db/models/user');
 require('../../../server/db/models/image-capture');
@@ -14,6 +15,7 @@ require('../../../server/db/models/test-config');
 var User = mongoose.model('User');
 var TestConfig = mongoose.model('TestConfig');
 var ImageDiff = mongoose.model('ImageDiff');
+var ImageCapture = mongoose.model('ImageCapture');
 
 describe('TestConfig model', function () {
     var user1, user2, user3;
@@ -760,6 +762,80 @@ describe('TestConfig model', function () {
             
             return TestConfig.crawlURL(obj1).then(function(data) {
                 expect(data).to.be.equal(2);
+            }); 
+        });
+    });
+
+    describe('runTestConfig method', function () {
+
+        var AWSkeys = require('../../../server/app/routes/test-config/AWSkeys'); 
+        process.env.AWS_ACCESS_KEY_ID = AWSkeys.accessKeyId;
+        process.env.AWS_SECRET_ACCESS_KEY = AWSkeys.secretAccessKey;
+
+        var AWS = require('aws-sdk'); 
+        var s3 = new AWS.S3({params: {Bucket: 'capstone-doraemon'}});
+        AWS.config.region = AWSkeys.region; 
+
+        it('should exist', function () {
+            var obj = {
+                name: 'Test Google',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id
+            };
+
+            return TestConfig.create(obj).then(function(config) {
+                expect(config.runTestConfig).to.be.a('function');
+            })
+        });
+
+        it('should run a single testConfig document', function () {
+            var nightmare = new Nightmare();
+            var date = new Date('June 13, 2015 10:00:00');
+            var testConfig;
+            var obj = {
+                name: 'Test-Config test',
+                URL: 'https://www.google.com/',
+                viewport: '1024x768',
+                dayFrequency: [0],
+                hourFrequency: [0],
+                userID: user1._id,
+                enabled: true
+            };
+
+            this.timeout(20000);
+
+            return TestConfig.create(obj).then(function(config) {
+                testConfig = config;
+                nightmare.run();
+                return testConfig.runTestConfig(nightmare, date);
+            }).then(function() {
+                return ImageCapture.find({}).exec();
+            }).then(function(data) {
+                expect(data).to.have.length(1);
+                expect(data[0]).to.have.deep.property('websiteURL','https://www.google.com/');
+                expect(data[0]).to.have.deep.property('viewport','1024x768');
+                expect(data[0]).to.have.deep.property('testName','Test-Config test');
+                expect(data[0].testConfigID.toString()).to.be.equal(testConfig._id.toString());
+
+                nightmare.run();
+                return testConfig.runTestConfig(nightmare, date);
+            }).then(function() {
+                return ImageCapture.find({}).exec();
+            }).then(function(data) {
+                expect(data).to.have.length(2);
+                expect(data[0]).to.have.deep.property('websiteURL','https://www.google.com/');
+                expect(data[0]).to.have.deep.property('viewport','1024x768');
+                expect(data[0]).to.have.deep.property('testName','Test-Config test');
+                expect(data[0].testConfigID.toString()).to.be.equal(testConfig._id.toString());
+                expect(data[1]).to.have.deep.property('websiteURL','https://www.google.com/');
+                expect(data[1]).to.have.deep.property('viewport','1024x768');
+                expect(data[1]).to.have.deep.property('testName','Test-Config test');
+                expect(data[1].testConfigID.toString()).to.be.equal(testConfig._id.toString());
+
+                // return testConfig.runTestConfig(nightmare, date);
             }); 
         });
     });

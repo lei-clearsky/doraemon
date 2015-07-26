@@ -98,6 +98,7 @@ schema.statics.useGMCompare = function(imageCaptures, diffPath) {
     if (imageCaptures.lastImageCapture === null) {
         return deferred.resolve(null);
     }
+
     gm.compare(imageCaptures.lastImageCapture.darkenImgURL, imageCaptures.newImageCapture.darkenImgURL, options, function (err, isEqual, equality, raw) {    
 
         if (err) {

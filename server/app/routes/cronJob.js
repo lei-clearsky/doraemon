@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Nightmare = require('nightmare');
 var nightmare = new Nightmare();
 var CronJob = require('cron').CronJob;
-var testConfig = mongoose.model('TestConfig');
+var TestConfig = mongoose.model('TestConfig');
 
 var Q = require('q');
 var chalk = require('chalk');
@@ -21,7 +21,7 @@ var obj = {
                 var weekday = date.getDay();
 
                 // searches TestConfig model and retrives URL objects
-                testConfig.findAllScheduledTests(hour, weekday).then(function(tests) {
+                TestConfig.findAllScheduledTests(hour, weekday).then(function(tests) {
 
                     console.log(chalk.magenta('Starting ' + tests.length + ' test-config jobs for Weekday: ' + weekday + ', Hour: ' + hour));
                     nightmare.run();

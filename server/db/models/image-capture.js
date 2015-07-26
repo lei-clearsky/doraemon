@@ -16,7 +16,7 @@ var schema = new mongoose.Schema({
     imgURL: {
         type: String
     },
-    darkenImgURL : {
+    darkenImgURL: {
         type: String
     },
     testName: {
@@ -50,16 +50,9 @@ schema.statics.searchForLastSaved = function(url, userID, viewport, testConfigID
 schema.statics.saveImageCapture = function(config, snapshotPath) {
     var lastImageCapture;
     // searches for last screenshot taken
-    return this
-        .searchForLastSaved(config.URL, config.userID, config.viewport, config._id) 
-        .then(function(lastImg) {
+    return this.searchForLastSaved(config.URL, config.userID, config.viewport, config._id).then(function(lastImg) {
             lastImageCapture = lastImg;
-            if (lastImg) {
-                return utilities.darkenImg(snapshotPath);
-            } else {
-                return null;
-            }
-
+            return utilities.darkenImg(snapshotPath);
         }).then(function(darkenSnapshotPath) {
             // creating temporary object to be stored in database
             var newImage = {
