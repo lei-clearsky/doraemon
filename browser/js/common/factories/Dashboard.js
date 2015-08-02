@@ -208,7 +208,6 @@ app.factory('Dashboard', function ($http) {
         var diffPercentArr = [];
         var percObjArr = [];
         diffsOneTest.forEach(function(diff, index) {
-            console.log('diff: ', diff);
             if (diff.diffPercent*100 > diff.threshold) {
                 alertsOneTest.push(diff);
             }

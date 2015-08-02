@@ -54,15 +54,14 @@
 				word-wrap: break-word;
 			}
 			&:after {
-				content:"";
+				content: "";
 				position: absolute;
 				top: 100%;
-				left:50%;
-				transform: translateX(-50%);
-				border-width: 6px 6px 6px 6px;
-				border-style: solid;
-				z-index: 100001;
-				border-color: #525252 transparent transparent transparent;
+				left: 50%;
+				transform: translateX(-50%) translateY(-50%) rotate(45deg);
+				width:10px;
+				height:10px;
+				background:#525252;
 			}
 		}
 		&:hover .ls-bar-info {
