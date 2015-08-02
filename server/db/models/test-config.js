@@ -246,9 +246,6 @@ schema.methods.runTestConfig = function(nightmare, date) {
     }
 
     var that = this;
-    var passStuff = function() {
-        that.processImages(snapshotPath, date, deferred);
-    };
 
     // use nightmare to take a screenshot
     if(this.inTestCase) {
@@ -259,7 +256,7 @@ schema.methods.runTestConfig = function(nightmare, date) {
             .goto(that.URL)   
             .wait() 
             .screenshot(snapshotPath)
-            .use(passStuff);
+            .use(that.processImages.bind(that, snapshotPath, date, deferred));
     };
 
     return deferred.promise;
@@ -277,7 +274,7 @@ schema.methods.parseSteps = function() {
 
     };
 
-    result += '.screenshot(snapshotPath).use(passStuff);';
+    result += '.screenshot(snapshotPath).use(that.processImages.bind(that, snapshotPath, date, deferred));';
     return result;
 };
 
