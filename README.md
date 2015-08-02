@@ -17,6 +17,6 @@ At set intervals, we use nightmare.js to take a snapshot of a webpage at a given
 
 #### Check out a demo [here](https://boiling-island-8716.herokuapp.com/)
 
-A Chrome Extension was also developed to test single page applications and web pages with dynamic UI features.
+A Chrome Extension was also developed to test single page applications and web pages with dynamic UI features. Download it at the Play store [here](https://chrome.google.com/webstore/detail/private-pixels-step-recor/mjmcnfmjfnhdpngopmpdlegjpidnnmip).
 
-#### Check out the Chrome Extension repo [here](https://github.com/vatteh/doraemon_recorder)
+#### Check out the Chrome Extension repo [here](https://github.com/vatteh/doraemon_recorder).
