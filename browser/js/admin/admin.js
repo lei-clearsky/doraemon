@@ -18,6 +18,7 @@ app.controller('AdminController', function ($scope, $rootScope, AuthService) {
         {'name': 'Config Form', 'state': 'admin.config', 'icon': 'fa fa-pencil-square'},
         {'name': 'Alerts', 'state': 'admin.alert', 'icon': 'fa fa-exclamation-triangle'},
         {'name': 'Diffs', 'state': 'admin.diffs', 'icon': 'fa fa-users'},
+        {'name': 'Tools', 'state': 'admin.tools', 'icon': 'fa fa-wrench'}
     ];
 
 });
