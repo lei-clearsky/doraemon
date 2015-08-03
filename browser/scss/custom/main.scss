@@ -1,3 +1,9 @@
+a {
+	&:hover,
+	&:focus {
+		text-decoration: none;
+	}
+}
 /* =============== Group ========================= */
 .group:after {
   content: "";
