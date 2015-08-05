@@ -1,6 +1,37 @@
 #about {
-  font-family: 'Raleway Dots', cursive;
-  padding: 50px 100px;
   height:100vh;
+  margin-top:70px;
+  h1, h2 {
+  	font-weight: 300;
+  }
+  p, ul {
+  	font-size: 18px;
+  	font-weight: 300;
+  }
+
+  .profiles-heading {
+  	margin-top: 50px;
+  }
+  .profile {
+  	margin-top: 15px;
+  	  .profile-img {
+	  	width: 100px;
+	  	height: 100px;
+	  	margin-bottom: 10px;
+		border-radius: 50%;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+	  }
+	  .profile-name {
+	  	font-weight: 300;
+	  	font-size: 16px;
+	  }
+	  .profile-social {
+	  	i {
+	  		font-size: 24px;
+	  		margin: 5px;
+	  	}
+	  }
+  }
 
 }
