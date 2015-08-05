@@ -38,47 +38,54 @@ router.get('/:id', function (req, res, next) {
     The new testCase document will have an array of testConfigIDs 
 */
 router.post('/', function (req, res, next) {
-    
-    var testCaseObj = req.body,
-        splittedSteps = TestCase.splitStepsBySnapshot(testCaseObj.steps),
-        testConfigIDs = [],
-        promises = [];
 
-    splittedSteps.forEach(function(steps, index) {
-        var testConfigObj = {
-            name: testCaseObj.name,
-            URL: testCaseObj.URL,
-            devURL: testCaseObj.devURL,
-            threshold: testCaseObj.threshold,
-            viewport: testCaseObj.viewport,
-            dayFrequency: testCaseObj.dayFrequency,
-            hourFrequency: testCaseObj.hourFrequency,
-            steps: steps,
-            userID: testCaseObj.userID,
-            inTestCase: true,
-            testStepIndex: index
-        };
+    if (!(req.body instanceof Array)) {
+        req.body = [req.body];
+    }
 
-        var promise = TestConfig.create(testConfigObj, function (err, newTestConfig) {
-            if (err) return next(err);
-            return newTestConfig;
+    var testCasePromises = [];
+
+    req.body.forEach(function(testCaseObj) {
+        var splittedSteps = TestCase.splitStepsBySnapshot(testCaseObj.steps),
+            testConfigIDs = [],
+            testConfigPromises = [];
+
+        splittedSteps.forEach(function(steps, index) {
+            var testConfigObj = {
+                name: testCaseObj.name,
+                URL: testCaseObj.URL,
+                devURL: testCaseObj.devURL,
+                threshold: testCaseObj.threshold,
+                viewport: testCaseObj.viewport,
+                dayFrequency: testCaseObj.dayFrequency,
+                hourFrequency: testCaseObj.hourFrequency,
+                steps: steps,
+                userID: testCaseObj.userID,
+                inTestCase: true,
+                testStepIndex: index
+            };
+
+            testConfigPromises.push(TestConfig.create(testConfigObj));
         });
 
-        promises.push(promise);
+        Q.all(testConfigPromises).then(function(testConfigs) {
+            testCaseObj.testConfigIDs = [];
+
+            testConfigs.forEach(function(testConfig) {
+                testCaseObj.testConfigIDs.push(testConfig._id);
+            });
+
+            testCasePromises.push(TestCase.create(testCaseObj));
+        }).then(null, function(error) {
+            console.log(error);
+        });
     });
 
-    Q.all(promises).then(function(testConfigs) {
-        testCaseObj.testConfigIDs = [];
-
-        testConfigs.forEach(function(testConfig) {
-            testCaseObj.testConfigIDs.push(testConfig._id);
-        });
-
-        TestCase.create(testCaseObj, function (err, newTestCase) {
-            if (err) return next(err);
-            res.json(newTestCase);
-        });
-    }); 
+    Q.all(testCasePromises).then(function(testCases) {
+        res.json(testCases);
+    }).then(null, function(error) {
+        console.log(error);
+    });
 });
 
 /* 

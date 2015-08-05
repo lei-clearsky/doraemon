@@ -14,7 +14,7 @@ var	testConfig = mongoose.model('TestConfig');
 var cronJob = require('../cronJob');
 module.exports = router;
 
-// cronJob.run();
+cronJob.run();
 
 router.get('/test/:id', function(req,res,next){
 	testConfig.getTestNamesForUser(req.params.id)
@@ -85,9 +85,20 @@ router.get('/getTests/:id', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-	testConfig.create(req.body, function (err, testConfigDoc) {
-		if (err) return next(err);	
-		res.json(testConfigDoc);
+	if (!(req.body instanceof Array)) {
+		req.body = [req.body];
+	}
+
+	var promises = [];
+
+	req.body.forEach(function(config) {
+		promises.push(testConfig.create(config));
+	});
+
+	Q.all(promises).then(function(data) {
+		res.json(data);
+	}).then(null, function(error) {
+		console.log(error);
 	});
 });
 
