@@ -18,7 +18,7 @@ router.post('/', function(req, res, next) {
 
 
 router.get('/:id', function(req, res, next) {
-	res.json(req.user);
+	res.json(req.requestedUser);
 });
 
 router.param('id', function(req, res, next, id) {

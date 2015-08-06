@@ -14,7 +14,7 @@ var	testConfig = mongoose.model('TestConfig');
 var cronJob = require('../cronJob');
 module.exports = router;
 
-cronJob.run();
+// cronJob.run();
 
 router.get('/test/:id', function(req,res,next){
 	testConfig.getTestNamesForUser(req.params.id)
