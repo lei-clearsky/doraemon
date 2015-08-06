@@ -146,11 +146,11 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
         if (!$scope.isValid())
             return;  
 
-        var promises = [];
+        var configs = [];
 
         $scope.config.forEach(function(element) {
             element.viewports.forEach(function(viewport) {
-                promises.push(Config.create({
+                configs.push({
                     name: $scope.configTest.name,
                     URL: 'http://' + $scope.configTest.rootURL + element.path,
                     devURL: 'http://' + $scope.configTest.devURL,
@@ -160,11 +160,11 @@ app.controller('ConfigCtrl', function ($scope, Config, currentUser, viewportOpti
                     dayFrequency: element.dayFrequency,
                     hourFrequency: element.hourFrequency,
                     userID: currentUser._id
-                }));
+                });
             });                
         });
 
-        $q.all(promises).then(function(data) {
+        Config.create(configs).then(function(data) {
             $scope.testsCreated = data.length;
             $scope.showSuccessAlert = true;
             $scope.submitAttempted = false;

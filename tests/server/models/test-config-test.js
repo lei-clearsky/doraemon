@@ -508,11 +508,8 @@ describe('TestConfig model', function () {
             }).then(function(data) {
                 expect(data).to.have.length(3);
                 expect(data[0].userID.toString()).to.be.equal(user1._id.toString());
-                expect(data[0]).to.have.deep.property('testName', 'Test Google');
                 expect(data[1].userID.toString()).to.be.equal(user1._id.toString());
-                expect(data[1]).to.have.deep.property('testName', 'Test Google');
                 expect(data[2].userID.toString()).to.be.equal(user1._id.toString());
-                expect(data[2]).to.have.deep.property('testName', 'Test Google 2');
                 return TestConfig.getDiffsByDate(date2, user1._id, 'Test Google');
             }).then(function(data) {
                 expect(data).to.have.length(0);

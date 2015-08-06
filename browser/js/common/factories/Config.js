@@ -10,8 +10,8 @@ app.factory('Config', function ($http) {
             });
         },
 
-        create: function (config) {
-            return $http.post('/api/test-config', config).then(function (response) {
+        create: function (configs) {
+            return $http.post('/api/test-config', configs).then(function (response) {
                 return response.data;
             });
         },

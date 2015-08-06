@@ -1,143 +1,122 @@
-// var dbURI = 'mongodb://localhost:27017/testingDB';
-// var clearDB = require('mocha-mongoose')(dbURI);
-// var mongoose = require('mongoose');
+var dbURI = 'mongodb://localhost:27017/testingDB';
+var clearDB = require('mocha-mongoose')(dbURI);
+var mongoose = require('mongoose');
 
-// var supertest = require('supertest');
-// // var app = require('../../../server/app');
-// // var agent = supertest.agent(app);
+var expect = require('chai').expect;
 
-// var chai = require('chai');
-// var expect = chai.expect;
-// var spies = require('chai-spies');
-// chai.use(spies);
+require('../../../server/db/models/user');
+require('../../../server/db/models/image-capture');
+require('../../../server/db/models/image-diff');
+require('../../../server/db/models/test-config');
+require('../../../server/db/models/test-case');
 
-// require('../../../server/db/models/image-capture');
-// require('../../../server/db/models/image-diff');
-// require('../../../server/db/models/test-config');
+var User = mongoose.model('User');
+var TestConfig = mongoose.model('TestConfig');
+var ImageDiff = mongoose.model('ImageDiff');
+var ImageCapture = mongoose.model('ImageCapture');
 
-// var ImageCapture = mongoose.model('ImageCapture');
-// var ImageDiff = mongoose.model('ImageDiff');
-// var TestConfig = mongoose.model('TestConfig');
+var supertest = require('supertest');
+var app = require('../../../server/app');
 
+describe('TestConfig Routes', function () {
 
-// describe('HTTP requests', function() {
+	beforeEach('Establish DB connection', function (done) {
+		if (mongoose.connection.db) return done();
+		mongoose.connect(dbURI, done);
+	});
 
-//     beforeEach('Establish DB connection', function (done) {
-//         if (mongoose.connection.db) return done();
-//         mongoose.connect(dbURI, done);
-//     });
+	afterEach('Clear test database', function (done) {
+		clearDB(done);
+	});
 
-//     afterEach('Clear test database', function (done) {
-//         clearDB(done);
-//     });
+	describe('POST request', function () {
+		var guestAgent;
 
-// 	before(function(done) {
-//         TestConfig.remove({}, done);
-//     });
+		beforeEach('Create guest agent', function () {
+			guestAgent = supertest.agent(app);
+		});
 
-//     // describe('GET /', function() {
-//     // 	 it('should get 200 on api/test-config/', function(done) {
-// 	   //      agent
-// 	   //      	.get('api/test-config/')
-// 	   //       	.expect(200, done)
-// 	   //  })
-//     // })
+		it('to / should return a 200 response with created testConfigs in body', function (done) {
+			var userInfo = {
+				email: 'test@fsa.com',
+				password: 'test'
+			};
 
-//     // describe('GET /wiki/:title', function() {
-//     //     it('should get 404 on page that doesnt exist', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo_bar')
-// 	   //        .expect(404, done)	
-//     //     });
+			User.create(userInfo).then(function(user) {
+				var configInfo = [ { name: 'Test Config Post',
+				    URL: 'http://reddit.com',
+				    rootURL: 'http://reddit.com',
+				    threshold: '5',
+				    viewport: '1920x1200',
+				    dayFrequency: [ 6 ],
+				    hourFrequency: [ 10 ],
+				    userID: user._id },
+				  { name: 'Test Config Post',
+				    URL: 'http://reddit.com',
+				    rootURL: 'http://reddit.com',
+				    threshold: '5',
+				    viewport: '1440x900',
+				    dayFrequency: [ 6 ],
+				    hourFrequency: [ 10 ],
+				    userID: user._id },
+				  { name: 'Test Config Post',
+				    URL: 'http://reddit.com/r/all',
+				    rootURL: 'http://reddit.com',
+				    threshold: null,
+				    viewport: '1024x768',
+				    dayFrequency: [ 6 ],
+				    hourFrequency: [ 10 ],
+				    userID: user._id },
+				  { name: 'Test Config Post',
+				    URL: 'http://reddit.com/r/all',
+				    rootURL: 'http://reddit.com',
+				    threshold: null,
+				    viewport: '1920x1200',
+				    dayFrequency: [ 6 ],
+				    hourFrequency: [ 10 ],
+				    userID: user._id },
+				  { name: 'Test Config Post',
+				    URL: 'http://reddit.com/r/news',
+				    rootURL: 'http://reddit.com',
+				    threshold: null,
+				    viewport: '360x640',
+				    dayFrequency: [ 2 ],
+				    hourFrequency: [ 10 ],
+				    userID: user._id } 
+				];
 
-//     //     it('should get 200 on page that does exist', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo')
-// 	   //        .expect(200, done)	
-//     //     });
-//     // })
+				guestAgent.post('/api/test-config').send(configInfo).expect(200).end(function (err, response) {
+					if (err) return done(err);
+					expect(response.body).to.have.length(5);
+					done();
+				});
+			});
+		});
 
-//     // describe('GET /wiki/tags/:tag', function() {
-//     //     it('should get 200', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/tags/coding')
-// 	   //        .expect(200, done)
-//     //     })
-//     // })
+		it('to /bulkcreate should return a 200 response with # of testConfigs created in body', function (done) {
+			var userInfo = {
+				email: 'test@fsa.com',
+				password: 'test'
+			};
 
-//     // describe('GET /wiki/:title/similar', function() {
-//     //     it('should get 404 for page that doesn\'t exist', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo_bar/similar')
-// 	   //        .expect(404, done)
-//     //     });
+			this.timeout(5000);
 
-//     //     it('should get 200 for similar page', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo/similar')
-// 	   //        .expect(200, done)
-//     //     })
-//     // })
+			User.create(userInfo).then(function(user) {
+				var configInfo = { testName: 'Test Routes Bulk',
+					startURL: 'http://www.fullstackacademy.com',
+					maxDepth: 1,
+					viewport: [ '1920x1200', '1440x900' ],
+					dayFrequency: [ 6, 2 ],
+					hourFrequency: [ 10 ],
+					userID: user._id 
+				};
 
-//     // describe('GET /wiki/:title/edit', function() {
-//     //     it('should get 404 for page that doesn\'t exist', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo_bar/edit')
-// 	   //        .expect(404, done)
-//     //     });
-
-//     //     it('should get 200 for similar page', function(done) {
-//     //     	agent
-// 	   //        .get('/wiki/foo/edit')
-// 	   //        .expect(200, done)
-//     //     })
-//     // })
-
-//     // describe('GET /add', function() {
-//     //     it('should get 200', function(done) {
-//     //     	agent
-// 	   //        .get('/add')
-// 	   //        .expect(200, done)
-//     //     })
-//     // })
-
-//     // describe('POST /wiki/:title/edit', function() {
-//     //     it('should get 404 for page that doesn\'t exist', function(done) {
-//     //     	agent
-// 	   //        .post('/wiki/foo_bar/edit')
-// 	   //        .expect(404, done)
-//     //     });
-
-//     //     it('should update db', function(done) {
-//     //     	agent
-// 	   //        .post('/wiki/foo/edit')
-// 	   //        .send({body: "foo bar", tags: 'hi, bye'})
-// 	   //        .expect(200)
-// 	   //        .end(function (err, res) {
-// 	   //        	models.Page.findOne({title: 'foo'}, function(err, page) {
-// 	   //        		expect(page.body).to.equal('foo bar');	
-// 	   //        		done();
-// 	   //        	});
-// 	   //        });	          
-//     //     });
-//     // })
-
-//     // describe('POST /add/submit', function() {
-//     //     it('should create in db', function(done) {
-
-//     //     	agent
-// 	   //        .post('/add/submit')
-// 	   //        .send({title: "zoo", body: "foo bar zoo", tags: 'hi, bye'})
-// 	   //        .expect(200)
-// 	   //        .end(function (err, res) {
-// 	   //        	models.Page.findOne({title: 'zoo'}, function(err, page) {
-// 	   //        		expect(page.body).to.equal('foo bar zoo');	
-// 	   //        		done();
-// 	   //        	});
-// 	   //        });
-
-
-//     //     })
-//     // })
-
-// })
+				guestAgent.post('/api/test-config/bulkcreate').send(configInfo).expect(200).end(function (err, response) {
+					if (err) return done(err);
+					expect(response.body).to.be.equal(14);
+					done();
+				});
+			});
+		});
+	});
+});

@@ -15,8 +15,10 @@ Our stack basically consists of:
 
 At set intervals, we use nightmare.js to take a snapshot of a webpage at a given URL. With this current snapshot, we will then grab the previous snapshot taken at that URL, then use GraphicsMagick to create a diff image of the two snapshots. That diff image is then posted in our dashboard and an alert is set if a substantial difference is calculated.
 
-#### Check out a demo [here](https://boiling-island-8716.herokuapp.com/)
+#### Check out the live site [here](http://www.privatepixels.today)
 
-A Chrome Extension was also developed to test single page applications and web pages with dynamic UI features. Download it at the Play store [here](https://chrome.google.com/webstore/detail/private-pixels-step-recor/mjmcnfmjfnhdpngopmpdlegjpidnnmip).
+A Chrome Extension was also developed to test single page applications and web pages with dynamic UI features. Our Chrome extension is used to record user workflow on a browser, allowing us to save the recorded actions and run them before taking a snapshot at your defined intervals.
+
+#### Download it at the Play store [here](https://chrome.google.com/webstore/detail/private-pixels-step-recor/mjmcnfmjfnhdpngopmpdlegjpidnnmip).
 
 #### Check out the Chrome Extension repo [here](https://github.com/vatteh/doraemon_recorder).

@@ -28,8 +28,8 @@ app.config(function ($stateProvider) {
 app.factory('TestCaseFactory', function ($http) {
 
     return {
-        createTestCase: function (testCaseObj) {
-            return $http.post('/api/test-case', testCaseObj).then(function (response) {
+        createTestCase: function (testCaseObjs) {
+            return $http.post('/api/test-case', testCaseObjs).then(function (response) {
                 return response.data;
             });
         },
@@ -128,7 +128,7 @@ app.controller('TestCaseCtrl', function ($scope, TestCaseFactory, currentUser, v
         if (!$scope.isValid())
             return;  
 
-        var promises = [];
+        var configs = [];
 
         $scope.config.viewports.forEach(function(viewport) {
             var newTestCaseObj = {
@@ -144,10 +144,10 @@ app.controller('TestCaseCtrl', function ($scope, TestCaseFactory, currentUser, v
                 formCompleted: true
             };
 
-            promises.push(TestCaseFactory.createTestCase(newTestCaseObj));
+            configs.push(newTestCaseObj);
         });
 
-        $q.all(promises).then(function() {
+        TestCaseFactory.createTestCase(configs).then(function() {
             return TestCaseFactory.deleteTestCase($stateParams.testCaseID);
         }).then(function() {
             $scope.showSuccessAlert = true;
