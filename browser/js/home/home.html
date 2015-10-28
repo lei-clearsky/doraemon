@@ -3,5 +3,63 @@
 	<h3>Visual regression testing got easy</h3>
 	<h3>See every pixel change</h3>
 	<div class="see"></div>
+	<div class="discover-more">
+		<span>Discover More</span>
+		<a class="discover-more-arrow entypo-down-open-big"></a>
+	</div>
+
 	<!-- <p class="footer">built with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></p> -->
+</section>
+
+<section id="home-about">
+	<div class="home-section">
+		<div class="container">
+			<div class="col-md-8 col-md-offset-2">
+
+	        <h1 class="text-center">A Visual UI Test Automation Service</h1>
+	        <p>An automatic visual UI testing and monitoring service built on the MEAN stack.</p>
+
+	        <p>Our stack basically consists of:</p>
+	        <ul>
+	        	<li>Nightmare.js which is a headless browser using the Webkit render engine. Used to create snapshots of webpages.</li>
+	        	<li>GraphicsMagick is an image manipulation tool able to run in node.js. Used to create a diff image of two snapshots.</li>
+	        	<li>AWS is used to store our images.</li>
+	        	<li>CronJob is used to schedule tasks at set intervals.</li>
+	        	<li>Roboto is a web crawler used to find web pages on a site.</li> 
+	        	<li>Angular, Bootstrap & Sass is used in the front end to create our dynamic UI.</li>
+	        	<li>FSG was used as a basic MEAN stack scaffolding generator.</li>
+	        </ul>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="home-section green">
+		<div class="container">
+			<div class="col-md-8 col-md-offset-2">
+
+	        <p>A <strong>Chrome Extension</strong> was also developed to test single page applications and web pages with dynamic UI features. <strong>Download it at the play store <a href="https://chrome.google.com/webstore/detail/private-pixels-step-recor/mjmcnfmjfnhdpngopmpdlegjpidnnmip">here</a> and check out the Chrome Extension repo <a href="https://github.com/vatteh/doraemon_recorder">here</a></strong></p>
+
+	    	</div>
+		</div>
+	</div>
+
+	<div class="home-section">
+		<div class="container">
+			<div class="col-md-8 col-md-offset-2">
+	    	<h1 class="text-center profiles-heading">Our Team</h1>
+			
+			<div class="row">
+		        <div class='col-md-3 text-center profile' ng-repeat='info in contactInfo'>
+		            <img class="profile-img" src="{{info.imgSrc}}">
+		            <div class="profile-name">{{info.name}}</div>
+		            <div class="profile-social">
+		                <a href="{{info.linkedIn}}"><i class="fa fa-linkedin"></i></a>
+		                <a href="{{info.github}}"><i class="fa fa fa-github"></i></a>
+		            </div>
+		        </div>
+			</div> 
+			</div>
+		</div>
+	</div>
 </section>
